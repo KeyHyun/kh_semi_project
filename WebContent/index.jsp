@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-
- 	<%@ include file="/WEB-INF/views/footer.jsp" %>
+	<a href="/joinFrm">이동</a>
+ 	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
 </body>
 </html>
