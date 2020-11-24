@@ -55,7 +55,7 @@
     <header></header>
     <footer>
         <div>
-            <div><a href="#"><img src="swu-img/logo%202.png"></a></div>
+            <div><a href="#"><img src="/img/logo2.png"></a></div>
             <div class="footer-menu"><a href="#">이용약관</a></div>
             <div class="footer-menu"><a href="#">개인정보처리방침</a></div>
             <div class="footer-menu"><a href="#">운영정책</a></div>
