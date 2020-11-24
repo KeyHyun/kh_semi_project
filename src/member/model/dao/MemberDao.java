@@ -67,4 +67,38 @@ public class MemberDao {
 		return b;
 	}
 
+	public Member selectOneMember(Connection conn, Member m) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from member where member_id = ? and member_pw = ?";
+		Member loginMember = null;
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, m.getMemberId());
+			pstmt.setString(2, m.getMemberPw());
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				loginMember = new Member();
+				loginMember.setMemberId(rset.getString("member_id"));
+				loginMember.setMemberPw(rset.getString("member_pw"));
+				loginMember.setMemberNo(rset.getInt("member_no"));
+				loginMember.setMemberName(rset.getString("member_name"));
+				loginMember.setMemberEmail(rset.getString("member_email"));
+				loginMember.setMemberNickname(rset.getString("member_nickname"));
+				loginMember.setFilename(rset.getString("filename"));
+				loginMember.setFilepath(rset.getString("filepath"));
+				loginMember.setMemberEnrollSNS(rset.getString("member_enrollsns"));
+				loginMember.setMemberGrade(rset.getInt("member_grade"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return loginMember;
+	}
+
 }

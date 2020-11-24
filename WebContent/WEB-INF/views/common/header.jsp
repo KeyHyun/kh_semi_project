@@ -1,6 +1,9 @@
+<%@page import="member.model.vo.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%
+	Member loginMember = (Member)session.getAttribute("loginMember");
+%>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.js"></script>
 
@@ -135,16 +138,16 @@
               </ul>
           </div>
           <div class="nav-right">
-             <%if(true) {%>
+             <%if(loginMember == null) {%>
               <div>
-                  <a href="#">로그인</a>
+                  <a href="/views/login.jsp">로그인</a>
                </div>
                <div>
                    <a href="/joinFrm"> 회원가입</a>
                </div>
               <%}else {%>
               <div>
-                 <img src="/img/login_logo1.png">
+                 <a href="/logout"><img src="/img/login_logo1.png"></a>
               </div>
               <div>
                  <img src="/img/login_logo2.png">
