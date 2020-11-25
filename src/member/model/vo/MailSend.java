@@ -6,14 +6,48 @@ import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class MailSend {
 	public String mailSend(String email, String n_pw) {
+		
+//		final String user = "kokoder@hs.ac.kr";
+//		final String password = "password";
+//		
+//		Properties prop = new Properties();
+//		prop.put("mail.smtp.host", "smtp.gmail.com");
+//		prop.put("mail.smtp.port", 465);
+//		prop.put("mail.smtp.auth", "true");
+//		prop.put("mail.smtp.ssl.enable","true");
+//		prop.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+//		
+//		Session session = Session.getDefaultInstance(prop, new javax.mail.Authenticator() {
+//			protected PasswordAuthentication getPasswordAuthentication() {
+//				return new PasswordAuthentication(user, password);
+//			}
+//		});
+//		
+//		MimeMessage message = new MimeMessage(session);
+//		try {
+//			message.setFrom(new InternetAddress(user));
+//			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+//			message.setSubject("Study With Us 임시 비밀번호 발급");
+//			message.setText("<h1>안녕하세요 임시 비밀번호 입니다. 임시 비밀번호는 ["+n_pw+"] 입니다.</h1>","text/html;charset=UTF-8");
+//			Transport.send(message);
+//			System.out.print("전송성공");
+//		} catch (AddressException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (MessagingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		// 랜덤 코드 생성
 		// ↓ 메일 전송 코드
 		Properties prop = System.getProperties();
@@ -49,7 +83,6 @@ public class MailSend {
 				e.printStackTrace();
 			}
 			
-			return n_pw;
-	
+		return n_pw;
 	}
 }

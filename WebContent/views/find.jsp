@@ -85,7 +85,7 @@
    						type : "post",
    						data : {selN:selN,searchId:searchId,searchMail:searchMail},
    						success : function(data){
-   							if(data== "true"){
+   							if(data == true){
    								$("#resultText").css('color','green');
    								resultHTML = "임시비밀번호가 발급되었습니다. 이메일을 확인해주세요.";
    							}
