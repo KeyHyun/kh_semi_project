@@ -101,4 +101,48 @@ public class MemberDao {
 		return loginMember;
 	}
 
+	public String findMemberId(Connection conn, String searchName, String searchEmail) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String s_id = null;
+		String query = "select member_id from member where member_name = ? and member_email = ?";
+		Member loginMember = null;
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, searchName);
+			pstmt.setString(2, searchEmail);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				s_id = rset.getString("member_id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return s_id;
+	}
+
+	public int findMemberPw(Connection conn, String searchId, String searchMail, String n_pw) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update member set member_pw = ? where member_id = ? and member_email = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, n_pw);
+			pstmt.setString(2, searchId);
+			pstmt.setString(3, searchMail);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
 }
+

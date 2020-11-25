@@ -1,7 +1,5 @@
 @charset "UTF-8";
 
-@charset "UTF-8";
-
         .login_container{
             width: 308px;
             height: 413px;
@@ -63,4 +61,8 @@
         	color : red;
         }
         
+        a{
+        	color : #A6A7A8;
+        	text-decoration: none;
+        }
         	

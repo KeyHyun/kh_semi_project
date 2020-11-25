@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="/js/login.js" defer></script>
-<link rel="stylesheet" type="text/css" href="/css/logins.css">
+<link rel="stylesheet" type="text/css" href="/css/login.css">
 <title>로그인</title>
 </head>
 <body>
@@ -42,8 +42,8 @@
 				<button type="submit">로그인</button>
 			</div>
 			<div class="find_box">
-				<span><a href="#">아이디 또는 비밀번호 찾기 / </a></span> <span><a
-					href="#">회원가입</a></span>
+				<span><a href="/views/find.jsp">아이디 또는 비밀번호 찾기 / </a></span> <span><a
+					href="/joinFrm">회원가입</a></span>
 			</div>
 		</div>
 	</form>
