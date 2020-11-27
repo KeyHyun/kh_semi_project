@@ -129,7 +129,7 @@
                       </ul>
                   </li>
                   <li>
-                      <a href="#">고객센터</a>
+                      <a href="/noticeList?reqPage=1">고객센터</a>
                   </li>
               </ul>
           </div>
