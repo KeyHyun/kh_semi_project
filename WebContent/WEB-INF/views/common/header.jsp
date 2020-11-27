@@ -1,17 +1,20 @@
 <%@page import="member.model.vo.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%
-	Member m = (Member)session.getAttribute("member");
-%>
+	<%
+    Member m = (Member)session.getAttribute("member");
+    %>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.js"></script>
-
+<link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/header/style.css">
+<link rel="stylesheet" href="/css/header/responsive.css">
+<script type="text/javascript" src="/js/bootstrap.js"></script>
 <style>
-   .nav{
-      width: 1200px;
+	.nav{
+		width: 1200px;
         margin: 0 auto;
-   }
+	}
     .nav-wrap {
         position: absolute;
         z-index: 10;
@@ -108,6 +111,7 @@
 </style>
 
 <body>
+<<<<<<< HEAD
    <div class="nav">
       <div class="nav-wrap">
           <div class="nav-left">
@@ -123,7 +127,7 @@
                       </ul>
                   </li>
                   <li>
-                      <a href="#">스터디 찾기</a>
+                      <a href="/groupStudyList?reqPage=1">스터디 찾기</a>
                   </li>
                   <li>
                       <a href="#">이벤트</a>
@@ -163,5 +167,6 @@
            $(".nav-sub").slideToggle();
        });
        $(".nav-right>div>img").hover().css("cursor","pointer");
-   </script>
+   </script>	
+		      		
 </body>

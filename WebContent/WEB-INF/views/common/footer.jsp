@@ -51,8 +51,7 @@
         }
     </style>
     
-    <body>
-    <header></header>
+<body>
     <footer>
         <div>
             <div><a href="#"><img src="/img/logo2.png"></a></div>

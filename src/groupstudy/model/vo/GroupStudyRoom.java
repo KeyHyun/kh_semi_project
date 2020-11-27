@@ -1,6 +1,7 @@
 package groupstudy.model.vo;
 
 public class GroupStudyRoom {
+	private int rNum;
 	private int groupNo;
 	private String groupExplan;
 	private String groupRule;
@@ -11,6 +12,24 @@ public class GroupStudyRoom {
 	private int groupManagerNo;
 	private String groupTitle;
 	private int categoryNo;
+	public GroupStudyRoom() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public GroupStudyRoom(int groupNo, String groupExplan, String groupRule, int groupPersonnel, String groupContent,
+			String groupStartDate, String groupEndDate, int groupManagerNo, String groupTitle, int categoryNo) {
+		super();
+		this.groupNo = groupNo;
+		this.groupExplan = groupExplan;
+		this.groupRule = groupRule;
+		this.groupPersonnel = groupPersonnel;
+		this.groupContent = groupContent;
+		this.groupStartDate = groupStartDate;
+		this.groupEndDate = groupEndDate;
+		this.groupManagerNo = groupManagerNo;
+		this.groupTitle = groupTitle;
+		this.categoryNo = categoryNo;
+	}
 	public int getGroupNo() {
 		return groupNo;
 	}
@@ -71,23 +90,11 @@ public class GroupStudyRoom {
 	public void setCategoryNo(int categoryNo) {
 		this.categoryNo = categoryNo;
 	}
-	public GroupStudyRoom(int groupNo, String groupExplan, String groupRule, int groupPersonnel, String groupContent,
-			String groupStartDate, String groupEndDate, int groupManagerNo, String groupTitle, int categoryNo) {
-		super();
-		this.groupNo = groupNo;
-		this.groupExplan = groupExplan;
-		this.groupRule = groupRule;
-		this.groupPersonnel = groupPersonnel;
-		this.groupContent = groupContent;
-		this.groupStartDate = groupStartDate;
-		this.groupEndDate = groupEndDate;
-		this.groupManagerNo = groupManagerNo;
-		this.groupTitle = groupTitle;
-		this.categoryNo = categoryNo;
+	public int getrNum() {
+		return rNum;
 	}
-	public GroupStudyRoom() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void setrNum(int rNum) {
+		this.rNum = rNum;
 	}
 	
 }
