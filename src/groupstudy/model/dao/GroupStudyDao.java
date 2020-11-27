@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 
@@ -326,5 +327,94 @@ public class GroupStudyDao {
 			JDBCTemplate.close(pstmt);
 		}
 		return result2;
+	}
+	
+	//관리자 페이지 - 각 그룹스터디 안에 몇 명있는지 계산
+	public HashMap<Integer, Integer> seleteAllGroupMemberCount(Connection conn) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		HashMap<Integer, Integer> memberCount = new HashMap<Integer, Integer>();
+		String query = "select GROUP_NO, count(*)+1 memberCount from GROUP_STUDYMEMBER group by GROUP_NO";
+		try {
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				memberCount.put(rset.getInt("GROUP_NO"), rset.getInt("memberCount"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return memberCount;
+	}
+
+	//관리자 페이지 - 그룹스터디 삭제
+	public int deleteGroupStudy(Connection conn, int groupNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "delete from GROUP_STUDYROOM where GROUP_NO = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, groupNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	//관리자 페이지 - 그룹스터디 총 수
+	public int totalCount2(Connection conn) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int totalCount = 0;
+		String query = "select count(*) totalCount from GROUP_STUDYROOM";
+		try {
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				totalCount = rset.getInt("totalCount");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(pstmt);
+			JDBCTemplate.close(rset);
+		}
+		return totalCount;
+	}
+
+	//관리자 페이지 - 그룹스터디 페이징 
+	public ArrayList<GroupStudyRoom> selectList2(Connection conn, int start, int end) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		ArrayList<GroupStudyRoom> list = new ArrayList<GroupStudyRoom>();
+		String query = "select * from (select rownum as rnum, n.* from(select * from group_studyroom order by 1 desc) n) where rnum between ? and ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1,  start);
+			pstmt.setInt(2, end);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				GroupStudyRoom gsr = new GroupStudyRoom();
+				gsr.setGroupNo(rset.getInt("group_no"));
+				gsr.setGroupManagerNo(rset.getInt("GROUP_MANAGER_NO"));
+				gsr.setGroupTitle(rset.getString("GROUP_TITle"));
+				gsr.setGroupStartDate(rset.getString("GROUP_STARTDATE"));
+				gsr.setGroupEndDate(rset.getString("GROUP_ENDDATE"));
+				gsr.setGroupPersonnel(rset.getInt("GROUP_PERSONNEL"));
+				list.add(gsr);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return list;
 	}
 }

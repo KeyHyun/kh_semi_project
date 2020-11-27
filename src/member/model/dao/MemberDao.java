@@ -225,6 +225,93 @@ public class MemberDao {
 		}
 		return gl;
 	}
+	
+	//관리자 페이지 - 사용자 삭제
+	public int deleteUser(Connection conn, int memberNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "delete from member where member_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, memberNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	//관리자 페이지 - 사용자 레벨 변경
+	public int changeLevel(Connection conn, int memberLevel, int memberNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update member set member_grade=? where member_no=?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1,  memberLevel);
+			pstmt.setInt(2, memberNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	//관리자 페이지 - 총 사용자 수
+	public int totalCount(Connection conn) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		ResultSet rset = null;
+		String query = "select count(*) as total from member order by 1 desc";
+		try {
+			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("total");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	//관리자 페이지 - 사용자 페이징 조회
+	public ArrayList<Member> selectList(Connection conn, int start, int end) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		ArrayList<Member> list = new ArrayList<Member>();
+		String query = "select * from (select rownum as rnum, n.* from(select * from member order by 1 desc) n) where rnum between ? and ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				Member m = new Member();
+				m.setMemberNo(rset.getInt("member_no"));
+				m.setMemberId(rset.getString("member_id"));
+				m.setMemberPw(rset.getNString("member_pw"));
+				m.setMemberName(rset.getNString("member_name"));
+				m.setMemberEmail(rset.getNString("member_email"));
+				m.setMemberNickname(rset.getNString("member_nickname"));
+				m.setMemberGrade(rset.getInt("member_grade"));
+				list.add(m);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return list;
+	}
 
 }
 

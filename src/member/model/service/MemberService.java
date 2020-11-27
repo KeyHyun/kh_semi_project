@@ -2,12 +2,14 @@ package member.model.service;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import common.JDBCTemplate;
 import groupstudy.model.vo.GroupList;
 import member.model.dao.MemberDao;
 import member.model.vo.MailSend;
 import member.model.vo.Member;
+import member.model.vo.MemberManagePage;
 
 public class MemberService {
 
@@ -118,4 +120,104 @@ public class MemberService {
 		return gl;
 	}
 
+	//관리자페이지에서 사용자 삭제
+	public boolean deleteAllUser(String num) {
+		Connection conn = JDBCTemplate.getConnection();
+		StringTokenizer sT1 = new StringTokenizer(num, "/");
+		boolean result = true;
+		while(sT1.hasMoreTokens()) {
+			int memberNo = Integer.parseInt(sT1.nextToken());
+			int result1 = new MemberDao().deleteUser(conn, memberNo);
+			if(result1==0) {
+				result = false;
+				break;
+			}
+			if(result) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+		}
+		return result;
+	}
+
+	//관리자 페이지 - 사용자 레벨 변경
+	public int changeLevel(int memberLevel, int memberNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new MemberDao().changeLevel(conn, memberLevel,memberNo);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+
+	//관리자 페이지 - 사용자 리스트 페이징 조회
+	public MemberManagePage selectList(int reqPage) {
+		Connection conn = JDBCTemplate.getConnection();
+		
+		//1. 전체 글 수를 검색
+		int totalCount = new MemberDao().totalCount(conn);
+				
+		//2. 총 페이지 수
+		int numPerPage = 10;
+		int totalPage = 0;
+		if(totalCount%numPerPage == 0) {
+			totalPage = totalCount/numPerPage;
+		}else {
+			totalPage = totalCount/numPerPage + 1;
+		}
+		
+		//3. 게시글 시작번호화 끝 번호
+		int start = (reqPage-1)*numPerPage + 1;
+		int end = reqPage*numPerPage;
+		
+		//4.페이지 범위에 있는 게시글 리스트를 불러옴
+		ArrayList<Member> list = new MemberDao().selectList(conn, start, end);
+		
+		//5.페이지 네비게이션 생성
+		int pageNaviSize = 5;
+		String pageNavi = "";
+		
+		//6.페이징 번호
+		int pageNo = reqPage-2;
+		if(reqPage <=3) {
+			pageNo = 1;
+		}else if(pageNo > totalPage-4){
+			pageNo = totalPage-4;
+		}
+		
+		//7. 이전버튼
+		if(reqPage > 3) {
+			pageNavi += "<li class='page-item'><a class='page-link' href='/memberList?reqPage="+(pageNo-1)+"'><<</a></li>";
+		}
+		
+		//8. 네비게이션 숫자
+		for(int i=0; i<pageNaviSize; i++) {
+			if(reqPage==pageNo) {
+				pageNavi += "<li class='page-item'><a class='page-link' href='#' style='background-color:#6ED078'>"+pageNo+"</a></li>";
+				pageNavi += "<li class='reqPage' style='display:none'>"+reqPage+"</li>";
+			}else {
+				pageNavi += "<li class='page-item'><a class='page-link' href='/memberList?reqPage="+(pageNo)+"'>"+pageNo+"</a></li>";
+			}
+			pageNo++;
+			
+			if(pageNo > totalPage) {
+				break;
+			}
+		}
+		
+		//9. 다음버튼
+		if(pageNo <= totalPage-3) {
+			pageNavi += "<li class='page-item'><a class='page-link' href='/memberList?reqPage="+pageNo+"'>>></a></li>";
+		}
+		
+		//10. 리스트와 태그 텍스트를 객체에 넣어줌
+		MemberManagePage mmp = new MemberManagePage(list, pageNavi);
+		JDBCTemplate.close(conn);
+		return mmp;
+	}
 }
