@@ -242,8 +242,8 @@
 	                </div>
 	            </form>
 	            <div class="add-function">
-	            	<%if(m!=null && m.getMemberGrade() == 1) {%>
-	                <a href="/createRoomCntCheck?memberNo=1&memberGrade=1">그룹스터디 생성</a>
+	            	<%if(m!=null && m.getMemberGrade() != 0) {%>
+	                <a href="/createRoomCntCheck?memberNo=<%=m.getMemberNo()%>&memberGrade=<%=m.getMemberGrade()%>">그룹스터디 생성</a>
 	                <%} %>
 	                <select id="float" name="float-category" onChange="floatCategory(this)">
 	                    <option value="" selected>최신순</option>
@@ -259,7 +259,7 @@
 	                        <img src="">
 	                    </div>
 	                    <div class="list-content">
-	                        <a href="/groupStudyView?groupNo=<%=gsr.getGroupNo()%>"><%=gsr.getGroupTitle() %></a><br>
+	                        <a href="/groupStudyDetail?groupNo=<%=gsr.getGroupNo()%>"><%=gsr.getGroupTitle() %></a><br>
 	                        <p><%=gsr.getGroupExplan() %></p>
 	                    </div>
 	                </div>

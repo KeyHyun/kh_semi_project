@@ -1,7 +1,7 @@
 <%@page import="member.model.vo.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-	<%
+   <%
     Member m = (Member)session.getAttribute("member");
     %>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +11,10 @@
 <link rel="stylesheet" href="/css/header/responsive.css">
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 <style>
-	.nav{
-		width: 1200px;
+   .nav{
+      width: 1200px;
         margin: 0 auto;
-	}
+   }
     .nav-wrap {
         position: absolute;
         z-index: 10;
@@ -24,7 +24,6 @@
         font-family: Roboto;
         background-color: #fff;
     }
-
     .nav-left {
         margin-top: 20px;
         width: calc(100%/6);
@@ -32,18 +31,15 @@
         float: left;
         text-align: center;
     }
-
     .nav-center {
         width: calc((100%/3)*2);
         float: left;
     }
-
     .nav-right {
         width: calc(100%/6);
         float: left;
         overflow: hidden;
     }
-
     .nav-right>div {
         width: calc(100%/2);
         float: left;
@@ -53,27 +49,22 @@
     .nav-right>div>a{
         color: black;
     }
-
     ul {
         list-style-type: none;
     }
-
     a {
         text-decoration: none;
     }
-
     .nav-center>ul {
         overflow: hidden;
         margin: 0;
         padding-left: 0;
     }
-
     .nav-center>ul>li {
         float: left;
         width: calc(100%/4);
         text-align: center;
     }
-
     .nav-center>ul>li>a {
         display: inline-block;
         width: 100%;
@@ -83,18 +74,15 @@
         font-size: 18px;
         color: black;
     }
-
     .nav-sub {
         width: 100%;
         padding: 0;
         display: none;
         position: relative;
     }
-
     .nav-sub>li {
         width: 100;
     }
-
     .nav-sub>li>a {
         display: inline-block;
         width: 100%;
@@ -104,14 +92,12 @@
         color: black;
         line-height: 30px;
     }
-
     .nav-center>ul>li:hover>a {
         cursor: pointer;
     }
 </style>
 
 <body>
-<<<<<<< HEAD
    <div class="nav">
       <div class="nav-wrap">
           <div class="nav-left">
@@ -123,7 +109,13 @@
                       <a href="#">My Plan</a>
                       <ul class="nav-sub">
                           <li><a href="#">개인스터디</a></li>
-                          <li><a href="#">그룹스터디</a></li>
+                          <li>
+                          	<% if(m!=null){ %> <!-- logincheck하기 -->
+ 								<a href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>">그룹스터디</a><br>
+ 							<%}else{ %>
+ 								<a href="/myGroupStudyList?memberNo=0">그룹스터디</a><br>
+ 							<%} %>
+                          </li>
                       </ul>
                   </li>
                   <li>
@@ -167,6 +159,6 @@
            $(".nav-sub").slideToggle();
        });
        $(".nav-right>div>img").hover().css("cursor","pointer");
-   </script>	
-		      		
+   </script>   
+                  
 </body>

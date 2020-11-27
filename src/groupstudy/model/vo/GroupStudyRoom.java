@@ -96,5 +96,10 @@ public class GroupStudyRoom {
 	public void setrNum(int rNum) {
 		this.rNum = rNum;
 	}
-	
+	   public String getGroupContentBr() {
+		      return groupContent.replaceAll("\r\n", "<br>");
+		   }
+		   public String getGroupRuleBr() {
+		      return groupRule.replaceAll("\r\n", "<br>");
+		   }
 }

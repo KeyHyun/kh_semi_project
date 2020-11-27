@@ -55,18 +55,16 @@
     <footer>
         <div>
             <div><a href="#"><img src="/img/logo2.png"></a></div>
-            <div class="footer-menu"><a href="#">이용약관</a></div>
-            <div class="footer-menu"><a href="#">개인정보처리방침</a></div>
-            <div class="footer-menu"><a href="#">운영정책</a></div>
+            <div class="footer-menu"><a href="/usePolicy">이용약관</a></div>
+            <div class="footer-menu"><a href="/privacyPersonal">개인정보처리방침</a></div>
+            <div class="footer-menu"><a href="/servicePolicy">운영정책</a></div>
             <div class="footer-menu"><a href="#">고객문의</a></div>
         </div>
         <div>
-            <pre>
-세미프로젝트 SWU팀
+         <pre>세미프로젝트 SWU팀
 KH당산지점 : 1544-9970 | 담당 강사님 이윤수
 주소 : 서울특별시 영등포구 선유동2로 57 이레빌딩(구관) 19F
-문의 : ctj123@naver.com
-        </pre>
+문의 : ctj123@naver.com</pre>
         </div>
         <div class="footer-line"></div>
         <div>Copyright © 1998-2020 KH Information Educational Institute All Right Reserved</div>
