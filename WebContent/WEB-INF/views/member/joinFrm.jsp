@@ -46,9 +46,9 @@
                             <label for="ex2"><img src="img/ex2.jpg"></label>
                         </li>
                         <li>
-                            <input type="radio" id="ex3" name="pro_img" value="3.gif">
+                            <input type="radio" id="ex3" name="pro_img" value="3.jpg">
 
-                            <label for="ex3"> <img src="img/ex3.gif"></label>
+                            <label for="ex3"> <img src="img/ex3.jpg"></label>
                         </li>
                         <li>
                             <input type="radio" id="ex4" name="pro_img" value="4.jpg">

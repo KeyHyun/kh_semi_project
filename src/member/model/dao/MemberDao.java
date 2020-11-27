@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import common.JDBCTemplate;
+import groupstudy.model.vo.GroupList;
 import member.model.vo.Member;
 
 public class MemberDao {
@@ -142,6 +144,86 @@ public class MemberDao {
 			JDBCTemplate.close(pstmt);
 		}
 		return result;
+	}
+
+	public Member selectOneMember(Connection conn, int memberNo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from member where member_no = ?";
+		Member m = null;
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, memberNo);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				m = new Member();
+				m.setMemberId(rset.getString("member_id"));
+				m.setMemberPw(rset.getString("member_pw"));
+				m.setMemberNo(rset.getInt("member_no"));
+				m.setMemberName(rset.getString("member_name"));
+				m.setMemberEmail(rset.getString("member_email"));
+				m.setMemberNickname(rset.getString("member_nickname"));
+				m.setFilename(rset.getString("filename"));
+				m.setFilepath(rset.getString("filepath"));
+				m.setMemberEnrollSNS(rset.getString("member_enrollsns"));
+				m.setMemberGrade(rset.getInt("member_grade"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return m;
+	}
+
+	public ArrayList<GroupList> searchMyStudy(Connection conn, int memberNo) {
+		
+		PreparedStatement pstmt = null;
+		PreparedStatement pst = null;
+		ResultSet rset2 = null;
+		ResultSet rset = null;
+		String query2 = "select group_no, count(*) membercount from group_studymember where group_no in (select group_no from group_studymember where member_no = ?) group by group_no order by group_no asc";
+		String query = "select group_studymember.group_no,group_title,group_startdate,group_enddate,group_personnel,member_no from group_studyroom,group_studymember where group_studyroom.group_no = group_studymember.group_no and group_studymember.member_no=?";
+		GroupList g = null;
+		int i = 0;
+		ArrayList<Integer> gn = new ArrayList<Integer>();
+		ArrayList<GroupList> gl = new ArrayList<GroupList>();
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, memberNo);
+			rset = pstmt.executeQuery();
+			pst = conn.prepareStatement(query2);
+			pst.setInt(1, memberNo);
+			rset2 = pst.executeQuery();
+			while(rset2.next())
+			{
+				gn.add(rset2.getInt("membercount"));
+			}
+			
+			while(rset.next()) {
+				g = new GroupList();
+				g.setGroupNo(rset.getInt("group_no"));
+				g.setGroupTitle(rset.getString("group_title"));
+				g.setGroupStartDate(rset.getString("group_startdate"));
+				g.setGroupEndDate(rset.getString("group_enddate"));
+				g.setGroupMax(rset.getInt("group_personnel"));
+				g.setMemberNo(rset.getInt("member_no"));
+				g.setMemberCnt(gn.get(i));
+				gl.add(g);
+				i++;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return gl;
 	}
 
 }

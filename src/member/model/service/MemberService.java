@@ -1,8 +1,10 @@
 package member.model.service;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import common.JDBCTemplate;
+import groupstudy.model.vo.GroupList;
 import member.model.dao.MemberDao;
 import member.model.vo.MailSend;
 import member.model.vo.Member;
@@ -38,6 +40,7 @@ public class MemberService {
 		return b;
 	}
 
+	
 	public Member selectOneMember(Member m) {
 		
 		Connection conn = JDBCTemplate.getConnection();
@@ -91,6 +94,28 @@ public class MemberService {
 		JDBCTemplate.close(conn);
 		
 		return result;
+	}
+
+	public Member selectOneMember(int memberNo) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		Member m = new MemberDao().selectOneMember(conn, memberNo);
+		
+		JDBCTemplate.close(conn);
+		
+		return m;
+	}
+
+	public ArrayList<GroupList> searchMyStudy(int memberNo) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		ArrayList<GroupList> gl = new MemberDao().searchMyStudy(conn,memberNo);
+		
+		JDBCTemplate.close(conn);
+		
+		return gl;
 	}
 
 }

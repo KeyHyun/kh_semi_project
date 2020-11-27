@@ -11,4 +11,83 @@ public class GroupStudyRoom {
 	private int groupManagerNo;
 	private String groupTitle;
 	private int categoryNo;
+	public int getGroupNo() {
+		return groupNo;
+	}
+	public void setGroupNo(int groupNo) {
+		this.groupNo = groupNo;
+	}
+	public String getGroupExplan() {
+		return groupExplan;
+	}
+	public void setGroupExplan(String groupExplan) {
+		this.groupExplan = groupExplan;
+	}
+	public String getGroupRule() {
+		return groupRule;
+	}
+	public void setGroupRule(String groupRule) {
+		this.groupRule = groupRule;
+	}
+	public int getGroupPersonnel() {
+		return groupPersonnel;
+	}
+	public void setGroupPersonnel(int groupPersonnel) {
+		this.groupPersonnel = groupPersonnel;
+	}
+	public String getGroupContent() {
+		return groupContent;
+	}
+	public void setGroupContent(String groupContent) {
+		this.groupContent = groupContent;
+	}
+	public String getGroupStartDate() {
+		return groupStartDate;
+	}
+	public void setGroupStartDate(String groupStartDate) {
+		this.groupStartDate = groupStartDate;
+	}
+	public String getGroupEndDate() {
+		return groupEndDate;
+	}
+	public void setGroupEndDate(String groupEndDate) {
+		this.groupEndDate = groupEndDate;
+	}
+	public int getGroupManagerNo() {
+		return groupManagerNo;
+	}
+	public void setGroupManagerNo(int groupManagerNo) {
+		this.groupManagerNo = groupManagerNo;
+	}
+	public String getGroupTitle() {
+		return groupTitle;
+	}
+	public void setGroupTitle(String groupTitle) {
+		this.groupTitle = groupTitle;
+	}
+	public int getCategoryNo() {
+		return categoryNo;
+	}
+	public void setCategoryNo(int categoryNo) {
+		this.categoryNo = categoryNo;
+	}
+	public GroupStudyRoom(int groupNo, String groupExplan, String groupRule, int groupPersonnel, String groupContent,
+			String groupStartDate, String groupEndDate, int groupManagerNo, String groupTitle, int categoryNo) {
+		super();
+		this.groupNo = groupNo;
+		this.groupExplan = groupExplan;
+		this.groupRule = groupRule;
+		this.groupPersonnel = groupPersonnel;
+		this.groupContent = groupContent;
+		this.groupStartDate = groupStartDate;
+		this.groupEndDate = groupEndDate;
+		this.groupManagerNo = groupManagerNo;
+		this.groupTitle = groupTitle;
+		this.categoryNo = categoryNo;
+	}
+	public GroupStudyRoom() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
 }
