@@ -43,7 +43,7 @@ public class CreateRoomCntCheckServlet extends HttpServlet {
 			if(roomCnt>=5) {//이미 최대방개수를 가지고있음
 				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 				request.setAttribute("msg", "스터디그룹은 최대 5개까지 생성가능합니다");
-				request.setAttribute("loc", "/index.jsp");//스터디 찾기 페이지 경로로 변경 필요
+				request.setAttribute("loc", "/views/groupStudy/groupStudyList.jsp");//스터디 찾기 페이지 경로로 변경 필요
 				rd.forward(request, response);
 			}else {//방생성가능
 				RequestDispatcher rd = request.getRequestDispatcher("/views/createGroupStudy.jsp");
@@ -53,7 +53,7 @@ public class CreateRoomCntCheckServlet extends HttpServlet {
 			if(roomCnt>=1) {//이미 최대방개수를 가지고있음
 				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 				request.setAttribute("msg", "현재 등급에서 스터디그룹은 최대 1개까지 생성가능합니다");
-				request.setAttribute("loc", "/index.jsp");//스터디 찾기 페이지 경로로 변경 필요
+				request.setAttribute("loc", "/views/groupStudy/groupStudyList.jsp");//스터디 찾기 페이지 경로로 변경 필요
 				rd.forward(request, response);
 			}else {//방생성가능
 				RequestDispatcher rd = request.getRequestDispatcher("/views/createGroupStudy.jsp");

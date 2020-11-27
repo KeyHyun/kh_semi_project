@@ -6,7 +6,10 @@
     %>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.js"></script>
-
+<link rel="stylesheet" href="/css/bootstrap.css">
+<link rel="stylesheet" href="/css/header/style.css">
+<link rel="stylesheet" href="/css/header/responsive.css">
+<script type="text/javascript" src="/js/bootstrap.js"></script>
 <style>
    .nav{
       width: 1200px;
@@ -108,10 +111,11 @@
 </style>
 
 <body>
+<<<<<<< HEAD
    <div class="nav">
       <div class="nav-wrap">
           <div class="nav-left">
-              <a href="index.jsp"><img src="img/navi_logo.png" width="140px" height="70px"></a>
+              <a href="index.jsp"><img src="/img/navi_logo.png" width="140px" height="70px"></a>
           </div>
           <div class="nav-center">
               <ul>
@@ -119,7 +123,13 @@
                       <a href="#">My Plan</a>
                       <ul class="nav-sub">
                           <li><a href="#">개인스터디</a></li>
-                          <li><a href="#">그룹스터디</a></li>
+                          <li>
+                          	<% if(m!=null){ %> <!-- logincheck하기 -->
+ 								<a href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>">그룹스터디</a><br>
+ 							<%}else{ %>
+ 								<a href="/myGroupStudyList?memberNo=0">그룹스터디</a><br>
+ 							<%} %>
+                          </li>
                       </ul>
                   </li>
                   <li>
@@ -140,17 +150,17 @@
           <div class="nav-right">
              <%if(m == null) {%>
               <div>
-                  <a href="#">로그인</a>
+                  <a href="/views/login.jsp">로그인</a>
                </div>
                <div>
-                   <a href="#"> 회원가입</a>
+                   <a href="/joinFrm"> 회원가입</a>
                </div>
               <%}else {%>
               <div>
-                 <img src="/img/login_logo1.png">
+                 <a href="/logout"><img src="/img/login_logo1.png"></a>
               </div>
               <div>
-                 <img src="/img/login_logo2.png">
+                 <a href="/myPage?memberNo=<%=m.getMemberNo()%>"><img src="/img/login_logo2.png"></a>
               </div>
               <%} %>
           </div>
@@ -163,5 +173,6 @@
            $(".nav-sub").slideToggle();
        });
        $(".nav-right>div>img").hover().css("cursor","pointer");
-   </script>
+   </script>   
+                  
 </body>

@@ -46,7 +46,7 @@ request.setCharacterEncoding("utf-8");
 			request.setAttribute("loc", "/groupStudyDetail?groupNo="+groupNo);
 		}else {
 			request.setAttribute("msg", "참여요청에 실패하였습니다");
-			request.setAttribute("loc", "/");
+			request.setAttribute("loc", "/groupStudyDetail?groupNo="+groupNo);
 		}
 		
 		rd.forward(request, response);

@@ -58,18 +58,18 @@ public class InsertGroupStudyRoomServlet extends HttpServlet {
 			if(result>0) {	//insert성공
 				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 				request.setAttribute("msg", "그룹스터디 생성을 완료했습니다");
-				request.setAttribute("loc", "/");//스터디찾기 메인으로
+				request.setAttribute("loc", "/views/groupStudy/groupStudyList.jsp");//스터디찾기 메인으로
 				rd.forward(request, response);
 			}else {			//insert실패
 				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 				request.setAttribute("msg", "그룹스터디 생성에 실패했습니다.[insert error]");
-				request.setAttribute("loc", "/");//스터디찾기 메인으로?
+				request.setAttribute("loc", "/views/groupStudy/groupStudyList.jsp");//스터디찾기 메인으로?
 				rd.forward(request, response);
 			}
 		}else {//categoryNo이 없을경우 에러
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 			request.setAttribute("msg", "그룹스터디 생성에 실패했습니다.[not found categoryNo]");
-			request.setAttribute("loc", "/");//스터디찾기 메인으로?
+			request.setAttribute("loc", "/views/groupStudy/groupStudyList.jsp");//스터디찾기 메인으로?
 			rd.forward(request, response);
 		}
 		

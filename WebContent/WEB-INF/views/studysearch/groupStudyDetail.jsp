@@ -296,7 +296,7 @@
         $("#btn").click(function(){
         	<%if(m==null){ %>
 				alert("로그인 후 이용가능한 페이지입니다");
-				location.href="/index.jsp";
+				location.href="/views/login.jsp";
 			<%}else{%>
           		$(".modal-wrap").css("display","flex");
           	<%}%>

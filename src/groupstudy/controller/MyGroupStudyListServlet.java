@@ -41,7 +41,7 @@ public class MyGroupStudyListServlet extends HttpServlet {
 		if(memberNo==0) {//로그인이 안되어있으면 0을 보내기 때문에 체크 후 화면 전환
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 			request.setAttribute("msg", "로그인 후 이용가능한 페이지 입니다");
-			request.setAttribute("loc", "/");//로그인화면으로 이동
+			request.setAttribute("loc", "/views/login.jsp");//로그인화면으로 이동
 			rd.forward(request, response);
 		}else {//else없이 해도 위에서 바로 나가지지않나..?
 			//참여중인 스터디 그룹번호들 가져오기
