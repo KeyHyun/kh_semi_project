@@ -106,7 +106,7 @@
     </style>
 <body>
 <div>
-	   <%@ include file="/WEB-INF/views/common/header.jsp" %>
+	   <%@inclue file="file="/WEB-INF/views/common/header.jsp" %>
 </div>
     <section>
         <div class="wrap">
