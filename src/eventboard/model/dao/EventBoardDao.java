@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import common.JDBCTemplate;
 import eventboard.model.vo.EventBoard;
-
+import noticeboard.model.vo.NoticeBoard;
 
 public class EventBoardDao {
 

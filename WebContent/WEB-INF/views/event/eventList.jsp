@@ -181,6 +181,7 @@
     .none{
     	opacity: 0%;
     }
+
 </style>
 
 <body>
