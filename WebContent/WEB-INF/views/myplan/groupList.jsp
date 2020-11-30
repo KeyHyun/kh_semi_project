@@ -6,7 +6,7 @@
     pageEncoding="UTF-8"%>
     
     <%
-    ArrayList<GroupStudyRoomAddCategory> gsrCateList = (ArrayList<GroupStudyRoomAddCategory>)request.getAttribute("gsrCateList");
+    	ArrayList<GroupStudyRoomAddCategory> gsrCateList = (ArrayList<GroupStudyRoomAddCategory>)request.getAttribute("gsrCateList");
     %>
     <%-- <% groupstudyroom %> --%>
 <!DOCTYPE html>

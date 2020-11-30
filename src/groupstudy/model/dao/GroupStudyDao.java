@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 
@@ -15,6 +16,7 @@ import groupstudy.model.vo.GroupApplyData;
 import groupstudy.model.vo.GroupList;
 import groupstudy.model.vo.GroupStudyRoom;
 import sun.security.action.GetIntegerAction;
+import groupstudy.model.vo.GroupStudyMember;
 
 public class GroupStudyDao {
 	
@@ -114,6 +116,8 @@ public class GroupStudyDao {
 				gsr.setGroupStartDate(rset.getString("group_startdate"));
 				gsr.setGroupEndDate(rset.getString("group_enddate"));
 				gsr.setCategoryNo(rset.getInt("category_no"));
+				gsr.setFilename(rset.getString("filename"));
+				gsr.setFilepath(rset.getString("filepath"));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -266,7 +270,7 @@ public class GroupStudyDao {
 	public int insertGroupStudyRoom(Connection conn, GroupStudyRoom gsr) {
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String query = "insert into GROUP_STUDYROOM values(GROUP_STUDYROOM_SEQ.NEXTVAL,?,?,?,?,?,?,?,?,?)";
+		String query = "insert into GROUP_STUDYROOM values(GROUP_STUDYROOM_SEQ.NEXTVAL,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, gsr.getGroupTitle());
@@ -278,6 +282,8 @@ public class GroupStudyDao {
 			pstmt.setString(7, gsr.getGroupStartDate());
 			pstmt.setString(8, gsr.getGroupEndDate());
 			pstmt.setInt(9, gsr.getCategoryNo());
+			pstmt.setString(10, gsr.getFilename());
+			pstmt.setString(11, gsr.getFilepath());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -293,7 +299,7 @@ public class GroupStudyDao {
 		PreparedStatement pstmt = null;
 		int lastGroupNo = 0;
 		ResultSet rset = null;
-		String query = "select group_no from (select rownum rnum, group_no from GROUP_STUDYROOM where group_manager_no=? order by group_no desc) where rnum=1";
+		String query = "select max(group_no) as group_no from group_studyroom where group_manager_no=?";
 		
 		try {
 			pstmt = conn.prepareStatement(query);
@@ -500,6 +506,187 @@ public class GroupStudyDao {
 		return result;
 		
 	}
+	//그룹스터디 삭제
+	public int deleteGroupStudy(Connection conn, int groupNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "delete from GROUP_STUDYROOM where GROUP_NO = ?";
+		try {
+		    pstmt = conn.prepareStatement(query);
+		    pstmt.setInt(1, groupNo);
+		    result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}finally {
+		    JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
 
+	public int deleteGroupStudyMember(Connection conn, int memberNo, int groupNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "delete from GROUP_STUDYMEMBER where MEMBER_NO = ? and GROUP_NO=?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, memberNo);
+			pstmt.setInt(2, groupNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+		    JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	//updateGroupStudyRoom 파일패스도 수정해야해서 다시작업필요
+	public int updateGroupStudyRoom(Connection conn, GroupStudyRoom gsr) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update GROUP_STUDYROOM set group_content=?, group_enddate=?, group_explan=?, group_personnel=?, group_rule=?, group_title=?, filename=?, filepath=? where group_no=? ";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, gsr.getGroupContent());
+			pstmt.setString(2, gsr.getGroupEndDate());
+			pstmt.setString(3, gsr.getGroupExplan());
+			pstmt.setInt(4, gsr.getGroupPersonnel());
+			pstmt.setString(5, gsr.getGroupRule());
+			pstmt.setString(6, gsr.getGroupTitle());
+			pstmt.setString(7, gsr.getFilename());
+			pstmt.setString(8, gsr.getFilepath());
+			pstmt.setInt(9, gsr.getGroupNo());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+		    JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	
+	//(진선)스터디 참여요청시 체크용(인원수 및 중복참여)
+	//groupStudymember전체 조회
+	public ArrayList<GroupStudyMember> selectGroupStudyMemberAll(Connection conn, int groupNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		ArrayList<GroupStudyMember> gsmList = new ArrayList<GroupStudyMember>();
+		String query = "select * from GROUP_STUDYMEMBER where group_no=?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, groupNo);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				GroupStudyMember gsm = new GroupStudyMember();
+				gsm.setGroupMemberNo(rset.getInt("group_member_no"));
+				gsm.setGroupNo(rset.getInt("group_no"));
+				gsm.setMemberNo(rset.getInt("member_no"));
+				gsmList.add(gsm);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+		    JDBCTemplate.close(pstmt);
+		    JDBCTemplate.close(rset);
+		}
+		return gsmList;
+	}
+	//관리자 페이지 - 각 그룹스터디 안에 몇 명있는지 계산
+		public HashMap<Integer, Integer> seleteAllGroupMemberCount(Connection conn) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			HashMap<Integer, Integer> memberCount = new HashMap<Integer, Integer>();
+			String query = "select GROUP_NO, count(*)+1 memberCount from GROUP_STUDYMEMBER group by GROUP_NO";
+			try {
+				pstmt = conn.prepareStatement(query);
+				rset = pstmt.executeQuery();
+				while(rset.next()) {
+					memberCount.put(rset.getInt("GROUP_NO"), rset.getInt("memberCount"));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				JDBCTemplate.close(rset);
+				JDBCTemplate.close(pstmt);
+			}
+			return memberCount;
+		}
+
+
+		//관리자 페이지 - 그룹스터디 총 수
+		public int totalCount2(Connection conn) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			int totalCount = 0;
+			String query = "select count(*) totalCount from GROUP_STUDYROOM";
+			try {
+				pstmt = conn.prepareStatement(query);
+				rset = pstmt.executeQuery();
+				if(rset.next()) {
+					totalCount = rset.getInt("totalCount");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				JDBCTemplate.close(pstmt);
+				JDBCTemplate.close(rset);
+			}
+			return totalCount;
+		}
+
+		//관리자 페이지 - 그룹스터디 페이징 
+		public ArrayList<GroupStudyRoom> selectList2(Connection conn, int start, int end) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			ArrayList<GroupStudyRoom> list = new ArrayList<GroupStudyRoom>();
+			String query = "select * from (select rownum as rnum, n.* from(select * from group_studyroom order by 1 desc) n) where rnum between ? and ?";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1,  start);
+				pstmt.setInt(2, end);
+				rset = pstmt.executeQuery();
+				while(rset.next()) {
+					GroupStudyRoom gsr = new GroupStudyRoom();
+					gsr.setGroupNo(rset.getInt("group_no"));
+					gsr.setGroupManagerNo(rset.getInt("GROUP_MANAGER_NO"));
+					gsr.setGroupTitle(rset.getString("GROUP_TITle"));
+					gsr.setGroupStartDate(rset.getString("GROUP_STARTDATE"));
+					gsr.setGroupEndDate(rset.getString("GROUP_ENDDATE"));
+					gsr.setGroupPersonnel(rset.getInt("GROUP_PERSONNEL"));
+					list.add(gsr);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				JDBCTemplate.close(rset);
+				JDBCTemplate.close(pstmt);
+			}
+			return list;
+		}
+
+		//관리자페이지 - 그룹스터디 삭제 할 때 그룹스터디 이미지 한번에 받기위함
+		public String deleteFilepath(Connection conn, int groupNo) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String filepath = "";
+			String query = "select filepath from group_studyroom where group_no = ?";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, groupNo);
+				rset = pstmt.executeQuery();
+				if(rset.next()) {
+					filepath = rset.getString("filepath");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				JDBCTemplate.close(rset);
+				JDBCTemplate.close(pstmt);
+			}
+			return filepath;
+		}
 
 }

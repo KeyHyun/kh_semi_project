@@ -103,7 +103,6 @@
     /* ---------------------------------------------------------- */
     .gl{
     	overflow: hidden;
-    	padding-top: 50px;
     	padding-left: 100px;
     }
     .gl1-1{
@@ -129,7 +128,7 @@
     
     .gl1-1:first-child{ /* 제목이랑 사진들어갈곳 크기지정함 */
     	margin-right: 30px;
-    	width: 250px;
+    	width: 200px;
     }
     .gl1-2:first-child {
 		width: 25%;
@@ -142,9 +141,13 @@
 		width: 35%;
 		text-align: center;
 	}
-	 /* 우리스터디규칙부터---------------------------------------------------------- */
-	.glTitle{
-		background-color: 
+	 /* 목록/수정/삭제/스터디나기기버튼---------------------------------------------------------- */
+	.btnDiv{
+		text-align: right;
+		height: 50px;
+	}
+	.btn{
+		margin: 5px;
 	}
 }
     
@@ -166,10 +169,25 @@
                     </ul>
                 </div>
                 <div class="participatingGroup">
-                    <div class="groupListTitle"><%=gsr.getGroupTitle() %></div>
+                    <div class="groupListTitle" style="font-weight: bold">[ <%=gsr.getGroupTitle() %> ]</div>
                     <div class="groupList">
-                    	<div class="gl">
-                    		<div class="gl1-1">사진이랑 제목들어갈자리~~~</div>
+                    	<div class="btnDiv">
+                    		<a href="javascript:history.go(-1)" class="btn btn-success btn-sm">목록으로</a>
+                    		<%if(gsr.getGroupManagerNo()==m.getMemberNo()){//방장인 경우 %>
+	                    		<a href="/updateGroupStudyRoomFrm?groupNo=<%=gsr.getGroupNo() %>&category1=<%=category1 %>&category2=<%=category2 %>" class="btn btn-success btn-sm">수정</a>
+    	                		<a href="" class="btn btn-success btn-sm" id="studyDelete">삭제</a><!-- script로처리 -->
+                    		<%}else{ //단순한 참여자인경우%>
+                    			<a href="" class="btn btn-success btn-sm" id="studyExit">스터디 나가기</a><!-- script로처리 -->
+                    		<%} %>
+                    	</div>
+                    	<div class="gl"><!-- 메인이미지넣는곳 -->
+                    		<div class="gl1-1">
+                    			<%if(gsr.getFilepath()==null){ %>
+                    				<img src='/img/basic.png'>
+                    			<%}else{ %>
+                    				<img src='/upload/groupImg/<%=gsr.getFilepath() %>'>
+                    			<%} %>
+                    		</div>
                     		<div class="gl1-1">
                     			<div class="dDayDiv">
                     				<div class="gl1-2">
@@ -187,7 +205,7 @@
                     			</div>
                     			<div>
                     				<p>스터디 상세내용</p>
-                    				<textarea rows="5" cols="90" style="resize: none; outline: none;" readonly="readonly"><%=gsr.getGroupContentBr() %></textarea>
+                    				<p class="gcContent" style="border: 1px solid gray; padding-left: 10px;"><%=gsr.getGroupContentBr() %></p>
                     			</div>
                     		</div>
                     	</div>
@@ -246,7 +264,26 @@
 	    	    $(".greenSquare").html("D-"+dday);
     		    $("#dDayStatus").html("진행중");
     	    }
+    	    
+    	    //스터디 삭제하기 confirm
+    	    $("#studyDelete").click(function(){
+    	    	if(!confirm("[<%=gsr.getGroupTitle()%>] 스터디를 삭제하시겠습니까?")){
+    	    		$("#studyDelete").attr("href","javascript:void(0);");
+    	    	}else{
+    	    		$("#studyDelete").attr("href","/deleteGroupStudyRoom?groupNo=<%=gsr.getGroupNo() %>&memberNo=<%=m.getMemberNo() %>");
+    	    	}
+    	    });
+    	    //스터디 나가기 confirm
+    	    $("#studyExit").click(function(){
+    	    	if(!confirm("[<%=gsr.getGroupTitle()%>] 스터디를 나가시겠습니까?")){
+    	    		$("#studyExit").attr("href","javascript:void(0);");
+    	    	}else{
+    	    		$("#studyExit").attr("href","/deleteGroupStudyMember?memberNo=<%=m.getMemberNo()%>&groupNo=<%=gsr.getGroupNo() %>&groupTitle=<%=gsr.getGroupTitle()%>");
+    	    	}
+    	    });
     	});
+    	
+    	
     </script>
 </body>
 </html>

@@ -9,6 +9,13 @@ public class EventBoard {
 	private String filename;
 	private String filepath;
 	private String eventLink;
+	private int rnum;
+	public int getRnum() {
+		return rnum;
+	}
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
 	public EventBoard() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -40,6 +40,7 @@ public class MyPlanGroupDetailServlet extends HttpServlet {
 		
 		//groupList.jsp에서 선택한 그룹스터디의 상세페이지를 보여주기위한 정보
 		GroupStudyRoom gsr = new GroupStudyService().selectGroupStudyOne(groupNo);
+		System.out.println(gsr.getFilepath());
 		//인원수 가져오기
 		int memberCnt = new GroupStudyService().selectMemberNo(groupNo);
 		

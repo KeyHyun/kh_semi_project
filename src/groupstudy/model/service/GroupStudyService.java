@@ -2,76 +2,19 @@ package groupstudy.model.service;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import common.JDBCTemplate;
 import groupstudy.model.dao.GroupStudyDao;
 import groupstudy.model.vo.Category;
+import groupstudy.model.vo.GroupManagePage;
+import groupstudy.model.vo.GroupStudyMember;
 import groupstudy.model.vo.GroupStudyPageData;
 import groupstudy.model.vo.GroupStudyRoom;
 import groupstudy.model.vo.GroupStudyRoomAddCategory;
 
 public class GroupStudyService {
-
-//	public GroupStudyPageData selectList(int reqPage) {
-//		Connection conn = JDBCTemplate.getConnection();
-//		GroupStudyDao dao = new GroupStudyDao();	//총 게시물 수를 구하는 DAO
-//		int totalCount = dao.totalCount(conn);		//한 페이지당 게시물 수
-//		int numPerPage = 12;					//한 페이지당 게시물 수
-//		int totalPage = 0;						//전체 페이지 수
-//		if(totalCount%numPerPage ==0) {			//나머지가 0인경우
-//			totalPage = totalCount/numPerPage;
-//		}else {
-//			totalPage = totalCount/numPerPage+1;
-//		}
-//		System.out.println("totalcount : "+totalCount);
-//		//reqPage=1 -> start : 1, end = 10
-//		//reqPage=2 -> start : 11, end = 20
-//		//reqPage=3 -> start : 21, end = 30
-//		int start = (reqPage-1)*numPerPage+1; //해당 페이지 게시물의 시작번호
-//		int end = reqPage*numPerPage;
-//		System.out.println("시작번호 : "+start+" / 끝번호 : "+end);
-//		ArrayList<GroupStudyRoom> list = dao.selectList(conn,start,end);
-//		//페이지 네비게이션 작성
-//		int pageNaviSize = 5;					//페이지 네비게이션 길이 지정
-//		String pageNavi = "";					//페이지 네비 태그 작성용
-//		//페이지 시작번호 구하기 
-//		int pageNo = reqPage-2;
-//		if (reqPage <= 3) {
-//			pageNo = 1;
-//		} else if (pageNo > totalPage - 4) {
-//			pageNo = totalPage - 4;
-//		}
-//
-//		// 7. 이전버튼
-//		if (reqPage > 3) {
-//			pageNavi += "<li class='page-item'><a class='page-link' href='/groupStudyList?reqPage=" + (pageNo - 1)
-//					+ "'><<</a></li>";
-//		}
-//		//페이지 네비 숫자
-//		for (int i = 0; i < pageNaviSize; i++) {
-//			if (reqPage == pageNo) {
-//				pageNavi += "<li class='page-item'><a class='page-link' href='#' style='background-color:#6ED078'>"
-//						+ pageNo + "</a></li>";
-//			} else {
-//				pageNavi += "<li class='page-item'><a class='page-link' href='/groupStudyList?reqPage=" + (pageNo)
-//						+ "'>" + pageNo + "</a></li>";
-//			}
-//			pageNo++;
-//
-//			if (pageNo > totalPage) {
-//				break;
-//			}
-//		}
-//		//다음 버튼
-//		if(reqPage != totalPage) {
-//			pageNavi += "<a class'btn' href='/groupStudyList?reqPage="+(reqPage+1)+"'>다음</a>";
-//		}
-//		GroupStudyPageData gspd = new GroupStudyPageData(list, pageNavi);
-//		System.out.println(gspd.getPageNavi());
-//		
-//		JDBCTemplate.close(conn);
-//		return gspd;
-//	}
 	
 	public GroupStudyPageData selectList(int reqPage) {
 		Connection conn = JDBCTemplate.getConnection();
@@ -210,10 +153,11 @@ public class GroupStudyService {
 	public int insertGroupStudyRoom(GroupStudyRoom gsr) {
 		Connection conn = JDBCTemplate.getConnection();
 		int result = new GroupStudyDao().insertGroupStudyRoom(conn,gsr);
+		int result2 = 0;
 		if(result>0) {
 			//groupStudyMember 테이블에도 방장을 insert함(groupMangerNo을 가지고 제일 최근에 만들어진 groupNo으로 insert)
 			int lastGroupNo = new GroupStudyDao().selectManagerGroupNo(conn, gsr.getGroupManagerNo());//최근 groupNo구하기
-			int result2 = new GroupStudyDao().insertGroupStudyMember(conn, gsr.getGroupManagerNo(), lastGroupNo);//방장도 groupStudyMember에 저장
+			result2 = new GroupStudyDao().insertGroupStudyMember(conn, gsr.getGroupManagerNo(), lastGroupNo);//방장도 groupStudyMember에 저장
 			if(result2>0) {
 				JDBCTemplate.commit(conn);
 			}else {
@@ -223,9 +167,54 @@ public class GroupStudyService {
 			JDBCTemplate.rollback(conn);
 		}
 		JDBCTemplate.close(conn);
-		return result;
+		return result2;
 	}
-
+	//(진선)스터디룸삭제
+		public int deleteGroupStudyRoom(int groupNo) {
+			Connection conn = JDBCTemplate.getConnection();
+			int result = new GroupStudyDao().deleteGroupStudy(conn, groupNo);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+			return result;
+		}
+		
+		//(진선)그룹스터디멤버 삭제
+		public int deleteGroupStudyMember(int memberNo, int groupNo) {
+			Connection conn = JDBCTemplate.getConnection();
+			int result = new GroupStudyDao().deleteGroupStudyMember(conn, memberNo, groupNo);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+			return result;
+		}
+		
+		//(진선)그룹스터디 수정
+		public int updateGroupStudyRoom(GroupStudyRoom gsr) {
+			Connection conn = JDBCTemplate.getConnection();
+			int result = new GroupStudyDao().updateGroupStudyRoom(conn, gsr);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+			return result;
+		}
+		//(진선)스터디 참여요청시 체크용(인원수 및 중복참여)
+		public ArrayList<GroupStudyMember> selectGroupStudyMemberAll(int groupNo) {
+			Connection conn = JDBCTemplate.getConnection();
+			ArrayList<GroupStudyMember> gsmList = new GroupStudyDao().selectGroupStudyMemberAll(conn, groupNo);
+			JDBCTemplate.close(conn);
+			return gsmList;
+		}
+		
 	public int getMemberCnt(int groupNo) {
 		
 		Connection conn = JDBCTemplate.getConnection();
@@ -261,4 +250,113 @@ public class GroupStudyService {
 		}
 		return result;
 	}
+	
+	//관리자 페이지 - 그룹스터디 no으로 참여중인 멤버 수 찾기
+		public HashMap<Integer, Integer> seleteAllGroupMemberCount() {
+			Connection conn = JDBCTemplate.getConnection();
+			HashMap<Integer, Integer> memberCount = new GroupStudyDao().seleteAllGroupMemberCount(conn);
+			JDBCTemplate.close(conn);
+			return memberCount;
+		}
+
+		//관리자 페이지 - 그룹스터디 삭제(이미지 있는 경우 이미지 경로만 받아온다)
+		public ArrayList<String> deleteAllMember(String num) {
+			Connection conn = JDBCTemplate.getConnection();
+			System.out.println(num);
+			StringTokenizer sT1 = new StringTokenizer(num, "/");
+			ArrayList<String> imgList = new ArrayList<String>();
+			boolean result = true;
+			while(sT1.hasMoreTokens()) {
+				int groupNo = Integer.parseInt(sT1.nextToken());
+				String filePath = new GroupStudyDao().deleteFilepath(conn, groupNo);
+				if(filePath != null) {
+					imgList.add(filePath);
+				}
+				int result1 = new GroupStudyDao().deleteGroupStudy(conn, groupNo);
+				if(result1==0) {
+					result = false;
+					break;
+				}
+				if(result) {
+					JDBCTemplate.commit(conn);
+				}else {
+					JDBCTemplate.rollback(conn);
+				}
+				JDBCTemplate.close(conn);
+			}
+			if(result) {
+				return imgList;
+			}
+			return null;
+		}
+
+		//관리자페이지 - 그룹스터디 페이징 조회
+		public GroupManagePage seleteList(int reqPage) {
+			Connection conn = JDBCTemplate.getConnection();
+			
+			//1. 전체 글 수 검색
+			int totalCount = new GroupStudyDao().totalCount2(conn);
+
+			//2. 총 페이지 수
+			int numPerPage = 10;
+			int totalPage = 0;
+			if(totalCount/numPerPage == 0) {
+				totalPage = totalCount/numPerPage;
+			}else {
+				totalPage = totalCount/numPerPage + 1;
+			}
+			
+			//3. 게시글 시작번호와 끝번호
+			int start = (reqPage-1)*numPerPage + 1;
+			int end = reqPage*numPerPage;
+			
+			//4. 페이지 범위에 있는 게시글 리스트를 불러옴 + 그룹스터디 각 인원수도 계산
+			ArrayList<GroupStudyRoom> list = new GroupStudyDao().selectList2(conn, start, end);
+			HashMap<Integer, Integer> memberCount = new GroupStudyDao().seleteAllGroupMemberCount(conn);
+			
+			//5. 페이지 네비게이션 생성
+			int pageNaviSize = 5;
+			String pageNavi = "";
+			
+			//6. 페이지 번호
+			int pageNo = reqPage-2;
+			if(reqPage <= 3) {
+				pageNo = 1;
+			}else if(pageNo > totalPage-4) {
+				pageNo = totalPage-4;
+			}
+			
+			//7. 이전버튼
+			if(reqPage > 3) {
+				pageNavi += "<li class='page-item'><a class='page-link' href='/groupStudyListManager?reqPage="+(pageNo-1)+"'><<</a></li>";
+			}
+			
+			//8. 네비게이션 숫자
+			for(int i=0; i<pageNaviSize; i++) {
+				if(reqPage==pageNo) {
+					pageNavi += "<li class='page-item'><a class='page-link' href='#' style='background-color:#6ED078'>"+pageNo+"</a></li>";
+					pageNavi += "<li class='reqPage' style='display:none'>"+reqPage+"</li>";
+				}else {
+					pageNavi += "<li class='page-item'><a class='page-link' href='/groupStudyListManager?reqPage="+(pageNo)+"'>"+pageNo+"</a></li>";
+				}
+				pageNo++;
+				
+				if(pageNo > totalPage) {
+					break;
+				}
+			}
+			
+			//9. 다음버튼
+			System.out.println(pageNo +": pageNo");
+			System.out.println(reqPage +": reqPage");
+			System.out.println(totalPage + ": totalPage");
+			if(reqPage <= totalPage-3) {
+				pageNavi += "<li class='page-item'><a class='page-link' href='/groupStudyListManager?reqPage="+pageNo+"'>>></a></li>";
+			}
+
+			//10. 리스트+태그텍스트+멤버 카운트를 객체에 넣어줌
+			GroupManagePage gmp = new GroupManagePage(list, pageNavi, memberCount);
+			JDBCTemplate.close(conn);
+			return gmp;
+		}
 }

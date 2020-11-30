@@ -1,6 +1,7 @@
 package groupstudy.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,16 +44,17 @@ public class GroupStudyDetailServlet extends HttpServlet {
 			request.setAttribute("loc", "/");
 			rd.forward(request, response);
 		}else {//gsr을 가져오는데 성공했을 경우
-			int memberCnt = new GroupStudyService().selectMemberNo(groupNo);
+			ArrayList<GroupStudyMember> gsmList = new GroupStudyService().selectGroupStudyMemberAll(groupNo);
+			//int memberCnt = new GroupStudyService().selectMemberNo(groupNo);//첨여인원가져오기(참여요청시 체크과 인원수를 위한값)
 			Category category = new GroupStudyService().selectCategory(gsr.getCategoryNo());//상단쯤에 카테고리도 써줘야함
 			//스터디상세보기 페이지로 이동
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/studysearch/groupStudyDetail.jsp");
-			request.setAttribute("memberCnt", memberCnt);
+			//request.setAttribute("memberCnt", memberCnt);
+			request.setAttribute("gsmList", gsmList);
 			request.setAttribute("gsr", gsr);
 			request.setAttribute("category", category);
 			rd.forward(request, response);
 		}
-		
 	}
 
 	/**

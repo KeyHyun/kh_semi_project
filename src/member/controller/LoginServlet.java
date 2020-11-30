@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import member.model.service.MemberService;
 import member.model.vo.Member;
+import member.model.vo.MemberManagePage;
 
 /**
  * Servlet implementation class LoginServlet
@@ -49,6 +50,13 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("msg", "아이디 혹은 비밀번호를 확인해주세요.");
 			request.setAttribute("id", loginId);
 			rdd.forward(request, response);
+		}
+		else if(loginMember.getMemberName().equals("관리자")) {
+			MemberManagePage mmp = new MemberService().selectList(1);
+			RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/managerPage/memberList.jsp");
+			request.setAttribute("list", mmp.getList());
+			request.setAttribute("pageNavi", mmp.getPageNavi());
+			rd.forward(request, response);
 		}
 		else {
 			HttpSession session = request.getSession();
