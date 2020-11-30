@@ -151,7 +151,7 @@
                         <li><a class="leftMenuA" href="/groupStudyListManager?reqPage=1">그룹스터디 관리</a></li>
                         <li><a class="leftMenuA" href="/noticeManagerList?reqPage=1" style="background-color: #6ED078;">공지사항 관리</a></li>
                         <li><a class="leftMenuA" href="#">고객문의 관리</a></li>
-                        <li><a class="leftMenuA" href="#">이벤트 관리</a></li>
+                        <li><a class="leftMenuA" href="/eventManagerList?reqPage=1">이벤트 관리</a></li>
                     </ul>
                 </div>
                 <div class="participatingGroup">

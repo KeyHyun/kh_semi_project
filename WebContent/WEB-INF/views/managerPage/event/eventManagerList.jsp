@@ -1,9 +1,10 @@
-<%@page import="member.model.vo.Member"%>
+<%@page import="eventboard.model.vo.EventBoard"%>
+<%@page import="noticeboard.model.vo.NoticeBoard"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-    	ArrayList<Member> list = (ArrayList<Member>)request.getAttribute("list");
+    	ArrayList<EventBoard> list = (ArrayList<EventBoard>)request.getAttribute("list");
 		String pageNavi = (String)request.getAttribute("pageNavi");
     %>
 <!DOCTYPE html>
@@ -11,7 +12,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>관리자|사용자 관리</title>
+    <title>관리자|공지사항 관리</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 
@@ -147,60 +148,38 @@
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>관리자</li>
-                        <li><a class="leftMenuA" href="/memberList?reqPage=1" style="background-color: #6ED078;">사용자 관리</a></li>
+                        <li><a class="leftMenuA" href="/memberList?reqPage=1" >사용자 관리</a></li>
                         <li><a class="leftMenuA" href="/groupStudyListManager?reqPage=1">그룹스터디 관리</a></li>
-                        <li><a class="leftMenuA" href="/noticeManagerList?reqPage=1">공지사항 관리</a></li>
+                        <li><a class="leftMenuA" href="/noticeManagerList?reqPage=1" >공지사항 관리</a></li>
                         <li><a class="leftMenuA" href="#">고객문의 관리</a></li>
-                        <li><a class="leftMenuA" href="/eventManagerList?reqPage=1">이벤트 관리</a></li>
+                        <li><a class="leftMenuA" href="/eventManagerList?reqPage=1" style="background-color: #6ED078;">이벤트 관리</a></li>
                     </ul>
                 </div>
                 <div class="participatingGroup">
-                    <div class="groupListTitle">사용자 관리</div>
+                    <div class="groupListTitle">이벤트 관리</div>
                     <div class="groupList">
                         <section>
-                            <table class="table" style="width:95%;  margin:0 auto; text-align:center; "">
+                       		<div style="text-align:right; margin-bottom:5px;">
+								<a href="/eventWriteFrm" class="btn btn-primary btn-sm">글쓰기</a>
+							</div>
+                            <table class="table" style="width:95%;  margin:0 auto; text-align:center;">
                                 <tr>
                                     <th>선택</th>
-                                    <th>회원번호</th>
-                                    <th>아이디</th>
-                                    <th>이름</th>
-                                    <th>닉네임</th>
-                                    <th>이메일</th>
-                                    <th>등급</th>
-                                    <th></th>
-
+                                    <th>순서</th>
+                                    <th>이벤트명</th>
+                                    <th>등록일</th>
+									<th>마감일</th>
                                 </tr>
-                                <%for(Member member : list){ %>
-								<%if(member.getMemberGrade() != 0){ %>
+                                <%for(EventBoard e : list){ %>
                                 <tr>
                                     <td><input type="checkbox" class="chk"></td>
-                                    <td><%=member.getMemberNo() %></td>
-                                    <td><%=member.getMemberId() %></td>
-                                    <td><%=member.getMemberName() %></td>
-                                    <td><%=member.getMemberNickname() %></td>
-                                    <td><%=member.getMemberEmail() %></td>
-                                    <td>
-                                        <select>
-                                            <%if(member.getMemberGrade()==0){ %>
-                                            <option value="0" selected>관리자</option>
-                                            <option value="1">정회원</option>
-                                            <option value="2">준회원</option>
-                                            <%}else if(member.getMemberGrade()==1){ %>
-                                            <option value="0">관리자</option>
-                                            <option value="1" selected>정회원</option>
-                                            <option value="2">준회원</option>
-                                            <%}else{ %>
-                                            <option value="0">관리자</option>
-                                            <option value="1">정회원</option>
-                                            <option value="2" selected>준회원</option>
-                                            <% } %>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-outline-info btn-sm changeBtn">변경</button>
-                                    </td>
+                                   <td style="display:none;"><%=e.getEventNo() %></td>
+                                   <td><%=e.getRnum()%></td>
+                                    <td><a href="/eventManagerView?eventNo=<%=e.getEventNo() %>&manager=yes"><%=e.getEventTitle() %></a></td>
+                                    <td><%=e.getEventEnrollDate() %></td>
+                                    <td class = "endDate" value="<%=e.getEventEndDate() %>"><%=e.getEventEndDate() %></td>
                                 </tr>
-                                <%} } %>
+                                <%} %>
                                 <tr>
                                     <th colspan="9">
                                         <button class="btn btn-info btn-md deleteAllBtn">삭제하기</button>
@@ -217,12 +196,6 @@
 
 
                         <script>
-                            $(".changeBtn").click(function() {
-                                var memberLevel = $(this).parent().prev().children().val();
-                                var memberNo = $(this).parent().parent().children().first().next().html();
-                                var reqPage = $(".reqPage").html();
-                                location.href = "/changeLevel?memberNo=" + memberNo + "&memberLevel=" + memberLevel + "&reqPage="+reqPage; //파라미터를 연결하려면 &을 쓴다.
-                            });
                             $(".deleteAllBtn").click(function() {
                                 var inputs = $("[type=checkbox]:checked");
                                 var num = new Array();
@@ -230,12 +203,40 @@
                                     num.push($(item).parent().next().html());
                                 });
                                 if(num.length==0){
-                                	alert('삭제할 유저를 선택해주세요.');
+                                	alert('삭제할 이벤트를 선택해주세요.');
                                 }else{
-                                	location.href = "/deleteAllUser?num=" + num.join("/");
+                                	location.href = "/deleteAllEvent?num=" + num.join("/");
                                 }
-                                
                             });
+                            
+                            $(document).ready(function(){
+                        		//d-day
+                        		var endDates = $(".endDate");
+                        		endDates.each(function(idx, item){
+                        			var date = $(item).html();
+                        			var dday = dayCal(date);
+                            	    if(dday<0){//종료일지가 지난경우
+                            	    	$(item).html("종료");
+                            	    }else if(dday==0){//D-DAY인경우
+                            	    	$(item).html("D-"+dday);
+                            	    }else{
+                            	    	$(item).html("D-"+dday);
+                            	    }
+                        		});
+                        	    
+                        	});
+                        	
+                        	function dayCal(date){
+                        		var now = new Date();
+                        		var groupEndDate = date;
+                        		console.log(groupEndDate);
+                        	    var endArray = groupEndDate.split('-');
+                        	    var endDate = new Date(endArray[0], endArray[1]-1, endArray[2]);//달은 -1해줘야함
+                        	    var dday = endDate.getTime() - now.getTime();
+                        	    dday = Math.floor(dday / (1000 * 60 * 60 * 24))+1;
+                        	    return dday;
+
+                        	}
                         </script>
 
                     </div>

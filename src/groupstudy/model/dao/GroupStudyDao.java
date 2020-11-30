@@ -417,4 +417,27 @@ public class GroupStudyDao {
 		}
 		return list;
 	}
+
+	//관리자페이지 - 그룹스터디 삭제 할 때 그룹스터디 이미지 한번에 받기위함
+	public String deleteFilepath(Connection conn, int groupNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String filepath = "";
+		String query = "select filepath from group_studyroom where group_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, groupNo);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				filepath = rset.getString("filepath");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return filepath;
+	}
 }

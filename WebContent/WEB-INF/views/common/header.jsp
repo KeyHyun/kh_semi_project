@@ -106,13 +106,18 @@
           <div class="nav-center">
               <ul>
                   <li>
-                      <a href="#">My Plan</a>
+                  <% if(m!=null){ %> <!-- logincheck하기 -->
+                      <a href="myStudyCalender?memberNo=<%=m.getMemberNo()%>">My Plan</a>
                       <ul class="nav-sub">
                           <li><a href="#">개인스터디</a></li>
                           <li>
-                          	<% if(m!=null){ %> <!-- logincheck하기 -->
+                          	
  								<a href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>">그룹스터디</a><br>
  							<%}else{ %>
+							 <a href="myStudyCalender?memberNo=0">My Plan</a>
+		                     <ul class="nav-sub">
+		                         <li><a href="#">개인스터디</a></li>
+		                         <li>
  								<a href="/myGroupStudyList?memberNo=0">그룹스터디</a><br>
  							<%} %>
                           </li>
@@ -122,11 +127,19 @@
                       <a href="/groupStudyList?reqPage=1">스터디 찾기</a>
                   </li>
                   <li>
-                      <a href="#">이벤트</a>
+                  <% if(m!=null){ %> 
+                      <a href="/eventList?memberNo=<%=m.getMemberNo()%>&reqPage=1">이벤트</a>
                       <ul class="nav-sub">
-                          <li><a href="#">이달의 이벤트</a></li>
+                          <li><a href="/eventList?memberNo=<%=m.getMemberNo()%>&reqPage=1">이달의 이벤트</a></li>
                           <li><a href="#">이벤트 당첨자 조회</a></li>
                       </ul>
+                      <%} else{ %>
+                      <a href="/eventList?memberNo=0&reqPage=1">이벤트</a>
+                      <ul class="nav-sub">
+                          <li><a href="/eventList?memberNo=0&reqPage=1">이달의 이벤트</a></li>
+                          <li><a href="#">이벤트 당첨자 조회</a></li>
+                      </ul>
+                      <%} %>
                   </li>
                   <li>
                       <a href="/noticeList?reqPage=1">고객센터</a>

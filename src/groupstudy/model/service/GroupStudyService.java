@@ -237,14 +237,19 @@ public class GroupStudyService {
 		return memberCount;
 	}
 
-	//관리자 페이지 - 그룹스터디 샂게
-	public boolean deleteAllMember(String num) {
+	//관리자 페이지 - 그룹스터디 삭제(이미지 있는 경우 이미지 경로만 받아온다)
+	public ArrayList<String> deleteAllMember(String num) {
 		Connection conn = JDBCTemplate.getConnection();
 		System.out.println(num);
 		StringTokenizer sT1 = new StringTokenizer(num, "/");
+		ArrayList<String> imgList = new ArrayList<String>();
 		boolean result = true;
 		while(sT1.hasMoreTokens()) {
 			int groupNo = Integer.parseInt(sT1.nextToken());
+			String filePath = new GroupStudyDao().deleteFilepath(conn, groupNo);
+			if(filePath != null) {
+				imgList.add(filePath);
+			}
 			int result1 = new GroupStudyDao().deleteGroupStudy(conn, groupNo);
 			if(result1==0) {
 				result = false;
@@ -257,7 +262,10 @@ public class GroupStudyService {
 			}
 			JDBCTemplate.close(conn);
 		}
-		return result;
+		if(result) {
+			return imgList;
+		}
+		return null;
 	}
 
 	//관리자페이지 - 그룹스터디 페이징 조회
