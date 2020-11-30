@@ -226,5 +226,92 @@ public class MemberDao {
 		return gl;
 	}
 
+	public int updateMember(Connection conn, Member updateMember) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update member set member_pw = ?, member_nickname = ?, filename = ?, filepath = ? where member_id = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, updateMember.getMemberPw());
+			pstmt.setString(2, updateMember.getMemberNickname());
+			pstmt.setString(3, updateMember.getFilename());
+			pstmt.setString(4, updateMember.getFilepath());
+			pstmt.setString(5, updateMember.getMemberId());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int deleteMember(Connection conn, int memberNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "delete from member where member_no = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, memberNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int selectOneMember(Connection conn, int groupNum, int alNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select g1.member_no send_member_no from alarm a1 join group_apply g1 using(group_no) where g1.member_no = a1.send_Member_No and group_no = ? and alarm_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, groupNum);
+			pstmt.setInt(2, alNo);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("send_member_no");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public Member searchSendMember(Connection conn, int sendMemberNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		Member m = new Member();
+		String query = "select member_name, FILEPATH from member where member_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, sendMemberNo);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				m.setFilepath(rset.getString("filepath"));
+				m.setMemberName(rset.getString("member_name"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return m;
+	}
+
+
 }
 

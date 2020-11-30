@@ -225,4 +225,40 @@ public class GroupStudyService {
 		JDBCTemplate.close(conn);
 		return result;
 	}
+
+	public int getMemberCnt(int groupNo) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		int memberCnt = new GroupStudyDao().getMemberCnt(conn,groupNo);
+		
+		JDBCTemplate.close(conn);
+		
+		return memberCnt;
+	}
+
+	public int updateAndInsert(int groupNo, int memberNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		
+		GroupStudyDao dao = new GroupStudyDao();
+		
+		int applyNo = dao.getApplyNo(conn,groupNo,memberNo);
+		
+		int result = dao.updateApplyStatus(conn,applyNo);
+		
+		if(result>0) {
+			int result2 = dao.insertGroupStudyMember(conn, memberNo, groupNo);
+			if(result2>0) {
+				JDBCTemplate.commit(conn);
+			}
+			else {
+				JDBCTemplate.rollback(conn);
+				result = 0;
+			}
+		}
+		else {
+			JDBCTemplate.rollback(conn);
+		}
+		return result;
+	}
 }

@@ -41,7 +41,7 @@
         overflow: hidden;
     }
     .nav-right>div {
-        width: calc(100%/2);
+        width: calc(100%/3);
         float: left;
         text-align: center;
         line-height: 100px;
@@ -95,9 +95,72 @@
     .nav-center>ul>li:hover>a {
         cursor: pointer;
     }
+    .alarmNote{
+    	border :1px solid black;
+    	width : 300px;
+    	height:500px;
+    	position:absolute;
+    	right : 40px;
+    	top : 50px;
+    	display:none;
+    	background-color: rgba(63,63,63,0.3);
+    	border-radius: 10px;
+    }
+    .alarmNote>ul{
+    padding : 0px;
+    margin : 10px auto;
+    width : 90%;
+    height : 90%;
+    margin-top : 20px;
+    }
+
+    .alarmNote>ul>li{
+    	display:flex;
+    	width : 100%;
+    	height : calc(100%/5);
+    	border-bottom : 1px solid black;
+    	font-size : 12px;
+    }
+    .alarmNote>ul>li>div>a{
+    	font-size : 10px;
+    }
+    .alarmNote>ul>li>div:first-child{
+    	width:20%;
+    	border-radius: 10px;
+    	height:100%;
+    }
+    .alarmNote>ul>li>div>img{
+    	width:100%;
+    	height:50%;
+    	border-radius: 70%;
+    	margin-top: 20px;
+
+    }
+     .alarmNote>ul>li>div:nth-child(2){
+    	width:60%;
+    	border-radius: 10px;
+    	margin: auto;
+    	color:white;
+    	font-weight: bold;
+    }
+     .alarmNote>ul>li>div:nth-child(3){
+    	width:10%;
+    	height:15%;
+    }
+    .alarmNote>ul>li>div:nth-child(3)>img{
+    	width:70%;
+    	height:100%;
+    	margin:0px;
+    	object-fit : contain;
+    	
+    }
 </style>
 
 <body>
+	<div class="alarmNote">
+		<ul id="alarmHTML">
+		</ul>
+	</div>
    <div class="nav">
       <div class="nav-wrap">
           <div class="nav-left">
@@ -143,22 +206,56 @@
                </div>
               <%}else {%>
               <div>
-                 <a href="/logout"><img src="/img/login_logo1.png"></a>
+                 <a href="/logout"><img src="/img/logout_icon.png"></a>
               </div>
               <div>
-                 <a href="/myPage?memberNo=<%=m.getMemberNo()%>"><img src="/img/login_logo2.png"></a>
+                 <a href="/myPage?memberNo=<%=m.getMemberNo()%>&alPage=1&glPage=1"><img src="/img/login_logo1.png"></a>
+              </div>
+              <div>
+              	<a href="#" id="alarmOpen" status="close" value=<%=m.getMemberNo() %>><img src="/img/login_logo2.png"></a>
               </div>
               <%} %>
           </div>
       </div>
    </div>
    <script>
+   
        $(".nav-center").hover(function () {
            $(".nav-sub").slideToggle();
        }, function () {
            $(".nav-sub").slideToggle();
        });
        $(".nav-right>div>img").hover().css("cursor","pointer");
+       
+       $("#alarmOpen").click(function(){
+    	   if($(this).attr("status")=="close"){
+    		   $(".alarmNote").fadeIn();
+   	   		$(this).attr("status","open");
+    	   }
+    	   else{
+    			  $(".alarmNote").fadeOut(); 
+    			  $(this).attr("status","close");
+    	   }
+    
+       });
+       
+       // 웹 소켓
+       // 웹 소켓 객체 생성 -> 자동 연결 실행
+      		var mem = "<%=m%>";
+      		if(mem != "null"){
+      			var memberNo = $("#alarmOpen").attr("value");
+      			 var webSocket = new WebSocket("ws://localhost/webSocket");
+                 var interval = setInterval(function() {
+            			webSocket.send(memberNo);
+               	}, 3000);
+      		}
+      		webSocket.onmessage = function(message) {
+      		// 콘솔 텍스트에 메시지를 출력한다.
+      		$("#alarmHTML").html(message.data);
+      		console.log(message);
+      		};
+      
+
    </script>   
-                  
+
 </body>

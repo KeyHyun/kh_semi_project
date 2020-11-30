@@ -8,22 +8,30 @@
 <html>
 <head>
 <meta charset="UTF-8">
+ <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="933752867537-c41ib5spq1iea0nqonfrnq807nohmj67.apps.googleusercontent.com">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="/js/login.js" defer></script>
 <link rel="stylesheet" type="text/css" href="/css/login.css">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script type="text/javascript"
+		src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js"
+		charset="utf-8"></script>
 <title>로그인</title>
+<style>
+</style>
 </head>
 <body>
 	<form action="/login" method="post">
 		<div class="login_container">
 			<div class="logo_container">
-				<img src="/img/logo.png">
+				<a href="/index.jsp"><img src="/img/logo.png"></a>
 			</div>
 			<div class="login_box">
 				<span>아이디</span>
 				<%if(id != null){ %>
-				<input type="text" id="id_Input" name="loginId" value="<%=id %>"
-					required autofocus>
+				<input type="text" id="id_Input" name="loginId" value=""
+					required>
 				<%}else{ %>
 				<input type="text" id="id_Input" name="loginId" required>
 				<%} %>
@@ -47,6 +55,5 @@
 			</div>
 		</div>
 	</form>
-
 </body>
 </html>

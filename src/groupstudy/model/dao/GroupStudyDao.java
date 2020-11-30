@@ -8,8 +8,11 @@ import java.util.ArrayList;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 
+import alarm.model.vo.Alarm;
 import common.JDBCTemplate;
 import groupstudy.model.vo.Category;
+import groupstudy.model.vo.GroupApplyData;
+import groupstudy.model.vo.GroupList;
 import groupstudy.model.vo.GroupStudyRoom;
 import sun.security.action.GetIntegerAction;
 
@@ -327,4 +330,176 @@ public class GroupStudyDao {
 		}
 		return result2;
 	}
+
+
+	// 기현 마이페이지 -> 그룹리스트 -> 페이징
+	public int totalCount(Connection conn, int memberNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select count(*) cnt from GROUP_STUDYMEMBER g1,GROUP_STUDYROOM g2 where member_no =? and g1.GROUP_NO = g2.GROUP_NO";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, memberNo);
+			rset = pstmt.executeQuery();
+			if(rset.next())
+			{
+				result = rset.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return result;
+	}
+
+	public ArrayList<GroupList> selectList(Connection conn, int memberNo, int start, int end) {
+		ArrayList<GroupList> list = new ArrayList<GroupList>();
+		int i = 0;
+		ArrayList<Integer> gn = new ArrayList<Integer>();
+		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
+		ResultSet rset = null;
+		ResultSet rset2 = null;
+		GroupList g = null;
+		String query = "select * from (select rownum as rnum, n.* from(select group_studymember.group_no,group_title,group_startdate,group_enddate,group_personnel,member_no from group_studyroom,group_studymember where group_studyroom.group_no = group_studymember.group_no and group_studymember.member_no=? order by 1 desc)n) where rnum between ? and ?";
+		String query2 = "select * from (select rownum as rnum, n.* from(select group_no, count(*) membercount from group_studymember where group_no in (select group_no from group_studymember where member_no = ?) group by group_no order by group_no desc)n) where rnum between ? and ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt2 = conn.prepareStatement(query2);
+			pstmt.setInt(1, memberNo);
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
+			pstmt2.setInt(1, memberNo);
+			pstmt2.setInt(2, start);
+			pstmt2.setInt(3, end);
+			rset = pstmt.executeQuery();
+			rset2 = pstmt2.executeQuery();
+			while(rset2.next()) {
+				gn.add(rset2.getInt("membercount"));
+			}
+			while(rset.next())
+			{
+				g = new GroupList();
+				g.setrNum(rset.getInt("rnum"));
+				g.setGroupNo(rset.getInt("group_no"));
+				g.setGroupTitle(rset.getString("group_title"));
+				g.setGroupStartDate(rset.getString("group_startdate"));
+				g.setGroupEndDate(rset.getString("group_enddate"));
+				g.setGroupMax(rset.getInt("group_personnel"));
+				g.setMemberNo(rset.getInt("member_no"));
+				g.setMemberCnt(gn.get(i));
+				list.add(g);
+				i++;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return list;
+		
+	}
+
+	public GroupApplyData getApplyInfo(Connection conn, int groupNum, int applyMemberNo) {
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		GroupApplyData gad = new GroupApplyData();
+		String query = "select * from group_studyroom g1,(select g1.apply_content,g1.group_no,m1.member_nickname from group_apply g1 join member m1 using(member_no) where member_no= ? ) g2 where g1.group_no = g2.group_no and g1.group_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, applyMemberNo);
+			pstmt.setInt(2, groupNum);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				gad.setApplyContent(rset.getString("apply_content"));
+				gad.setGroupMax(rset.getInt("group_personnel"));
+				gad.setGroupNo(rset.getInt("group_no"));
+				gad.setGroupTitle(rset.getString("group_title"));
+				gad.setMemberNickname(rset.getString("member_nickname"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return gad;
+		
+	}
+
+	public int getMemberCnt(Connection conn, int groupNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select count(*) cnt from group_studymember where group_no=?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, groupNo);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("cnt");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int getApplyNo(Connection conn, int groupNo, int memberNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select apply_no from group_apply where group_no = ? and member_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, groupNo);
+			pstmt.setInt(2, memberNo);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("apply_no");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int updateApplyStatus(Connection conn, int applyNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update group_apply set apply_status=? where apply_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "승인");
+			pstmt.setInt(2, applyNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+		
+	}
+
+
 }

@@ -8,7 +8,15 @@ public class GroupList {
 	private int memberNo;
 	private int memberCnt;
 	private int groupNo;
+	private int rNum;
 	
+	
+	public int getrNum() {
+		return rNum;
+	}
+	public void setrNum(int rNum) {
+		this.rNum = rNum;
+	}
 	public int getGroupNo() {
 		return groupNo;
 	}
@@ -51,8 +59,9 @@ public class GroupList {
 	public void setMemberNo(int memberNo) {
 		this.memberNo = memberNo;
 	}
+
 	public GroupList(String groupTitle, String groupStartDate, String groupEndDate, int groupMax, int memberNo,
-			int memberCnt, int groupNo) {
+			int memberCnt, int groupNo, int rNum) {
 		super();
 		this.groupTitle = groupTitle;
 		this.groupStartDate = groupStartDate;
@@ -61,6 +70,7 @@ public class GroupList {
 		this.memberNo = memberNo;
 		this.memberCnt = memberCnt;
 		this.groupNo = groupNo;
+		this.rNum = rNum;
 	}
 	public GroupList() {
 		super();
