@@ -1,3 +1,4 @@
+<%@page import="groupstudy.model.vo.GroupStudyMember"%>
 <%@page import="java.util.StringTokenizer"%>
 <%@page import="groupstudy.model.vo.Category"%>
 <%@page import="groupstudy.model.vo.GroupStudyRoom"%>
@@ -9,7 +10,8 @@
     <%
     	GroupStudyRoom gsr = (GroupStudyRoom)request.getAttribute("gsr");
     	Category category = (Category)request.getAttribute("category");
-    	int memberCnt = (Integer)request.getAttribute("memberCnt");
+    	//int memberCnt = (Integer)request.getAttribute("memberCnt");
+    	ArrayList<GroupStudyMember> gsmList = (ArrayList<GroupStudyMember>)request.getAttribute("gsmList");
     %>
     <%-- <% groupstudyroom %> --%>
 <!DOCTYPE html>
@@ -147,7 +149,7 @@
 		font-weight: bold;
 	}
 	
-    .modal-wrap{
+    .modal-wrap123{
       position: absolute;
       top: 0px;
       left: 0px;
@@ -157,8 +159,9 @@
       display: none;
       justify-content: center;
       align-items: center;
+      z-index:100;
     }
-    .modal{
+    .modal123{
       background-color: #fff;
       width: 40vw;
       height: 30vh;
@@ -166,14 +169,14 @@
       min-width: 300px;
       min-height: 340px;
     }
-    .modal-top>h1{
+    .modal-top123>h3{
       text-align: center;
     }
-    .modal-content{
+    .modal-content123{
     	padding-left: 50px;
     	padding-right: 50px;
     }
-    .modal-button>input{
+    .modal-button123>input{
     	background-color: white;
     	font-weight: bold;
       	outline: none;
@@ -212,14 +215,14 @@
                     			<hr class="line">
                     			<p class="gcContent">
                     				<%for(int i=0;i<gsr.getGroupPersonnel();i++){ %>
-                    					<%if(i<memberCnt){ %>
-                    						<img src="/img/fill_human1.png" style="padding-bottom: 16px;">
+                    					<%if(i<gsmList.size()){ %>
+                    						<img src="/img/fill_human1.png">
                     					<%}else{ %>
                     						<img src="/img/empty_human1.png">
                     					<%} %>
                     				<%} %>
                     				<br>
-                    				총 인원 <%=gsr.getGroupPersonnel() %>명 / 현재 <%=memberCnt %>명이 참여 중입니다.
+                    				총 인원 <%=gsr.getGroupPersonnel() %>명 / 현재 <%=gsmList.size() %>명이 참여 중입니다.
                     			</p>
                     			<br><br>
                     		</div>
@@ -235,7 +238,7 @@
                     			<hr class="line">
                     			<p class="gcContent">
                     				<%StringTokenizer tokens = new StringTokenizer(gsr.getGroupExplan(),"_"); %>
-                    				<%for(int i = 0;tokens.hasMoreElements();i++){ %>
+                    				<%while(tokens.hasMoreElements()){ %>
                     					<img src="/img/Vector33.png" style="margin-left: 10px;"> <%=tokens.nextToken() %><br>
                     				<%} %>
                     			</p>
@@ -252,7 +255,7 @@
                     	<hr width="80%">
                     	<br>
                     	<div class="modalBtnDiv">
-              				<button id="btn">참여 요청</button>
+              				<button id="btn" style="border: none;">참여 요청</button>
                     	</div>
                     </div>
                 </div>
@@ -261,10 +264,11 @@
 		</div>
 		
 		<!-- 모달---------------------------------- -->
-		<div class="modal-wrap">
-    		<div class="modal">
-      			<div class="modal-top">
-        			<h1>그룹장에게 참여 요청 메시지를 보냅니다</h1>
+		<div class="modal-wrap123">
+    		<div class="modal123">
+      			<div class="modal-top123">
+      				<br>
+        			<h3>그룹장에게 참여 요청 메시지를 보냅니다</h3>
         			<hr>
       			</div>
       			<form action="/insertApplyGroupMember" method="post">
@@ -273,13 +277,12 @@
       			<%}%>
       			<input type="hidden" name="groupNo" value="<%=gsr.getGroupNo()%>"> <!-- 현재페이지의 groupNo -->
       			
-      			<div class="modal-content">
+      			<div class="modal-content123">
 			       	 <p>그룹장에게 자신을 소개해보세요</p>
-			         <textarea rows="9" cols="54" name="applyContent" style="resize: none"></textarea>
+			         <textarea rows="5" cols="45" name="applyContent" style="resize: none" required="required"></textarea>
       			</div>
-      			<br>
       			<hr>
-      			<div class="modal-button">
+      			<div class="modal-button123">
       				<input type="submit" value="전송">
 			        <input type="button" value="취소">
       			</div>
@@ -293,18 +296,35 @@
     	$("[name=groupContent]").click(function(event){
     		event.stopPropagation();
     	});
-        $("#btn").click(function(){
-        	<%if(m==null){ %>
+        $("#btn").click(function(){	//참여요청 버튼 클릭시
+        	<%
+	        	int check = 0;
+	        	for(GroupStudyMember gsm : gsmList){
+	            	if(m.getMemberNo()==gsm.getMemberNo()){
+	            		check = 1;
+	            	}
+	            }
+	        %>
+        	<%if(m==null){ %>	//로그인안했을때
 				alert("로그인 후 이용가능한 페이지입니다");
 				location.href="/views/login.jsp";
-			<%}else{%>
-          		$(".modal-wrap").css("display","flex");
+			<%}else if(gsmList.size()==gsr.getGroupPersonnel()){ //이미 인원이 꽉찼을때 %>		
+          		alert("이 방은 인원이 가득찬 방으로 참여요청이 불가능합니다");
+          	<%}else if(check==1){ //요청하는 사용자가 이미 참여중인 스터디인경우 %>
+          		alert("이미 참여중인 스터디입니다.");
+          	<%}else{%>
+          		$(".modal-wrap123").css("display","flex");
           	<%}%>
         });
         
+        
+        
+        
         $("input[type=button]").click(function(){
-          $(".modal-wrap").css("display","none");
+          $(".modal-wrap123").css("display","none");
         });
+        
+        
       })
     </script>
 </body>

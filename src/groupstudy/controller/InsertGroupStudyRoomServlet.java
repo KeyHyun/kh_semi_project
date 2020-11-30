@@ -9,6 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+
 import groupstudy.model.service.GroupStudyService;
 import groupstudy.model.vo.GroupStudyRoom;
 
@@ -33,9 +38,22 @@ public class InsertGroupStudyRoomServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
+		//첨부파일확인
+		if(!ServletFileUpload.isMultipartContent(request)) {
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
+			request.setAttribute("msg", "파일업로드실패 enctype");
+			request.setAttribute("loc", "/");
+			rd.forward(request, response);
+			return;
+		}
+		
+		String saveDirectory = getServletContext().getRealPath("/")+"/upload/groupImg";
+		int maxSize = 10*1024*1024;
+		MultipartRequest mRequest = new MultipartRequest(request, saveDirectory, maxSize, "UTF-8", new DefaultFileRenamePolicy());
+		
 		//categoryNo먼저 받아오기
-		String category1 = request.getParameter("category1");
-		String category2 = request.getParameter("category2");
+		String category1 = mRequest.getParameter("category1");
+		String category2 = mRequest.getParameter("category2");
 		
 		int categoryNo = 0;
 		
@@ -44,14 +62,17 @@ public class InsertGroupStudyRoomServlet extends HttpServlet {
 		if(categoryNo>0) {//가져온 categoryNo을 포함해서 스터디그룹방 생성(insert)
 			GroupStudyRoom gsr = new GroupStudyRoom();
 			gsr.setCategoryNo(categoryNo);
-			gsr.setGroupContent(request.getParameter("groupContent"));
-			gsr.setGroupEndDate(request.getParameter("groupEndDate"));
-			gsr.setGroupExplan(request.getParameter("groupExplan"));
-			gsr.setGroupManagerNo(Integer.parseInt(request.getParameter("groupManagerNo")));
-			gsr.setGroupPersonnel(Integer.parseInt(request.getParameter("groupPersonnel")));
-			gsr.setGroupRule(request.getParameter("groupRule"));
-			gsr.setGroupStartDate(request.getParameter("groupStartDate"));
-			gsr.setGroupTitle(request.getParameter("groupTitle"));
+			gsr.setGroupContent(mRequest.getParameter("groupContent"));
+			gsr.setGroupEndDate(mRequest.getParameter("groupEndDate"));
+			gsr.setGroupExplan(mRequest.getParameter("groupExplan"));
+			gsr.setGroupManagerNo(Integer.parseInt(mRequest.getParameter("groupManagerNo")));
+			gsr.setGroupPersonnel(Integer.parseInt(mRequest.getParameter("groupPersonnel")));
+			gsr.setGroupRule(mRequest.getParameter("groupRule"));
+			gsr.setGroupStartDate(mRequest.getParameter("groupStartDate"));
+			gsr.setGroupTitle(mRequest.getParameter("groupTitle"));
+			gsr.setFilename(mRequest.getOriginalFileName("filename"));
+			gsr.setFilepath(mRequest.getFilesystemName("filename"));
+			
 			//db에 저장
 			int result = new GroupStudyService().insertGroupStudyRoom(gsr);//하나의 conn으로 처리해야함 insert2개가 중간에 잘못될경우 rollback
 			

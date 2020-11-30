@@ -34,12 +34,13 @@
 
     .myplan{
         overflow: hidden;
+        height: 1000px;
     }
 
     .leftMenu {
         width: 182px;
-        height: 920px;
-
+       /*  height: 953px; */
+       height: 100%;
         background: #E1E1E1;
 
         float: left;
@@ -61,8 +62,6 @@
 
     .groupContent {
         width: 1018px;
-        height: 867px;
-
         background: #FDFDFD;
     }
     
@@ -96,7 +95,8 @@
 	/* -------------------------------------------------------------- */
 	.groupContent{
 		padding-top: 20px;	
-		height: 847px;
+		/* height: 900px; */
+		height: 100%;
 	}
 	.category{
 		font-size: 15px;
@@ -168,6 +168,12 @@
 		width: 100px;
 		height: 30px;
 	}
+	input{
+		outline: none;
+	}
+	textarea{
+		outline: none;
+	}
 	
 	/* .explan:first-child{
 		display: inline-block;
@@ -193,7 +199,7 @@
                     </ul>
                 </div>
                 <div class="groupDetail">
-                	<form action="/insertGroupStudyRoom" method="post">
+                	<form action="/insertGroupStudyRoom" method="post" enctype="multipart/form-data">
                     <div class="groupTitle"><label for="groutTitleInput">스터디이름 : </label><input type="text" id="groutTitleInput" name="groupTitle" placeholder="생성하려는 스터디이름을 정해주세요" style="outline: none" required="required"></div>
                     <div class="groupContent">
                     	<input type="hidden" name="groupManagerNo" value="<%=m.getMemberNo()%>"><!-- 생성하려는 사용자의id넘기기 -->
@@ -238,7 +244,7 @@
 	                    			<p class="gcTitle">스터디 규칙</p>
 	                    			<hr class="line">
 	                    			<p class="gcContent">
-	                    				<textarea rows="3" cols="28" name="groupRule" style="resize: none; font-size: 20px;" required="required"></textarea>
+	                    				<textarea rows="3" cols="30" name="groupRule" style="resize: none; font-size: 20px;" required="required"></textarea>
 	                    			</p>
 	                    			<br><br>
 	                    		</div>
@@ -252,13 +258,22 @@
 	                    			<br><br>
 	                    		</div>
 	                    	</div>
-	                    	<div class="gcWrap" style="height: 230px;">
-	                    		<div class="gc" style="width: 90%">
+	                    	<div class="gcWrap">
+	                    		<div class="gc">
 	                    			<p class="gcTitle">스터디원에게 한마디</p>
 	                    			<hr class="line">
 	                    			<p class="gcContent">
-	                    				<textarea rows="5" cols="80" name="groupContent" style="resize: none; font-size: 20px;" required="required"></textarea>
+	                    				<textarea rows="5" cols="30" name="groupContent" style="resize: none; font-size: 20px;" required="required"></textarea>
 	                    			</p>
+	                    		</div>
+	                    		<div class="gc">
+	                    			<p class="gcTitle">스터디 프로필사진</p>
+	                    			<hr class="line">
+	                    			<p class="gcContent" style="font-size: 15px;">
+	                    				프로필 사진 : <input type="file" name="filename" onchange="loadImg(this)">
+	                    				<img id="img-view" width="80%" height="250px;" style="object-fit: contain; border: none;">
+	                    			</p>
+	                    			<br>
 	                    		</div>
 	                    	</div>
 	                    	<hr width="80%">
@@ -354,8 +369,22 @@
 				$(this).val(groupStartDate);
 			}
 		});
-		
     });
+  	//배열의 길이가 0인지(첨부파일개수가 0인지)
+	//배열에 담겨있는 파일의 크기가 0인지 확인 -> 파일업로드를 1개만 하기 때문에 0인덱스만 검사
+	function loadImg(f){
+		if(f.files.length != 0 && f.files[0]!=0){
+			var reader = new FileReader();	//JS파일리더객체 -> 파일정보 확인가능
+			//현재 사용자가 선택한 파일의 경로를 일어옴
+			reader.readAsDataURL(f.files[0]);
+			//파일의 경로를 읽어오는 작업이 완료되면 밑의 함수를 동작시키겠다.
+			reader.onload=function(e){
+				$("#img-view").attr('src',e.target.result);//파일경로를 src속성에 설정
+			}
+		}else{
+			$("#img-view").attr("src","");
+		}
+	}
     </script>
 </body>
 </html>

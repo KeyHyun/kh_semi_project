@@ -12,13 +12,21 @@ public class GroupStudyRoom {
 	private int groupManagerNo;
 	private String groupTitle;
 	private int categoryNo;
+	private String filename;
+	private String filepath;
+	
+	
+
 	public GroupStudyRoom() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public GroupStudyRoom(int groupNo, String groupExplan, String groupRule, int groupPersonnel, String groupContent,
-			String groupStartDate, String groupEndDate, int groupManagerNo, String groupTitle, int categoryNo) {
+	
+	public GroupStudyRoom(int rNum, int groupNo, String groupExplan, String groupRule, int groupPersonnel,
+			String groupContent, String groupStartDate, String groupEndDate, int groupManagerNo, String groupTitle,
+			int categoryNo, String filename, String filepath) {
 		super();
+		this.rNum = rNum;
 		this.groupNo = groupNo;
 		this.groupExplan = groupExplan;
 		this.groupRule = groupRule;
@@ -29,7 +37,10 @@ public class GroupStudyRoom {
 		this.groupManagerNo = groupManagerNo;
 		this.groupTitle = groupTitle;
 		this.categoryNo = categoryNo;
+		this.filename = filename;
+		this.filepath = filepath;
 	}
+	
 	public int getGroupNo() {
 		return groupNo;
 	}
@@ -96,10 +107,27 @@ public class GroupStudyRoom {
 	public void setrNum(int rNum) {
 		this.rNum = rNum;
 	}
-	   public String getGroupContentBr() {
-		      return groupContent.replaceAll("\r\n", "<br>");
-		   }
-		   public String getGroupRuleBr() {
-		      return groupRule.replaceAll("\r\n", "<br>");
-		   }
+	public String getGroupContentBr() {
+		return groupContent.replaceAll("\r\n", "<br>");
+	}
+	public String getGroupRuleBr() {
+		return groupRule.replaceAll("\r\n", "<br>");
+	}
+	public String getFilename() {
+		return filename;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public String getFilepath() {
+		return filepath;
+	}
+
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
+	}
+		   
+
 }

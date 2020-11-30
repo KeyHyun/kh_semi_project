@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import common.JDBCTemplate;
 import groupstudy.model.dao.GroupStudyDao;
 import groupstudy.model.vo.Category;
+import groupstudy.model.vo.GroupStudyMember;
 import groupstudy.model.vo.GroupStudyPageData;
 import groupstudy.model.vo.GroupStudyRoom;
 import groupstudy.model.vo.GroupStudyRoomAddCategory;
@@ -172,7 +173,8 @@ public class GroupStudyService {
 		JDBCTemplate.close(conn);
 		return memberCnt;
 	}
-
+	
+	//조기현(참여요청 시 apply테이블이 insert!!!)
 	public int insertApplyGroupMember(int memberNo, int groupNo, String applyContent) {
 		Connection conn = JDBCTemplate.getConnection();
 		int result = new GroupStudyDao().insertApplyGroupMember(conn,memberNo,groupNo,applyContent);
@@ -206,14 +208,15 @@ public class GroupStudyService {
 		return categoryNo;
 	}
 	
-	//groupStudyRoom, groupStudyMember(방장) 2개 한번에 insert
+	//groupStudyRoom, groupStudyMember(방장) 2개 한번에 insert(하나의 conn)
 	public int insertGroupStudyRoom(GroupStudyRoom gsr) {
 		Connection conn = JDBCTemplate.getConnection();
 		int result = new GroupStudyDao().insertGroupStudyRoom(conn,gsr);
+		int result2 = 0;
 		if(result>0) {
 			//groupStudyMember 테이블에도 방장을 insert함(groupMangerNo을 가지고 제일 최근에 만들어진 groupNo으로 insert)
 			int lastGroupNo = new GroupStudyDao().selectManagerGroupNo(conn, gsr.getGroupManagerNo());//최근 groupNo구하기
-			int result2 = new GroupStudyDao().insertGroupStudyMember(conn, gsr.getGroupManagerNo(), lastGroupNo);//방장도 groupStudyMember에 저장
+			result2 = new GroupStudyDao().insertGroupStudyMember(conn, gsr.getGroupManagerNo(), lastGroupNo);//방장도 groupStudyMember에 저장
 			if(result2>0) {
 				JDBCTemplate.commit(conn);
 			}else {
@@ -223,6 +226,49 @@ public class GroupStudyService {
 			JDBCTemplate.rollback(conn);
 		}
 		JDBCTemplate.close(conn);
+		return result2;
+	}
+	//(진선)스터디룸삭제
+	public int deleteGroupStudyRoom(int groupNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new GroupStudyDao().deleteGroupStudy(conn, groupNo);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
 		return result;
+	}
+	//(진선)그룹스터디멤버 삭제
+	public int deleteGroupStudyMember(int memberNo, int groupNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new GroupStudyDao().deleteGroupStudyMember(conn, memberNo, groupNo);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+	//(진선)그룹스터디 수정
+	public int updateGroupStudyRoom(GroupStudyRoom gsr) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new GroupStudyDao().updateGroupStudyRoom(conn, gsr);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+	//(진선)스터디 참여요청시 체크용(인원수 및 중복참여)
+	public ArrayList<GroupStudyMember> selectGroupStudyMemberAll(int groupNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		ArrayList<GroupStudyMember> gsmList = new GroupStudyDao().selectGroupStudyMemberAll(conn, groupNo);
+		JDBCTemplate.close(conn);
+		return gsmList;
 	}
 }
