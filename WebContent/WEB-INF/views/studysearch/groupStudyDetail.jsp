@@ -10,7 +10,7 @@
     <%
     	GroupStudyRoom gsr = (GroupStudyRoom)request.getAttribute("gsr");
     	Category category = (Category)request.getAttribute("category");
-    	//int memberCnt = (Integer)request.getAttribute("memberCnt");
+    	int memberCnt = (Integer)request.getAttribute("memberCnt");
     	ArrayList<GroupStudyMember> gsmList = (ArrayList<GroupStudyMember>)request.getAttribute("gsmList");
     %>
     <%-- <% groupstudyroom %> --%>

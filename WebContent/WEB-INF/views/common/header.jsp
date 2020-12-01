@@ -231,12 +231,19 @@
    </div>
    <script>
    
-       $(".nav-center").hover(function () {
-           $(".nav-sub").slideToggle();
-       }, function () {
-           $(".nav-sub").slideToggle();
-       });
+   $(".nav-center").bind({
+       mouseenter:function() {
+           var $btn = $('.nav-sub');
+           if(!$btn.is(':animated')) {
+               $btn.slideDown();
+           }
+       },
+       mouseleave: function() {
+           $(".nav-sub").slideUp();    
+       }
+   });
        $(".nav-right>div>img").hover().css("cursor","pointer");
+   
        
        $("#alarmOpen").click(function(){
     	   if($(this).attr("status")=="close"){

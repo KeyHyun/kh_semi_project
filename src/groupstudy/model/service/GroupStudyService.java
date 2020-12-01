@@ -359,4 +359,123 @@ public class GroupStudyService {
 			JDBCTemplate.close(conn);
 			return gmp;
 		}
+		// 검색어로 검색하였을때!!!!!!!!!!!!	12/01
+		public GroupStudyPageData selectListInputs(int reqPage, String word, String inputs) {
+			Connection conn = JDBCTemplate.getConnection();
+			GroupStudyDao dao = new GroupStudyDao(); // 총 게시물 수를 구하는 DAO
+			int totalCount = dao.totalCount(conn, word, inputs); // 한 페이지당 게시물 수
+			if(totalCount!=0) {
+				int numPerPage = 12; // 한 페이지당 게시물 수
+				int totalPage = 0; // 전체 페이지 수
+				if (totalCount % numPerPage == 0) { // 나머지가 0인경우
+					totalPage = totalCount / numPerPage;
+				} else {
+					totalPage = totalCount / numPerPage + 1;
+				}
+				System.out.println("검색어로검색totalcount : " + totalCount);
+				// reqPage=1 -> start : 1, end = 10
+				// reqPage=2 -> start : 11, end = 20
+				// reqPage=3 -> start : 21, end = 30
+				int start = ((reqPage - 1) * numPerPage) + 1; // 해당 페이지 게시물의 시작번호
+				int end = reqPage * numPerPage;
+				System.out.println("-----검색어로 검색-----\n"+"시작번호 : " + start + " / 끝번호 : " + end);
+				ArrayList<GroupStudyRoom> list = dao.selectListInputs(conn, start, end, word, inputs);
+				System.out.println(list.size());
+				// 페이지 네비게이션 작성 시작
+				int pageNaviSize = 5; // 페이지 네비게이션 길이 지정
+				if(totalPage<5) {
+					pageNaviSize = totalPage; // 페이지 네비게이션 길이 지정					
+				}
+				String pageNavi = ""; // 페이지 네비 태그 작성용(HTML코드)
+				// 페이지 시작번호 구하기
+				// reqPage : 1 ~ 5 -> 1, reqPage : 6 ~ 10 -> 6, reqPage : 11 ~ 15 -> 11
+				int pageNo = ((reqPage - 1) / pageNaviSize) * pageNaviSize + 1;
+				// 이전버튼 : 페이지 시작번호가 1이 아닌경우에만 이전버튼 생성
+				if (pageNo != 1) {
+					pageNavi += "<a class='btn' href='/groupStudyListWord?search-word="+word+"&inputs="+inputs+"&reqPage=" + (pageNo - 1) + "'>이전</a>";
+				}
+				// 페이지 네비 숫자
+				for (int i = 0; i < pageNaviSize; i++) {
+					if (reqPage == pageNo) { // 페이지 네비가 현재 요청페이지인 경우(a태그 필요없음)
+						pageNavi += "<span class='selectPage'>" + pageNo + "</span>";
+					} else {
+						pageNavi += "<a class='btn' href='/groupStudyListWord?search-word="+word+"&inputs="+inputs+"&reqPage=" + pageNo + "'>" + pageNo + "</a>";
+					}
+					pageNo++;
+					if (pageNo > totalPage) {
+						break;
+					}
+				}
+				// 다음 버튼
+				if (pageNo <= totalPage) {
+					pageNavi += "<a class'btn' href='/groupStudyListWord?search-word="+word+"&inputs="+inputs+"&reqPage=" + pageNo + "'>다음</a>";
+				}
+				GroupStudyPageData gspdWord = new GroupStudyPageData(list, pageNavi);
+
+				JDBCTemplate.close(conn);
+				return gspdWord;
+			}else {
+				return null;
+			}
+		}
+		//카테고리별 검색 기능 메소드	12/1
+		public GroupStudyPageData selectListCategory(int reqPage, String category1, String category2) {
+			Connection conn = JDBCTemplate.getConnection();
+			GroupStudyDao dao = new GroupStudyDao(); // 총 게시물 수를 구하는 DAO
+			int totalCount = dao.totalCountCategory(conn, category1, category2); // 한 페이지당 게시물 수
+			if(totalCount!=0) {
+				int numPerPage = 12; // 한 페이지당 게시물 수
+				int totalPage = 0; // 전체 페이지 수
+				if (totalCount % numPerPage == 0) { // 나머지가 0인경우
+					totalPage = totalCount / numPerPage;
+				} else {
+					totalPage = totalCount / numPerPage + 1;
+				}
+				System.out.println("카테고리별totalcount : " + totalCount);
+				// reqPage=1 -> start : 1, end = 10
+				// reqPage=2 -> start : 11, end = 20
+				// reqPage=3 -> start : 21, end = 30
+				int start = ((reqPage - 1) * numPerPage) + 1; // 해당 페이지 게시물의 시작번호
+				int end = reqPage * numPerPage;
+				System.out.println("-----카테고리 검색-----\n"+"시작번호 : " + start + " / 끝번호 : " + end);
+				ArrayList<GroupStudyRoom> list = dao.selectListCategory(conn, start, end, category1, category2);
+				System.out.println(list.size());
+				// 페이지 네비게이션 작성 시작
+				int pageNaviSize = 5; // 페이지 네비게이션 길이 지정
+				if(totalPage<5) {
+					pageNaviSize = totalPage; // 페이지 네비게이션 길이 지정					
+				}
+				String pageNavi = ""; // 페이지 네비 태그 작성용(HTML코드)
+				// 페이지 시작번호 구하기
+				// reqPage : 1 ~ 5 -> 1, reqPage : 6 ~ 10 -> 6, reqPage : 11 ~ 15 -> 11
+				int pageNo = ((reqPage - 1) / pageNaviSize) * pageNaviSize + 1;
+				// 이전버튼 : 페이지 시작번호가 1이 아닌경우에만 이전버튼 생성
+				if (pageNo != 1) {
+					pageNavi += "<a class='btn' href='/groupStudyListCategory?category1="+category1+"&category2="+category2+"&reqPage=" + (pageNo - 1) + "'>이전</a>";
+				}
+				// 페이지 네비 숫자
+				for (int i = 0; i < pageNaviSize; i++) {
+					if (reqPage == pageNo) { // 페이지 네비가 현재 요청페이지인 경우(a태그 필요없음)
+						pageNavi += "<span class='selectPage'>" + pageNo + "</span>";
+					} else {
+						pageNavi += "<a class='btn' href='/groupStudyListCategory?category1="+category1+"&category2="+category2+"&reqPage=" + pageNo + "'>" + pageNo + "</a>";
+					}
+					pageNo++;
+					if (pageNo > totalPage) {
+						break;
+					}
+				}
+				// 다음 버튼
+				if (pageNo <= totalPage) {
+					pageNavi += "<a class'btn' href='/groupStudyListCategory?category1="+category1+"&category2="+category2+"&reqPage=" + pageNo + "'>다음</a>";
+				}
+				GroupStudyPageData gspdCategory = new GroupStudyPageData(list, pageNavi);
+
+				JDBCTemplate.close(conn);
+				return gspdCategory;
+			}else {	//DB에 정보가 존재하지 않을때
+				return null;
+			}
+			
+		}
 }

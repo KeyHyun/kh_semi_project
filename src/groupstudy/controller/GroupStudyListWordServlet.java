@@ -13,16 +13,16 @@ import groupstudy.model.service.GroupStudyService;
 import groupstudy.model.vo.GroupStudyPageData;
 
 /**
- * Servlet implementation class GroupStudyListServlet
+ * Servlet implementation class GroupStudyListWordServlet
  */
-@WebServlet(name = "GroupStudyList", urlPatterns = { "/groupStudyList" })
-public class GroupStudyListServlet extends HttpServlet {
+@WebServlet(name = "GroupStudyListWord", urlPatterns = { "/groupStudyListWord" })
+public class GroupStudyListWordServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupStudyListServlet() {
+    public GroupStudyListWordServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,14 +33,23 @@ public class GroupStudyListServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//1. 인코딩
 		request.setCharacterEncoding("utf-8");
-		//2. view에서 넘겨준 데이터 저장
+		//2. view에서 넘겨준 값
 		int reqPage = Integer.parseInt(request.getParameter("reqPage"));
+		String word = request.getParameter("search-word");
+		String inputs = request.getParameter("inputs");
+		System.out.println("select값 : "+word);
+		System.out.println("입력값 : "+inputs);
 		//3. 비지니스 로직
-		GroupStudyPageData gspd = new GroupStudyService().selectList(reqPage);
+		GroupStudyPageData gspdWord = new GroupStudyService().selectListInputs(reqPage, word, inputs);
 		//4. 결과처리
-		RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/groupStudy/groupStudyList.jsp");
-		request.setAttribute("list", gspd.getList());
-		request.setAttribute("pageNavi", gspd.getPageNavi());
+		RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/groupStudy/groupStudyListWord.jsp");
+		if(gspdWord!=null) {
+			request.setAttribute("list", gspdWord.getList());
+			request.setAttribute("pageNavi", gspdWord.getPageNavi());
+		}else {
+			request.setAttribute("list", null);
+			request.setAttribute("pageNavi", "");
+		}
 		rd.forward(request, response);
 	}
 

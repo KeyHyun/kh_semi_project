@@ -4,10 +4,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-   	ArrayList<GroupStudyRoom> list = (ArrayList<GroupStudyRoom>)request.getAttribute("list");
 	Category category = (Category)request.getAttribute("category");
+   	ArrayList<GroupStudyRoom> list = (ArrayList<GroupStudyRoom>)request.getAttribute("list");
    	String pageNavi = (String)request.getAttribute("pageNavi");
-   %>
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -251,24 +251,29 @@ select {
 						</select>
 					</div>
 					<hr>
+
 					<div class="content-list">
-						<%for(GroupStudyRoom gsr : list) {%>
-						<div class="study-list">
-							<div class="list-img">
+						<%if(list==null) {%>
+							<h2>일치하는 정보가 없습니다.</h2>
+						<%}else {%>
+							<%for(GroupStudyRoom gsr : list) {%>
+							<div class="study-list">
+								<div class="list-img">
 								<%if(gsr.getFilename()==null) {%>
 									<img src="/img/basic.png">
 								<%}else {%>								
 									<img src="/upload/groupImg/<%=gsr.getFilename() %>">
 								<%} %>
+								</div>
+								<div class="list-content">
+									<a href="/groupStudyDetail?groupNo=<%=gsr.getGroupNo()%>"><%=gsr.getGroupTitle() %></a><br>
+									<p><%=gsr.getGroupExplan() %></p>
+								</div>
 							</div>
-							<div class="list-content">
-								<a href="/groupStudyDetail?groupNo=<%=gsr.getGroupNo()%>"><%=gsr.getGroupTitle() %></a><br>
-								<p><%=gsr.getGroupExplan() %></p>
-							</div>
-						</div>
+							<%} %>
 						<%} %>
 					</div>
-					<div id="pageNavi"><%=pageNavi %></div>
+					<div id="pageNaviWord"><%=pageNavi %></div>
 				</div>
 			</div>
 			<div>
