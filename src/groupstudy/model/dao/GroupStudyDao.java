@@ -32,6 +32,8 @@ public class GroupStudyDao {
 				gsr.setGroupTitle(rset.getString("group_title"));
 				gsr.setGroupExplan(rset.getString("group_explan"));
 				gsr.setCategoryNo(rset.getInt("category_no"));
+				gsr.setFilename(rset.getString("filename"));
+				gsr.setFilepath(rset.getString("filepath"));
 				//이 메소드는 그룹스터디 리스트를 보여주는 것이므로 보여줄 데이터만 가져온다.
 				list.add(gsr);
 			}
@@ -44,7 +46,7 @@ public class GroupStudyDao {
 		}
 		return list;
 	}
-
+	//전체 게시물 수 구하는 메소드
 	public int totalCount(Connection conn) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
@@ -52,6 +54,57 @@ public class GroupStudyDao {
 		String query = "select count(*) cnt from group_studyRoom";
 		try {
 			pstmt = conn.prepareStatement(query);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("cnt");
+				//별칭으로 해둔 cnt의 값을 넘겨준다.(총 게시물 수)
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	//제목 내용으로 검색한 수 구하는 메소드 --------11/30일
+	public int totalCount(Connection conn, String word, String inputs) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = null;
+		if(word.equals("group_title")) {
+			query = "select count(*) cnt from group_studyRoom where group_title LIKE ?";
+		}else {
+			query = "select count(*) cnt from group_studyRoom where group_content LIKE ?";
+		}
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "%"+inputs+"%");
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("cnt");
+				//별칭으로 해둔 cnt의 값을 넘겨준다.(총 게시물 수)
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+	public int totalCountCategory(Connection conn, String category1, String category2) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select count(*) cnt from (select * from group_studyRoom join category using (category_no)) where category1 = ? and category2 = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, category1);
+			pstmt.setString(2, category2);
 			rset = pstmt.executeQuery();
 			if(rset.next()) {
 				result = rset.getInt("cnt");
@@ -326,5 +379,78 @@ public class GroupStudyDao {
 			JDBCTemplate.close(pstmt);
 		}
 		return result2;
+	}
+
+	//제목, 내용으로 검색해서 해당 그룹스터디 목록 가져오기	12/1
+	public ArrayList<GroupStudyRoom> selectListInputs(Connection conn, int start, int end, String word, String inputs) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = null;
+		ArrayList<GroupStudyRoom> list = new ArrayList<GroupStudyRoom>();
+		if(word.equals("group_title")) {
+			query = "select * from (select rownum as rnum, n.* from (select * from group_studyRoom where group_title LIKE ? order by 1 desc)n) where rnum between ? and ?";			
+		}else {
+			query = "select * from (select rownum as rnum, n.* from (select * from group_studyRoom where group_content LIKE ? order by 1 desc)n) where rnum between ? and ?";
+		}
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "%"+inputs+"%");
+			pstmt.setInt(2, start);
+			pstmt.setInt(3, end);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				GroupStudyRoom gsr = new GroupStudyRoom();
+				gsr.setrNum(rset.getInt("rNum"));
+				gsr.setGroupNo(rset.getInt("group_no"));
+				gsr.setGroupTitle(rset.getString("group_title"));
+				gsr.setGroupExplan(rset.getString("group_explan"));
+				gsr.setCategoryNo(rset.getInt("category_no"));
+				gsr.setFilename(rset.getString("filename"));
+				gsr.setFilepath(rset.getString("filepath"));
+				//이 메소드는 그룹스터디 리스트를 보여주는 것이므로 보여줄 데이터만 가져온다.
+				list.add(gsr);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return list;
+	}
+	//카테고리별로 검색해서 해당 그룹스터디 목록 가져오기	12/1
+	public ArrayList<GroupStudyRoom> selectListCategory(Connection conn, int start, int end, String category1, String category2) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		ArrayList<GroupStudyRoom> list = new ArrayList<GroupStudyRoom>();
+		String query = "select * from (select rownum as rnum, n.* from (select * from group_studyRoom join category using (category_no) where category1 = ? and category2 = ? order by group_startdate desc)n) where rnum between ? and ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, category1);
+			pstmt.setString(2, category2);
+			pstmt.setInt(3, start);
+			pstmt.setInt(4, end);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				GroupStudyRoom gsr = new GroupStudyRoom();
+				gsr.setrNum(rset.getInt("rNum"));
+				gsr.setGroupNo(rset.getInt("group_no"));
+				gsr.setGroupTitle(rset.getString("group_title"));
+				gsr.setGroupExplan(rset.getString("group_explan"));
+				gsr.setCategoryNo(rset.getInt("category_no"));
+				gsr.setFilename(rset.getString("filename"));
+				gsr.setFilepath(rset.getString("filepath"));
+				//이 메소드는 그룹스터디 리스트를 보여주는 것이므로 보여줄 데이터만 가져온다.
+				list.add(gsr);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return list;
 	}
 }

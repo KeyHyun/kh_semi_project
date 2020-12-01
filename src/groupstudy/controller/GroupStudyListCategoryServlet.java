@@ -13,16 +13,16 @@ import groupstudy.model.service.GroupStudyService;
 import groupstudy.model.vo.GroupStudyPageData;
 
 /**
- * Servlet implementation class GroupStudyListServlet
+ * Servlet implementation class GroupStudyListCategoryServlet
  */
-@WebServlet(name = "GroupStudyList", urlPatterns = { "/groupStudyList" })
-public class GroupStudyListServlet extends HttpServlet {
+@WebServlet(name = "GroupStudyListCategory", urlPatterns = { "/groupStudyListCategory" })
+public class GroupStudyListCategoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GroupStudyListServlet() {
+    public GroupStudyListCategoryServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,12 +35,19 @@ public class GroupStudyListServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		//2. view에서 넘겨준 데이터 저장
 		int reqPage = Integer.parseInt(request.getParameter("reqPage"));
+		String category1 = request.getParameter("category1");
+		String category2 = request.getParameter("category2");
 		//3. 비지니스 로직
-		GroupStudyPageData gspd = new GroupStudyService().selectList(reqPage);
+		GroupStudyPageData gspdCategory = new GroupStudyService().selectListCategory(reqPage, category1, category2);
 		//4. 결과처리
-		RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/views/groupStudy/groupStudyList.jsp");
-		request.setAttribute("list", gspd.getList());
-		request.setAttribute("pageNavi", gspd.getPageNavi());
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/groupStudy/groupStudyListCategory.jsp");
+		if(gspdCategory!=null) {
+			request.setAttribute("list", gspdCategory.getList());
+			request.setAttribute("pageNavi", gspdCategory.getPageNavi());			
+		}else {
+			request.setAttribute("list", null);
+			request.setAttribute("pageNavi", "");
+		}
 		rd.forward(request, response);
 	}
 

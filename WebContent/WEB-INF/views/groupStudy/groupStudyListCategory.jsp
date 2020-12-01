@@ -280,20 +280,24 @@ select {
 					</div>
 					<hr>
 					<div class="content-list">
-						<%for(GroupStudyRoom gsr : list) {%>
-						<div class="study-list">
-							<div class="list-img">
-								<%if(gsr.getFilename()==null) {%>
-									<img src="/img/basic.png">
-								<%}else {%>								
-									<img src="/upload/groupImg/<%=gsr.getFilename() %>">
-								<%} %>
+						<%if(list == null) {%>
+							<h2>일치하는 정보가 없습니다.</h2>
+						<%}else {%>
+							<%for(GroupStudyRoom gsr : list) {%>
+							<div class="study-list">
+								<div class="list-img">
+									<%if(gsr.getFilename()==null) {%>
+										<img src="/img/basic.png">
+									<%}else {%>								
+										<img src="/upload/groupImg/<%=gsr.getFilename() %>">
+									<%} %>
+								</div>
+								<div class="list-content">
+									<a href="/groupStudyDetail?groupNo=<%=gsr.getGroupNo()%>"><%=gsr.getGroupTitle() %></a><br>
+									<p><%=gsr.getGroupExplan() %></p>
+								</div>
 							</div>
-							<div class="list-content">
-								<a href="/groupStudyDetail?groupNo=<%=gsr.getGroupNo()%>"><%=gsr.getGroupTitle() %></a><br>
-								<p><%=gsr.getGroupExplan() %></p>
-							</div>
-						</div>
+							<%} %>
 						<%} %>
 					</div>
 					<div id="pageNavi"><%=pageNavi %></div>
@@ -307,7 +311,7 @@ select {
 	<script>
     	//최초에 검색어입력박스------------------------------------------
         $(function(){        	
-            $(".label").eq(0).click();
+            $(".label").eq(1).click();
         });
         $(".label").click(function(){
             var label = $(this).index();

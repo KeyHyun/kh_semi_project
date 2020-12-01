@@ -149,6 +149,7 @@
 	
     .modal-wrap{
       position: absolute;
+      z-index: 15;
       top: 0px;
       left: 0px;
       width: 100vw;
@@ -159,6 +160,7 @@
       align-items: center;
     }
     .modal{
+      z-index: 20;
       background-color: #fff;
       width: 40vw;
       height: 30vh;
@@ -298,7 +300,7 @@
 				alert("로그인 후 이용가능한 페이지입니다");
 				location.href="/views/login.jsp";
 			<%}else{%>
-          		$(".modal-wrap").css("display","flex");
+          		$(".modal-wrap").css("display","block");
           	<%}%>
         });
         
