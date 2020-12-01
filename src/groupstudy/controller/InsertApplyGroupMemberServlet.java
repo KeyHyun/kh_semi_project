@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import alarm.model.service.AlarmService;
 import groupstudy.model.service.GroupStudyService;
 
 /**
@@ -38,12 +39,19 @@ request.setCharacterEncoding("utf-8");
 		String applyContent = request.getParameter("applyContent");
 		
 		int result = new GroupStudyService().insertApplyGroupMember(memberNo,groupNo,applyContent);
+		int alResult = new AlarmService().insertApplyAlarm(memberNo,groupNo,applyContent);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 		
 		if(result>0) {
-			request.setAttribute("msg", "참여요청이 완료되었습니다");
-			request.setAttribute("loc", "/groupStudyDetail?groupNo="+groupNo);
+			if(alResult>0) {
+				request.setAttribute("msg", "참여요청이 완료되었습니다");
+				request.setAttribute("loc", "/groupStudyDetail?groupNo="+groupNo);
+			}
+			else {
+				request.setAttribute("msg", "알람 Insert에 실패하였습니다");
+				request.setAttribute("loc", "/groupStudyDetail?groupNo="+groupNo);
+			}
 		}else {
 			request.setAttribute("msg", "참여요청에 실패하였습니다");
 			request.setAttribute("loc", "/groupStudyDetail?groupNo="+groupNo);

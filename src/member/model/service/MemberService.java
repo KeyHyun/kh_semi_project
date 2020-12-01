@@ -1,8 +1,23 @@
 package member.model.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 import java.util.StringTokenizer;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import alarm.model.dao.AlarmDao;
 import alarm.model.vo.Alarm;
@@ -401,4 +416,131 @@ public class MemberService {
 			JDBCTemplate.close(conn);
 			return mmp;
 		}
+		public int snsLogin(String id, String name, String image) {
+			Connection conn = JDBCTemplate.getConnection();
+			MemberDao dao = new MemberDao();
+			int result = dao.searchSnsMember(conn,id); //0 아니면 1이 나오는데 0 이면 인서트 1이면 그냥 반환 
+			if(result == 0) {
+				// 0이면 DB에 insert
+				int inResult = dao.insertSnsMember(conn,id,name,image);
+				if(inResult>0) {
+					JDBCTemplate.commit(conn);
+					result = 1;
+				}
+				else {
+					JDBCTemplate.rollback(conn);
+				}
+			}
+				JDBCTemplate.close(conn);
+			return result;
+		}
+		public Member selectSnsMember(String id) {
+			Connection conn = JDBCTemplate.getConnection();
+			Member member = new MemberDao().selectSnsMember(conn,id);
+			JDBCTemplate.close(conn);
+			return member;
+		}
+		public HashMap<String, String> getAccessToken(String path) {
+			HashMap<String,String> token = new HashMap<String,String>();
+			String access_token;
+			String refresh_token;
+			try {
+			URL url = new URL(path);
+			URLConnection urlConnection = url.openConnection();
+			InputStream is = urlConnection.getInputStream();
+			Scanner sc = new Scanner(is);
+			String str = null;
+			if(sc.hasNext()) {
+				 str = sc.nextLine();
+			}
+			JSONParser parsing = new JSONParser();
+			Object obj;
+			obj = parsing.parse(str);
+			JSONObject jsonObj = (JSONObject) obj;
+			access_token = (String)jsonObj.get("access_token");
+			refresh_token = (String)jsonObj.get("refresh_token");
+			token.put("access", access_token);
+			token.put("refresh", refresh_token);
+			} catch (MalformedURLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return token;
+		}
+		public HashMap<String, String> getUserInfo(HashMap<String, String> token) {
+			JSONParser parsing = new JSONParser();
+			String apiUrl = "https://openapi.naver.com/v1/nid/me";
+			HashMap<String,String> userInfo = new HashMap<String,String>();
+			URL resUrl;
+			try {
+				resUrl = new URL(apiUrl);
+				String access = token.get("access");
+				String header = "Bearer "+access;
+				HttpURLConnection con = (HttpURLConnection)resUrl.openConnection();
+				con.setRequestMethod("POST");
+				con.setRequestProperty("Authorization", header);
+				BufferedReader br;
+				int responseCode = con.getResponseCode();
+				if(responseCode == 200) {
+					br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				}else {
+					br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+				}
+				String inputLine;
+				StringBuffer res = new StringBuffer();
+				while((inputLine = br.readLine()) != null) {
+					res.append(inputLine);
+				}
+				br.close();
+				Object finalResult = parsing.parse(res.toString());
+				JSONObject fr = (JSONObject)finalResult;
+				JSONObject resObj = (JSONObject)fr.get("response");
+				userInfo.put("id", (String)resObj.get("id"));
+				userInfo.put("mail",(String)resObj.get("email"));
+				userInfo.put("name",(String)resObj.get("name"));
+				userInfo.put("nickName",(String)resObj.get("nickname"));
+				userInfo.put("image",(String)resObj.get("profile_image"));
+			} catch (MalformedURLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				
+		return userInfo;
+		}
+		public int naverLogin(Member m) {
+			Connection conn = JDBCTemplate.getConnection();
+			MemberDao dao = new MemberDao();
+			int result = dao.searchSnsMember(conn,m.getMemberId()); //0 아니면 1이 나오는데 0 이면 인서트 1이면 그냥 반환 
+			if(result == 0) {
+				// 0이면 DB에 insert
+				int inResult = dao.naverLogin(conn,m);
+				if(inResult>0) {
+					JDBCTemplate.commit(conn);
+					result = 1;
+				}
+				else {
+					JDBCTemplate.rollback(conn);
+				}
+			}
+				JDBCTemplate.close(conn);
+			return result;
+		}
+	
 }
+

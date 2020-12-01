@@ -39,7 +39,7 @@ public class WebSocketServlet {
     		returnHTML += "<li><div><img src="+ml.get(i).getFilepath()+"></div><div>"+ml.get(i).getMemberName()+"님에게서 그룹 참여신청이 도착했습니다.<br><a href='/myPage?memberNo="+memberNo+"&alPage=1&glPage=1#glNavi'>신청내역 확인하기 ></a></div><div><img src='/img/delete.png'></div></li>";
     	}
     	else if(al.get(i).getAlarmSubject() ==1) {
-    		returnHTML += "<li><div><img src='/img/my.png'></div><div>공지사항이 등록되었습니다.<br><a href='#'>공지사항으로 이동하기 ></a></div><div><img src='/img/delete.png'></div></li>";
+    		returnHTML += "<li><div><img src='/img/my.png'></div><div>공지사항이 등록되었습니다.<br><a href='/noticeList?reqPage=1'>공지사항으로 이동하기 ></a></div><div><img src='/img/delete.png'></div></li>";
     	}
     	else {
     		System.out.println("알람 서브젝트 오류");

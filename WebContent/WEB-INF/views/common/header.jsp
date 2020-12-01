@@ -170,14 +170,14 @@
               <ul>
                   <li>
                   <% if(m!=null){ %>
-                   <a href="myStudyCalender?memberNo=<%=m.getMemberNo()%>">My Plan</a>
+                   <a href="/todayPlan?memberNo=<%=m.getMemberNo()%>">My Plan</a>
                     <ul class="nav-sub">
-                          <li><a href="#">개인스터디</a></li>
+                          <li><a href="/todayPlan?memberNo=<%=m.getMemberNo()%>">개인스터디</a></li>
                           <li><a href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>">그룹스터디</a><br>
                   <%}else {%>
-                   <a href="myStudyCalender?memberNo=0">My Plan</a>
+                   <a href="/todayPlan?memberNo=0">My Plan</a>
                    <ul class="nav-sub">
-                          <li><a href="#">개인스터디</a></li>
+                          <li><a href="/todayPlan?memberNo=0">개인스터디</a></li>
                           <li><a href="/myGroupStudyList?memberNo=0">그룹스터디</a><br>
                   <%} %>
                           </li>

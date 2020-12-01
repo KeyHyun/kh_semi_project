@@ -296,6 +296,12 @@ display:none;
 .btnWrap{
 	text-align: center;
 }
+#redFont{
+	color: red;
+}
+#blueFont{
+	color: blue;
+}
 </style>
 </head>
 <body>
@@ -405,7 +411,11 @@ display:none;
 								<td>
 									<%if(l.getAlarmStatus().charAt(0) == 'x') {%>
 									<a class="readVal" href="#" alarmNum="<%=l.getAlarmNo()%>">안읽음</a>
-									<%}else{%>
+									<%}else if(l.getAlarmStatus().charAt(0) == 'r'){%>
+									<a class="readVal" id="redFont">승인거부</a>
+									<%}else if(l.getAlarmStatus().charAt(0) == 'a') {%>
+									<a class="readVal" id="blueFont">승인</a>
+									<% }else{%>
 									<a class="readVal">읽음</a>
 									<%} %>
 								</td>
@@ -429,6 +439,8 @@ display:none;
 			var groupNo;
 			var readVal;
 			var applyMemberNo;
+			var alarmNum;
+			var stat;
 			$("#applyBtn").click(function(){
 				$.ajax({
 					url : "/checkMemberMax",
@@ -436,9 +448,17 @@ display:none;
 					data : {groupNo : groupNo},
 					success : function(data){
 						if(data>=groupMax){
-							alert("해당 그룹의 인원 수가 초과되어 멤버를 추가할 수 없습니다.");
-							readVal.html("실패");
-							readVal.css('color','red');
+							stat = "r";
+							$.ajax({
+								url : "/updateAlarm",
+								type : "post",
+								data : {alarmNum:alarmNum,stat:stat},
+								success : function(data){
+									readVal.html("실패");
+									readVal.css('color','red');
+									alert("해당 그룹의 인원 수가 초과되어 멤버를 추가할 수 없습니다.");
+								}
+							});
 						}
 						else{
 							$.ajax({
@@ -447,14 +467,30 @@ display:none;
 								data : {applyMemberNo:applyMemberNo,groupNo:groupNo},
 								success : function(data){
 									if(data){
-										readVal.html("승인");
-										readVal.css('color','green');
-										alert("그룹에 멤버를 성공적으로 추가했습니다.");
+										stat = "a";
+										$.ajax({
+											url : "/updateAlarm",
+											type : "post",
+											data : {alarmNum:alarmNum,stat:stat},
+											success : function(data){
+												readVal.html("승인");
+												readVal.css('color','blue');
+												alert("그룹에 멤버를 성공적으로 추가했습니다.");
+											}
+										});
 									}
 									else{
-										alert("그룹에 멤버를 추가하지 못했습니다. (Insert Error)");
-										readVal.html("실패");
-										readVal.css('color','red');
+										stat = "r";
+										$.ajax({
+											url : "/updateAlarm",
+											type : "post",
+											data : {alarmNum:alarmNum,stat:stat},
+											success : function(data){
+												readVal.html("실패");
+												readVal.css('color','red');
+												alert("Insert Error.");
+											}
+										});
 									}
 								}
 							});
@@ -469,11 +505,22 @@ display:none;
 			$("#rejectBtn").click(function(){
 				$(".modal_back").css('display','none');
 				$(".modal_content").css('display','none');
+				stat = "r";
+				$.ajax({
+					url : "/updateAlarm",
+					type : "post",
+					data : {alarmNum:alarmNum,stat:stat},
+					success : function(data){
+						readVal.html("실패");
+						readVal.css('color','red');
+						alert("거부완료");
+					}
+				});
 			});
 			$(".readVal").click(function(){
 				var status = $(this).html();
 				readVal = $(this);
-				var alarmNum = $(this).attr("alarmNum");
+				alarmNum = $(this).attr("alarmNum");
 				if(status == '안읽음'){
 					$(this).html("읽음");
 					$(this).css('color','grey');

@@ -196,4 +196,46 @@ public class AlarmDao {
 		return al;
 	}
 
+	public int insertApplyAlarm(Connection conn, int groupNo, int memberNo, String applyContent, int managerNo) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into alarm values(alarm_seq.nextval,?,?,?,'x',?,?)";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, applyContent);
+			pstmt.setInt(2, managerNo);
+			pstmt.setInt(3, groupNo);
+			pstmt.setInt(4,2);
+			pstmt.setInt(5, memberNo);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int updateStatus(Connection conn, int alarmNum, String stat) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update alarm set alarm_status = ? where alarm_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, stat);
+			pstmt.setInt(2, alarmNum);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return result;
+	}
+
+	
+
 }

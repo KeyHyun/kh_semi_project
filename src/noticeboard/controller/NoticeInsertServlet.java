@@ -14,6 +14,7 @@ import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
+import alarm.model.service.AlarmService;
 import noticeboard.model.service.NoticeBoardService;
 import noticeboard.model.vo.NoticeBoard;
 

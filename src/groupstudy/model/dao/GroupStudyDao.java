@@ -689,4 +689,28 @@ public class GroupStudyDao {
 			return filepath;
 		}
 
+		public int getManagerNo(Connection conn, int groupNo) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			String query = "select group_manager_no from group_studyroom where group_no = ?";
+			int result = 0;
+			
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, groupNo);
+				rset = pstmt.executeQuery();
+				if(rset.next()) {
+					result = rset.getInt("group_manager_no");
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				JDBCTemplate.close(rset);
+				JDBCTemplate.close(pstmt);
+			}
+		
+			return result;
+		}
+
 }

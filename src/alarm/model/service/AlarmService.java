@@ -77,4 +77,33 @@ public class AlarmService {
 		return al;
 	}
 
+	public int insertApplyAlarm(int memberNo, int groupNo, String applyContent) {
+		Connection conn = JDBCTemplate.getConnection();
+		
+		int managerNo = new GroupStudyDao().getManagerNo(conn,groupNo);
+		int result = new AlarmDao().insertApplyAlarm(conn,groupNo,memberNo,applyContent,managerNo);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}
+		else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+
+	public int updateStatus(int alarmNum, String stat) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new AlarmDao().updateStatus(conn,alarmNum,stat);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}
+		else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+
+
 }

@@ -398,5 +398,105 @@ public class MemberDao {
 		return list;
 	}
 
+	public int searchSnsMember(Connection conn, String id) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = -1;
+		String query="select member_no from member where member_id = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, id);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = 1;
+			}
+			else {
+				result = 0;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int insertSnsMember(Connection conn, String id, String name, String image) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into member values(member_seq.nextval,?,'Cvas2354Dgf','snsUser','snsUser@kakao.com',?,?,?,o,?)";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, id);
+			pstmt.setString(2,name);
+			pstmt.setString(3,image);
+			pstmt.setString(4, image);
+			pstmt.setInt(5, 2);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public Member selectSnsMember(Connection conn, String id) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select * from member where member_id = ?";
+		Member m = new Member();
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, id);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				m.setFilename(rset.getString("filename"));
+				m.setFilepath(rset.getString("filepath"));
+				m.setMemberEmail(rset.getString("member_email"));
+				m.setMemberGrade(rset.getInt("member_grade"));
+				m.setMemberId(rset.getString("member_id"));
+				m.setMemberName(rset.getString("member_name"));
+				m.setMemberNickname(rset.getString("member_nickname"));
+				m.setMemberNo(rset.getInt("member_no"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return m;
+	}
+
+	public int naverLogin(Connection conn, Member m) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into member values(member_seq.nextval,?,?,?,?,?,?,?,'o',?)";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, m.getMemberId());
+			pstmt.setString(2, "NAVERLOGIN154322");
+			pstmt.setString(3, m.getMemberName());
+			pstmt.setString(4, m.getMemberEmail());
+			pstmt.setString(5, m.getMemberNickname());
+			pstmt.setString(6, m.getFilename());
+			pstmt.setString(7, m.getFilepath());
+			pstmt.setInt(8, 2);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return result;
+	}
+
 }
 

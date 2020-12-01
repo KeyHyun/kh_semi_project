@@ -200,7 +200,7 @@
                     				</div>
                     				<div class="gl1-2">
                     					<img src="/img/group_icon3.png"><br>
-                    					참여인원 : <%=gsr.getGroupPersonnel() %> / <%=memberCnt %>
+                    					참여인원 : <%=memberCnt%> / <%=gsr.getGroupPersonnel()%>
                     				</div>
                     			</div>
                     			<div>
