@@ -48,8 +48,33 @@
             color: white;
             font-weight: bold;
             background: #6ED078;
-
         }
+      /*------------------------------여기부터 내가 건드린 css---------------------------------------------*/
+      	.timeInputs>img {
+        	margin-right:7px;
+        }
+        
+        .timeInputs{
+        	height:53px;
+        	float:right;
+        	line-height:55px;
+        }
+        #timeInput{
+        	width:130px;
+        	height:40px;
+        	outline:none;
+        	font-size:22px;
+        	border: 3px solid #fff;
+        	border-radius: 10px;
+        }
+        #timeSet{
+        	width:50px;
+        	height: 50px;
+        	background-color: #6ED078;
+        	outline:none;
+        	border:none;
+        }
+/*------------------------------여기까지 내가 건드린 css---------------------------------------------*/
 
         .groupList {
             width: 1018px;
@@ -57,7 +82,6 @@
             display: flex;
             background: #FDFDFD;
         }
-
 
         .leftMenuList {
             padding: 0;
@@ -226,14 +250,23 @@
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>개인스터디</li>
-                        <li><a class="leftMenuA" href="#"><img src="/img/calender2.png" style="margin-right: 10px;">일일 계획</a></li>
+                        <li><a class="leftMenuA" href="/todayPlan?memberNo=<%=m.getMemberNo()%>"><img src="/img/calender2.png" style="margin-right: 10px;">일일 계획</a></li>
                         <li><a class="leftMenuA" href="/myStudyCalender?memberNo=<%=m.getMemberNo()%>" style="background-color: #6ED078;"><img src="/img/day2.png" style="margin-right: 10px;">나의 스케줄</a></li>
                         <li><a class="leftMenuA" href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>"><img src="/img/group_icon2.png" style="margin-right: 10px;">참여중인 스터디</a></li>
                     </ul>
                 </div>
                 <div class="participatingGroup">
                     <div class="groupListTitle">
-                        2020년 11월 23일 (월) 오늘 할 일
+                        2020년 11월 23일 (월) 오늘 할 일   
+                        <div class="timeInputs">
+	                        <img src="/img/today_time_icon_black.png" style="width:33px; height:33px;">
+	                        <img id="start" src="/img/today_time_start.png" style="width:25px; height:26px;" onclick="func6();">
+		                    <img id="stop" src="/img/today_time_stop.png" style="width:25px; height:25px;" onclick="func7();">
+	                        <form action="/personalStudyRoomInsert?memberNo=<%=m.getMemberNo()%>" method="post" style="display:inline;">                        
+		                        <input type="text" id="timeInput" name="time" placeholder="00 : 00 : 000">
+		                        <input type="submit" id="timeSet" value="저장"> 
+	                        </form>
+                        </div>
                     </div>
                     <div class="groupList">
                         <div class="group_goal">
@@ -273,7 +306,31 @@
 		function openPop(){
 			var popup = window.open('/views/popUp.jsp','리스트 추가','width=350px,height=400px,scrollbars=no');
 		};
-
+        function func6(){
+            var timeInput = document.getElementById("timeInput");
+            var minute = 0;
+            var time = 0;
+            var sec = 0;
+            time2 = window.setInterval(function(){
+                var date = new Date();
+                var mill = date.getMilliseconds();
+                //p2.innerHTML = count + " : "+mill;
+                timeInput.value = minute + " : " + sec + " : "+mill;
+                if(mill >= 990){
+                    sec++;
+                }
+                if(sec >= 59 && mill >= 990){
+                	minute++;
+                	sec = 0;
+                }
+                if(minute >= 59 && sec >= 59 && mill >= 990){
+                	window.clearInterval(time2);
+                }
+            },10);
+        }
+        function func7(){
+            window.clearInterval(time2);
+        }
 </script>
 </body>
 </html>

@@ -23,40 +23,27 @@
 	height: 100px;
 }
 .content-wrap {
+	margin: 0 auto;
 	margin-top: 100px;
 	width: 1200px;
 	height: 1274px;
-	overflow: hidden;
-	margin: 0 auto;
-	width: 1200px;
 }
-.content-left {
-	float: left;
-	width: 182px;
-	height: 100%;
-	background-color: #DCDEDD;
-	text-align: center;
-}
-.content-left>p>a {
-	display: inline-block;
-	width: 100%;
-	color: black;
-	text-decoration: none;
-}
+
 .content-right {
-	float: left;
+	margin: 0 auto;
 	width: 1018px;
 	height: 100%;
 	text-align: center;
 }
 .content-title {
-	margin: 0;
+	display:inline-block;
 	width: 100%;
 	height: 53px;
 	color: #fff;
 	font-weight: bold;
 	line-height: 53px;
-	background-color: #6ED078;
+	text-align:center;
+	background-color: #75D701;
 }
 .search-box {
 	margin: 0 auto;
@@ -75,8 +62,9 @@
 	display: inline-block;
 	color: #fff;
 	font-weight: bold;
-	background-color: #6ED078;
+	background-color: #75D701;
 }
+
 .label:hover {
 	cursor: pointer;
 }
@@ -170,7 +158,7 @@ hr {
 	width: 150px;
 	height: 50px;
 	color: #fff;
-	background-color: #6ED078;
+	background-color: #75D701;
 	overflow: hidden;
 	box-sizing:none;
 }
@@ -202,13 +190,8 @@ select {
 				<%@ include file="/WEB-INF/views/common/header.jsp"%>
 			</div>
 			<div class="content-wrap">
-				<div class="content-left">
-					<p>
-						<a href="groupStudyList?reqPage=1">스터디 찾기</a>
-					</p>
-				</div>
+				<a href="groupStudyList?reqPage=1" class="content-title">스터디 찾기</a>
 				<div class="content-right">
-					<p class="content-title">스터디 찾기</p>
 					<div class="search-box">
 						<div class="label">검색어로 찾기</div>
 						<div class="label">카테고리로 찾기</div>

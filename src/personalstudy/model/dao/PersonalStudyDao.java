@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import common.JDBCTemplate;
+import personalstudy.model.vo.PersonalStudyRoom;
 import personalstudy.model.vo.PersonalStudyTask;
 
 public class PersonalStudyDao {
@@ -43,6 +44,28 @@ public class PersonalStudyDao {
 			JDBCTemplate.close(rset);
 		}
 		return pstl;
+	}
+	//일일계획-시간저장	12/02 16:08
+	public int insertPersonalStudyRoom(Connection conn, int memberNo, String time) {
+		System.out.println("DAO");
+		System.out.println(memberNo);
+		System.out.println(time);
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into personal_studyRoom values(?,to_char(sysdate,'yyyy-mm-dd'),'goal',to_char(sysdate, 'HH24:MI:SS'),?)";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, memberNo);
+			pstmt.setString(2, time);
+			result = pstmt.executeUpdate();
+			System.out.println(result);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
 	}
 
 }
