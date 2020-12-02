@@ -22,10 +22,9 @@
 <title>그룹스터디 만들기</title>
 <style>
     .wrap{
-        width: 1200px;
         margin: 0 auto;
     }
-
+    
     .header {
         width: 1200px;
         height: 100px;
@@ -34,7 +33,9 @@
 
     .myplan{
         overflow: hidden;
-        height: 1000px;
+        width: 1200px;
+        margin: 0 auto;
+        margin-bottom: 100px;
     }
 
     .leftMenu {
@@ -51,18 +52,19 @@
     }
 
     .groupTitle {
-        width: 1018px;
+        width: 100%;
         height: 53px;
         text-align: center;
         line-height: 53px;
         color: white;
         font-weight: bold;
-        background: #6ED078;
+        background: #75D701;
+        margin: 0;
+        font-size: 20px;
     }
 
     .groupContent {
-        width: 1018px;
-        background: #FDFDFD;
+        width: 1200px;
     }
     
 
@@ -94,7 +96,7 @@
     }
 	/* -------------------------------------------------------------- */
 	.groupContent{
-		padding-top: 20px;	
+		padding-top: 50px;	
 		/* height: 900px; */
 		height: 100%;
 	}
@@ -110,6 +112,7 @@
 	.gc{
 		float: left;
 		width: 50%;
+		margin-bottom: 70px;
 	}
 	.gcTitle{
 		display: inline-block;
@@ -118,21 +121,22 @@
 		font-size: 24px;
 		color: #464646;
 		margin: 0;
-		margin-left: 100px;
+		margin-left: 70px;
 	}
 	.gcContent{
 		font-family: Roboto;
 		font-size: 18px;
 		color: #464646;
 		margin: 0;
-		margin-left: 100px;
+		margin-left: 70px;
 	}
 	.line{
 		 margin: 0;
-		 width: 300px;
-		 margin-top: 3px;
-		 margin-bottom: 7px;
-		 margin-left: 100px;
+		 width: 450px;
+		 margin-top: 5px;
+		 margin-bottom: 20px;
+		 margin-left: 70px;
+		 background-color: #5f5f5f ;
 	}
 	/* createStudy-------------------------------------------------------------- */
 	.modalBtnDiv{
@@ -147,6 +151,7 @@
 		color: white;
 		font-size: 20px;
 		font-weight: bold;
+		border: none;
 	}
 	.groupTitle>input{
 		width: 40%;
@@ -160,19 +165,26 @@
 	}
 	
 	.explan{
-		width: 270px;
-		height: 20px;
+		width: 300px;
+		height: 30px;
 	}
 	
 	select{
 		width: 100px;
 		height: 30px;
+		border-color: #DBDBDB;
 	}
 	input{
 		outline: none;
+		border-color: #DBDBDB;
+		box-shadow: none;
 	}
 	textarea{
 		outline: none;
+		border-color: #DBDBDB;
+	}
+	img{
+		border-color: #DBDBDB;
 	}
 	
 	/* .explan:first-child{
@@ -189,18 +201,14 @@
 <body>
  	<section>
         <div class="wrap">
-            <div class="header">
+            <div class="header" style="margin: 0 auto;">
             	<%@ include file="/WEB-INF/views/common/header.jsp"%>
             </div>
+            
             <div class="myplan">
-                <div class="leftMenu">
-                    <ul class="leftMenuList">
-                    	<li>개인스터디</li>
-                    </ul>
-                </div>
                 <div class="groupDetail">
                 	<form action="/insertGroupStudyRoom" method="post" enctype="multipart/form-data">
-                    <div class="groupTitle"><label for="groutTitleInput">스터디이름 : </label><input type="text" id="groutTitleInput" name="groupTitle" placeholder="생성하려는 스터디이름을 정해주세요" style="outline: none" required="required"></div>
+                	<div class="groupTitle">그룹스터디 생성</div>
                     <div class="groupContent">
                     	<input type="hidden" name="groupManagerNo" value="<%=m.getMemberNo()%>"><!-- 생성하려는 사용자의id넘기기 -->
 	                    	<div class="category">
@@ -215,6 +223,7 @@
 	                    		<select id="sel2" name="category2">
 	                    		</select>
 	                    	</div>
+	                    	<div style="margin-bottom: 50px;"><p class="gcTitle"><label for="groutTitleInput">스터디이름 : </label> <input type="text" id="groutTitleInput" maxlength="15" name="groupTitle" placeholder="생성하려는 스터디이름을 정해주세요" style="outline: none; width:800px; font-size: 20px;" required="required"></p></div>
 	                    	<div class="gcWrap">
 	                    		<div class="gc">
 	                    			<p class="gcTitle">스터디기간</p>
@@ -244,7 +253,7 @@
 	                    			<p class="gcTitle">스터디 규칙</p>
 	                    			<hr class="line">
 	                    			<p class="gcContent">
-	                    				<textarea rows="3" cols="30" name="groupRule" style="resize: none; font-size: 20px;" required="required"></textarea>
+	                    				<textarea class="rowCheck" rows="5" cols="40" name="groupRule" maxlength="30" style="resize: none; font-size: 20px;" required="required"></textarea>
 	                    			</p>
 	                    			<br><br>
 	                    		</div>
@@ -252,7 +261,7 @@
 	                    			<p class="gcTitle"><img src="/img/Star1.png">스터디 공통계획</p>
 	                    			<hr class="line">
 	                    			<p class="gcContent planWrap">
-	                    				<input type="text" class="explan" maxlength="20" required="required"><img class="plus p1" src="/img/Group62.png">
+	                    				<input type="text" class="explan" maxlength="20" required="required"> <img class="plus p1" src="/img/Group62.png">
 	                    			</p>
 	                    			<input type="hidden" name="groupExplan"> <!-- 여기에 explan을 String으로 한번에 묶어서 보냄 -->
 	                    			<br><br>
@@ -263,11 +272,11 @@
 	                    			<p class="gcTitle">스터디원에게 한마디</p>
 	                    			<hr class="line">
 	                    			<p class="gcContent">
-	                    				<textarea rows="5" cols="30" name="groupContent" style="resize: none; font-size: 20px;" required="required"></textarea>
+	                    				<textarea class="rowCheck" rows="6" cols="40" name="groupContent" maxlength="90" style="resize: none; font-size: 20px;" required="required"></textarea>
 	                    			</p>
 	                    		</div>
 	                    		<div class="gc">
-	                    			<p class="gcTitle">스터디 프로필사진</p>
+	                    			<p class="gcTitle">스터디 프로필사진<sub style="font-size: 13px; color: gray;">파일없이 등록 시 기본 이미지</sub></p>
 	                    			<hr class="line">
 	                    			<p class="gcContent" style="font-size: 15px;">
 	                    				프로필 사진 : <input type="file" name="filename" onchange="loadImg(this)">
@@ -317,7 +326,7 @@
 	    
 	    //이렇게 걸면 동적으로 이벤트를 걸 수 있음 / 이안에서 생성한 태그같은 애들에게도 이벤트가 적용됨 !!!!
 	    $(document).on("click",".plus",function(){
-			var planInput = "<input type='text' class='explan' maxlength='20' required='required'>";
+			var planInput = "<input type='text' class='explan' maxlength='20' required='required'> ";
 			var plusImg = "<img class='plus' src='/img/Group62.png'>";
 			var minusImg = "<img class='plus' src='/img/Group58.png'>";
 			
@@ -385,6 +394,21 @@
 			$("#img-view").attr("src","");
 		}
 	}
+	
+	
+	
+	//스터디 규칙 / 스터디원에게 할말(groupRule,groupContent)
+	//입력 줄수 제한 (7졸까지가능)
+	$(".rowCheck").keyup(function(){
+		var str = $(this).val();
+		var str_arr = str.split("\n");  // 줄바꿈 기준으로 나눔 
+		var row = str_arr.length;  // row = 줄 수 
+		if(row >7){//마지막 입력문자 삭제
+			alert("7줄 이상 입력할 수 없습니다");
+			var lastChar = str.slice(0,-1); //열 
+			$(this).val(lastChar);
+		}
+	});
     </script>
 </body>
 </html>

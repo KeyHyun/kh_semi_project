@@ -2,14 +2,18 @@ package groupstudy.model.service;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import common.JDBCTemplate;
 import groupstudy.model.dao.GroupStudyDao;
 import groupstudy.model.vo.Category;
+import groupstudy.model.vo.GroupComment;
+import groupstudy.model.vo.GroupCommentMemberFilePath;
 import groupstudy.model.vo.GroupStudyMember;
 import groupstudy.model.vo.GroupStudyPageData;
 import groupstudy.model.vo.GroupStudyRoom;
 import groupstudy.model.vo.GroupStudyRoomAddCategory;
+import member.model.vo.Member;
 
 public class GroupStudyService {
 
@@ -130,14 +134,15 @@ public class GroupStudyService {
 		JDBCTemplate.close(conn);
 		return gspd;
 	}
-
+	
+	//(진선)
 	public ArrayList<Integer> selectGroupNo(int memberNo) {
 		Connection conn = JDBCTemplate.getConnection();
 		ArrayList<Integer> groupNoList = new GroupStudyDao().selectGroupNo(conn, memberNo);
 		JDBCTemplate.close(conn);
 		return groupNoList;
 	}
-	//groupList.jsp에 출력용 group이랑 category랑 짝이 맞아야해서 객체 새로 생성함
+	//(진선)groupList.jsp에 출력용 group이랑 category랑 짝이 맞아야해서 객체 새로 생성함
 	public ArrayList<GroupStudyRoomAddCategory> selectGroupStudyOne(ArrayList<Integer> groupNoList) {
 		Connection conn = JDBCTemplate.getConnection();
 		ArrayList<GroupStudyRoomAddCategory> gsrCateList = new ArrayList<GroupStudyRoomAddCategory>();
@@ -151,14 +156,14 @@ public class GroupStudyService {
 		JDBCTemplate.close(conn);
 		return gsrCateList;
 	}
-
+	//(진선)
 	public GroupStudyRoom selectGroupStudyOne(int groupNo) {
 		Connection conn = JDBCTemplate.getConnection();
 		GroupStudyRoom gsr = new GroupStudyDao().selectGroupStudyOne(conn, groupNo);
 		JDBCTemplate.close(conn);
 		return gsr;
 	}
-
+	//(진선)
 	public Category selectCategory(int categoryNo) {
 		Connection conn = JDBCTemplate.getConnection();
 		Category category = new GroupStudyDao().selectCategory(conn, categoryNo);
@@ -166,7 +171,7 @@ public class GroupStudyService {
 		return category;
 	}
 	
-	//groupNo으로 선택한그룹스터디에 참여중인 인원수 가져오기
+	//(진선)groupNo으로 선택한그룹스터디에 참여중인 인원수 가져오기
 	public int selectMemberNo(int groupNo) {
 		Connection conn = JDBCTemplate.getConnection();
 		int memberCnt = new GroupStudyDao().selectMemberNo(conn, groupNo);
@@ -174,7 +179,7 @@ public class GroupStudyService {
 		return memberCnt;
 	}
 	
-	//조기현(참여요청 시 apply테이블이 insert!!!)
+	//(진선)조기현(참여요청 시 apply테이블이 insert!!!)
 	public int insertApplyGroupMember(int memberNo, int groupNo, String applyContent) {
 		Connection conn = JDBCTemplate.getConnection();
 		int result = new GroupStudyDao().insertApplyGroupMember(conn,memberNo,groupNo,applyContent);
@@ -186,21 +191,23 @@ public class GroupStudyService {
 		JDBCTemplate.close(conn);
 		return result;
 	}
-
+	
+	//(진선)
 	public ArrayList<String> categorySelAjax(String sel1) {
 		Connection conn = JDBCTemplate.getConnection();
 		ArrayList<String> categoryList = new GroupStudyDao().categorySelAjax(conn,sel1);
 		JDBCTemplate.close(conn);
 		return categoryList;
 	}
-
+	
+	//(진선)
 	public int createRoomCntCheck(int memberNo) {
 		Connection conn = JDBCTemplate.getConnection();
 		int roomCnt = new GroupStudyDao().createRoomCntCheck(conn,memberNo);
 		JDBCTemplate.close(conn);
 		return roomCnt;
 	}
-
+	//(진선)
 	public int selectCategoryNo(String category1, String category2) {
 		Connection conn = JDBCTemplate.getConnection();
 		int categoryNo = new GroupStudyDao().selectCategoryNo(conn,category1,category2);
@@ -208,7 +215,7 @@ public class GroupStudyService {
 		return categoryNo;
 	}
 	
-	//groupStudyRoom, groupStudyMember(방장) 2개 한번에 insert(하나의 conn)
+	//(진선)groupStudyRoom, groupStudyMember(방장) 2개 한번에 insert(하나의 conn)
 	public int insertGroupStudyRoom(GroupStudyRoom gsr) {
 		Connection conn = JDBCTemplate.getConnection();
 		int result = new GroupStudyDao().insertGroupStudyRoom(conn,gsr);
@@ -216,6 +223,7 @@ public class GroupStudyService {
 		if(result>0) {
 			//groupStudyMember 테이블에도 방장을 insert함(groupMangerNo을 가지고 제일 최근에 만들어진 groupNo으로 insert)
 			int lastGroupNo = new GroupStudyDao().selectManagerGroupNo(conn, gsr.getGroupManagerNo());//최근 groupNo구하기
+			System.out.println("신규 스터디그룹 번호 : "+lastGroupNo);
 			result2 = new GroupStudyDao().insertGroupStudyMember(conn, gsr.getGroupManagerNo(), lastGroupNo);//방장도 groupStudyMember에 저장
 			if(result2>0) {
 				JDBCTemplate.commit(conn);
@@ -270,5 +278,72 @@ public class GroupStudyService {
 		ArrayList<GroupStudyMember> gsmList = new GroupStudyDao().selectGroupStudyMemberAll(conn, groupNo);
 		JDBCTemplate.close(conn);
 		return gsmList;
+	}
+
+	//(진선)참여중인스터디 > 상세보기 > 댓글전체 불러오기
+	public GroupCommentMemberFilePath selectGroupCommentAll(int groupNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		ArrayList<GroupComment> gcList = new GroupStudyDao().selectGroupCommentAll(conn, groupNo);
+		ArrayList<String> memberIdList = new GroupStudyDao().selectMemberIdDistinct(conn,groupNo);
+		HashMap<String, String> memberIdFileMap = new HashMap<String, String>();
+		for(String memberId : memberIdList) {//memberId와 filepath를 한번에 저장
+			Member memberIdFile = new GroupStudyDao().selectMemberIdFilepath(conn,memberId);
+			memberIdFileMap.put(memberIdFile.getMemberId(), memberIdFile.getFilepath());//memberId를 키로 filepath를 값으로 가져옴
+		}
+		GroupCommentMemberFilePath gcmf = new GroupCommentMemberFilePath(gcList, memberIdFileMap);
+		JDBCTemplate.close(conn);
+		return gcmf;
+	}
+	
+	//(진선)댓글 수정하기
+	public int updateGroupComment(int commentNo, String commentContent) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new GroupStudyDao().updateGroupComment(conn, commentNo, commentContent);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+	
+	//(진선)댓글 삭제하기
+	public int deleteGroupComment(int commentNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new GroupStudyDao().deleteGroupComment(conn, commentNo);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+	
+	//(진선)댓글 작성하기(insert)
+	public int insertGroupComment(int groupNo, String commentWriter, String commentContent) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new GroupStudyDao().insertGroupComment(conn, groupNo, commentWriter, commentContent);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+	
+	//(진선)댓글 첨부파일 업로드(insert)
+	public int insertGroupCommentFile(int groupNo, String commentWriter, String commentTitle, String filename, String filepath) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new GroupStudyDao().insertGroupCommentFile(conn, groupNo, commentWriter, commentTitle, filename, filepath);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
 	}
 }

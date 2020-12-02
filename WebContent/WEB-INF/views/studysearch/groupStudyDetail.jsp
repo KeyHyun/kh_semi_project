@@ -22,7 +22,6 @@
 <title><%=gsr.getGroupTitle() %></title>
 <style>
     .wrap{
-        width: 1200px;
         margin: 0 auto;
     }
 
@@ -34,6 +33,9 @@
 
     .myplan{
         overflow: hidden;
+        width: 1200px;
+        margin: 0 auto;
+        margin-bottom: 100px;
     }
 
     .leftMenu {
@@ -50,20 +52,19 @@
     }
 
     .groupTitle {
-        width: 1018px;
+        width: 100%;
         height: 53px;
         text-align: center;
         line-height: 53px;
         color: white;
         font-weight: bold;
-        background: #6ED078;
+        background: #75D701;
+        margin: 0;
+        font-size: 20px;
     }
 
     .groupContent {
-        width: 1018px;
-        height: 867px;
-
-        background: #FDFDFD;
+        width: 1200px;
     }
     
 
@@ -95,11 +96,10 @@
     }
 	/* -------------------------------------------------------------- */
 	.groupContent{
-		padding-top: 20px;	
-		height: 847px;
+		padding-top: 30px;	
 	}
 	.category{
-		font-size: 15px;
+		font-size: 18px;
 		font-family: Roboto;
 		margin-left:30px;
 		margin-bottom: 50px;
@@ -110,6 +110,7 @@
 	.gc{
 		float: left;
 		width: 50%;
+		margin-bottom: 70px;
 	}
 	.gcTitle{
 		display: inline-block;
@@ -118,21 +119,24 @@
 		font-size: 24px;
 		color: #464646;
 		margin: 0;
-		margin-left: 100px;
+		margin-left: 70px;
 	}
 	.gcContent{
 		font-family: Roboto;
 		font-size: 18px;
 		color: #464646;
 		margin: 0;
-		margin-left: 100px;
+		margin-left: 70px;
+		outline: none;
+		border: none;
 	}
 	.line{
 		 margin: 0;
-		 width: 300px;
-		 margin-top: 3px;
-		 margin-bottom: 7px;
-		 margin-left: 100px;
+		 width: 450px;
+		 margin-top: 5px;
+		 margin-bottom: 20px;
+		 margin-left: 70px;
+		 background-color: #5f5f5f ;
 	}
 	/* 모달------------------------------------------------------------ */
 	.modalBtnDiv{
@@ -168,9 +172,12 @@
       max-width: 500px;
       min-width: 300px;
       min-height: 340px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
     }
-    .modal-top123>h3{
+    .modal-top123>h4{
       text-align: center;
+      color: green;
     }
     .modal-content123{
     	padding-left: 50px;
@@ -191,24 +198,19 @@
 <body>
  	<section>
         <div class="wrap">
-            <div class="header">
+            <div class="header" style="margin: 0 auto;">
             	<%@ include file="/WEB-INF/views/common/header.jsp"%>
             </div>
             <div class="myplan">
-                <div class="leftMenu">
-                    <ul class="leftMenuList">
-                    	<li>개인스터디</li>
-                    </ul>
-                </div>
                 <div class="groupDetail">
-                    <div class="groupTitle"><%=gsr.getGroupTitle() %></div>
+                <div class="groupTitle"><%=gsr.getGroupTitle() %></div>
                     <div class="groupContent">
-                    	<div class="category">분류 <%=category.getCategory1() %> > <%=category.getCategory2() %></div>
+                    	<div class="category">분류 | <%=category.getCategory1() %> > <%=category.getCategory2() %></div>
                     	<div class="gcWrap">
                     		<div class="gc">
                     			<p class="gcTitle">스터디기간</p>
                     			<hr class="line">
-                    			<p class="gcContent"><%=gsr.getGroupStartDate() %> ~ <%=gsr.getGroupEndDate() %></p>
+                    			<p class="gcContent">시작일 : <%=gsr.getGroupStartDate() %> ~ 종료일 : <%=gsr.getGroupEndDate() %></p>
                     		</div>
                     		<div class="gc">
                     			<p class="gcTitle">참여인원</p>
@@ -231,7 +233,7 @@
                     		<div class="gc">
                     			<p class="gcTitle">스터디 규칙</p>
                     			<hr class="line">
-                    			<p class="gcContent"><%=gsr.getGroupRuleBr() %></p>
+                    			<textarea class="gcContent" rows="7" cols="45" style="resize: none;" readonly="readonly"><%=gsr.getGroupRule() %></textarea>
                     		</div>
                     		<div class="gc" style="height: 200px;">
                     			<p class="gcTitle"><img src="/img/Star1.png">스터디 공통계획</p>
@@ -268,7 +270,7 @@
     		<div class="modal123">
       			<div class="modal-top123">
       				<br>
-        			<h3>그룹장에게 참여 요청 메시지를 보냅니다</h3>
+        			<h4>그룹장에게 참여 요청 메시지를 보냅니다</h4>
         			<hr>
       			</div>
       			<form action="/insertApplyGroupMember" method="post">
@@ -279,9 +281,9 @@
       			
       			<div class="modal-content123">
 			       	 <p>그룹장에게 자신을 소개해보세요</p>
-			         <textarea rows="5" cols="45" name="applyContent" style="resize: none" required="required"></textarea>
+			         <textarea rows="5" cols="53" name="applyContent" style="resize: none" required="required"></textarea>
       			</div>
-      			<hr>
+      			<hr width="80%;">
       			<div class="modal-button123">
       				<input type="submit" value="전송">
 			        <input type="button" value="취소">
@@ -300,7 +302,7 @@
         	<%
 	        	int check = 0;
 	        	for(GroupStudyMember gsm : gsmList){
-	            	if(m.getMemberNo()==gsm.getMemberNo()){
+	            	if(m!=null && m.getMemberNo()==gsm.getMemberNo()){
 	            		check = 1;
 	            	}
 	            }
@@ -316,9 +318,6 @@
           		$(".modal-wrap123").css("display","flex");
           	<%}%>
         });
-        
-        
-        
         
         $("input[type=button]").click(function(){
           $(".modal-wrap123").css("display","none");
