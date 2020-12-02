@@ -8,81 +8,80 @@
 </head>
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
+  .wrap{
+        width: 1200px;
+        margin: 0 auto;
+    }
 
-        .wrap {
-            margin: 0 auto;
-            width: 1200px;
-        }
+    .header {
+        width: 1200px;
+        height: 100px;
+    }
 
-        .header {
-            width: 1200px;
-            height: 100px;
-            background: green;
-        }
+    .myplan{
+        overflow: hidden;
+    }
 
-        .myplan {
-            overflow: hidden;
-        }
+    .leftMenu {
+        width: 182px;
+        height: 920px;
 
-        .leftMenu {
-            width: 182px;
-            height: 920px;
-            background: #E1E1E1;
-            float: left;
-        }
+        float: left;
+    }
+    
+    .participatingGroup {
+        float: left;
+        height: 920px;
+    }
 
-        .participatingGroup {
-            float: left;
-        }
+    .groupListTitle {
+        width: 100%;
+        height: 53px;
+        text-align: center;
+        line-height: 53px;
+        color: white;
+        font-weight: bold;
+        background: #75D701;
+    }
 
-        .groupListTitle {
-            width: 1018px;
-            height: 58px;
-            text-align: center;
-            line-height: 58px;
-            color: white;
-            font-weight: bold;
-            background: #6ED078;
-        }
+    .groupList {
+        width: 1018px;
+        height: 867px;
+    }
 
-        .groupList {
-            width: 1018px;
-            background: #FDFDFD;
-        }
-
-        .leftMenuList {
-            padding: 0;
-            margin: 0;
-            list-style-type: none;
-            line-height: 58px;
-        }
-
-        .leftMenuA {
-            display: block;
-            width: 100%;
-            height: 58px;
-            color: black;
-            font-size: 13px;
-            font-weight: bold;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .leftMenuA:hover {
-            color: black;
-            text-decoration: none;
-        }
-
-        .leftMenuList>li:first-child {
-            text-indent: 0;
-            text-align: center;
-            font-weight: bold;
-            font-size: 20px;
-        }
+    .leftMenuList{
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+        text-indent: 25px;
+        line-height: 58px;
+    }
+    .leftMenuA{
+        display: block;
+        width: 100%;
+        height: 58px;
+        color: black;
+        font-size: 13px;
+        font-weight: bold;
+        text-decoration: none;
+        border-left: 10px solid white;
+    }
+    .leftMenuA:hover{
+        color: black;
+        text-decoration: none;
+        border-left: 10px solid #75D701;
+    }
+    /* 해당 페이지의 메뉴를 고정으로 */
+    .leftMenuList>li:nth-child(3)>a{
+        border-color: #75D701;
+    }
+    
+    .leftMenuList>li:first-child{
+        text-indent: 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px;
+    }
 
         .title {
             margin-left: 20px;
@@ -105,24 +104,23 @@
         }
     </style>
 <body>
-<div>
-	   <%@inclue file="file="/WEB-INF/views/common/header.jsp" %>
-</div>
-    <section>
-        <div class="wrap">
-            <div class="header">헤더부분</div>
+	 <section>
+         <div class="wrap">
+            <div class="header">
+                <%@ include file="/WEB-INF/views/common/header.jsp"%>
+            </div>
             <div class="myplan">
+                    <div class="groupListTitle">개인정보처리방침</div>
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>이용안내</li>
                         <li><a class="leftMenuA" href="/usePolicy">이용약관</a></li>
-                        <li><a class="leftMenuA" href="/privacyPersonal" style="background-color: #6ED078; ">개인정보처리방침</a></li>
+                        <li><a class="leftMenuA" href="/privacyPersonal">개인정보처리방침</a></li>
                         <li><a class="leftMenuA" href="/servicePolicy">운영정책</a></li>
                     </ul>
                 </div>
                 <div class="participatingGroup">
-                    <div class="groupListTitle">개인정보처리방침</div>
-                    <div class="groupList">
+                    <div class="groupList"><br><br>
                         <div class="body">
                             <div class="text">
                                 <h1>개인정보처리방침</h1>
@@ -257,6 +255,15 @@
     <div>
     	<%@ include file="/WEB-INF/views/common/footer.jsp" %>
     </div>
-	
+	<script>
+	    //사이드메뉴바 호버기능
+	    $(".leftMenuA").hover(function(){
+	       $(".leftMenuA").eq(1).attr("style","border-color : white");
+	       $(this).attr("style","border-color : #75D701");
+	    },function(){
+	       $(".leftMenuA").attr("style","border-color : white");
+	       $(".leftMenuA").eq(1).attr("style","border-color : #75D701");
+	    });
+	</script>
 </body>
 </html>

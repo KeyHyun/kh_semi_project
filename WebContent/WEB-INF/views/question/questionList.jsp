@@ -1,9 +1,9 @@
-<%@page import="noticeboard.model.vo.NoticeBoard"%>
+<%@page import="questionboard.model.vo.QuestionBoard"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-    	ArrayList<NoticeBoard> list = (ArrayList<NoticeBoard>)request.getAttribute("list");
+    	ArrayList<QuestionBoard> list = (ArrayList<QuestionBoard>)request.getAttribute("list");
 		String pageNavi = (String)request.getAttribute("pageNavi");
     %>
 <!DOCTYPE html>
@@ -11,13 +11,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>공지사항</title>
+    <title>고객문의</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.js"></script>
 <style>
- .wrap{
+.wrap{
         width: 1200px;
         margin: 0 auto;
     }
@@ -81,7 +81,7 @@
         border-left: 10px solid #75D701;
     }
     /* 해당 페이지의 메뉴를 고정으로 */
-    .leftMenuList>li:nth-child(2)>a{
+    .leftMenuList>li:nth-child(3)>a{
         border-color: #75D701;
     }
     
@@ -91,7 +91,6 @@
         font-weight: bold;
         font-size: 20px;
     }
-    
 
     .title {
         margin-left: 20px;
@@ -133,13 +132,11 @@
     	background-color : #38AF52;
     }
     
-    .notice-content, .notice-content>a{
+    a{
     	color:black;
-    	width:450px;
-		text-align: left;
     }
     
-   .table th, .table td{
+    .table th, .table td{
 	  font-size: 12px;    
 	  line-height: 19px;
 	  color:#20232;
@@ -150,25 +147,41 @@
 	
 	.table th{
 		font-weight: bold;  
-		border-top: 1px solid #414141;
 	}
 	
 	.statusY{
-		color : #C50000;
+		color : #004106;
+		border: 1px solid #64CC6F;
+	}
+	
+	.statusN{
+		color : #630000;
 		border: 1px solid #CD5F5F;
 	}
-
+	
+	.tableTitle{
+		width:450px;
+		text-align: left;
+	}
+	
+	.tableStatus{
+		width:100px;
+	}
+	
+	.table-wrap{
+		min-height: 500px;
+	}
 
 </style>
 
 <body>
-    <section>
+	 <section>
          <div class="wrap">
             <div class="header">
                 <%@ include file="/WEB-INF/views/common/header.jsp"%>
             </div>
             <div class="myplan">
-                    <div class="groupListTitle">공지사항</div>
+                    <div class="groupListTitle">고객센터</div>
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>고객센터</li>
@@ -180,31 +193,56 @@
                     <div class="groupList">
                         <section>
                         <br>
-                            <table class="table" style="width:95%;border-top:2px solid #6ECF4C; margin:0 auto; text-align:center;">
+                        <%if(m!=null){ %>
+                       		<div style="text-align:right; margin-bottom:5px;">
+								<a href="/questionWriteFrm" class="btn btn-primary btn-sm" style="margin-right:30px;background-color:#fff;border:1px solid #DEDEDE;color:#525252">문의글 등록</a>
+							</div>
+							<%} %>
+							<div class="table-wrap">
+                            <table class="table" style="width:95%; border-top:2px solid #6ECF4C; margin:0 auto; text-align:center;">
                                 <tr>
                                     <th>순서</th>
-                                    <th>분류</th>
+                                    <th></th>
                                     <th>제목</th>
                                     <th>작성자</th>
                                     <th>작성일</th>
                                 </tr>
-                                <%for(NoticeBoard n : list){ %>
+                                <%for(QuestionBoard q : list){ %>
                                 <tr>
-                                    <td><%=n.getRnum() %></td>
-                                   <td style="display:none;"><%=n.getNoticeNo() %></td>
+                                    <td><%=q.getRnum() %></td>
+                                   <td style="display:none;"><%=q.getQuestionNo() %></td>
                                    <td class="tableStatus">
-	                                    <%if(n.getNoticeStatus()==0){ %>
-	                                    <div class="statusY"> 공지 </div>
+	                                    <%if(q.getAnswerStatus().charAt(0)=='y'){ %>
+	                                    <div class="statusY"> 완료 </div>
 	                                    <%} else{%>
-	                                    <div class="statusN"> 일반 </div>
+	                                    <div class="statusN"> 미답변 </div>
 	                                    <%} %>
                                     </td>
-                                    <td class="notice-content"><a  href="/noticeView?noticeNo=<%=n.getNoticeNo() %>"><%=n.getNoticeTitle() %></a></td>
-                                    <td>운영자</td>
-                                    <td><%=n.getNoticeEnrollDate() %></td>
+                                    <td  class="tableTitle" >
+                                    
+                                    <!-- 비밀글일때 -->
+                                    <%if(q.getQuestionPw()==1){ %>
+	                                    <!-- 로그인 안 했을 때 -->
+	                                    <%if(m ==null){ %>
+	                                    <a href="javascript:onclick()"><%=q.getQuestionTitle() %></a>
+	                                    
+	                                    <!-- 로그인 했을 때 -->
+	                                    <%} else{%>
+	                                    <a href="/questionView?questionNo=<%=q.getQuestionNo() %>&memberId=<%=m.getMemberId()%>&writerId=<%=q.getQuestionWriterId()%>"><%=q.getQuestionTitle() %></a>
+	                                    <%}%>
+	                                    <img src="/img/lock.png" style="width:10px;">
+                                    
+                                    <!-- 비밀글 아닐때 -->
+                                    <%} else{%>
+	                                    <a href="/questionView?questionNo=<%=q.getQuestionNo() %>&memberId=&writerId="><%=q.getQuestionTitle() %></a>
+                                    <%}%>
+                                    </td>
+                                    <td><%=q.getQuestionWriterId() %></td>
+                                    <td><%=q.getQuestionWriteDate() %></td>
                                 </tr>
                                 <%} %>
                             </table>
+                            </div>
                             <br><br>
                             <div class="text-center" style="width:100%; margin:0 auto;">
 								<ul class="pagination" >
@@ -220,16 +258,20 @@
     <div>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
     </div>
-<script>
-	//사이드메뉴바 호버기능
-	$(".leftMenuA").hover(function(){
-	   $(".leftMenuA").eq(0).attr("style","border-color : white");
-	   $(this).attr("style","border-color : #75D701");
-	},function(){
-	   $(".leftMenuA").attr("style","border-color : white");
-	   $(".leftMenuA").eq(0).attr("style","border-color : #75D701");
-	});
-</script>
+	<script>
+    function onclick() {
+        alert('비밀글 입니다.');
+    }
+    
+    //사이드메뉴바 호버기능
+    $(".leftMenuA").hover(function(){
+       $(".leftMenuA").eq(2).attr("style","border-color : white");
+       $(this).attr("style","border-color : #75D701");
+    },function(){
+       $(".leftMenuA").attr("style","border-color : white");
+       $(".leftMenuA").eq(2).attr("style","border-color : #75D701");
+    });
+	</script>
 </body>
 
 </html>

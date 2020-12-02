@@ -3,11 +3,17 @@
  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700' rel='stylesheet' type='text/css'>
  
   <style>
+  <!-----------------------여기 추가 -->
+		  .footer-wrap{
+		  	width:100%;
+		  	height:270px;
+		  	background-color: #F8F8FF;
+		  }
         footer {
             width: 1200px;
             height: 270px;
             margin: 0 auto;
-            background-color: #DCDCDC;
+            background-color: #F8F8FF;
             padding-top: 22px;
         }
         pre {
@@ -42,7 +48,7 @@
         .footer-line {
             margin-left: 0px;
             margin-right: 0px;
-            border-top: 1px solid #CACACA;
+            border-top: 1px solid #ECECEC;
         }
         footer>div:last-child{
             color: #B2B2B2;
@@ -51,12 +57,13 @@
         }
   		pre{
   		padding:0px;
-  		background-color: #DCDCDC;
+  		background-color: #F8F8FF;
   		border :none;
   		}
     </style>
     
 <body>
+<div class="footer-wrap">
     <footer>
         <div>
             <div><a href="#"><img src="/img/logo2.png"></a></div>
@@ -72,4 +79,5 @@ KH당산지점 : 1544-9970 | 담당 강사님 이윤수
         <div class="footer-line"></div>
         <div>Copyright © 1998-2020 KH Information Educational Institute All Right Reserved</div>
     </footer>
+    </div>
 </body>

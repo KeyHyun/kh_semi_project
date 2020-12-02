@@ -354,6 +354,10 @@ public class GroupStudyService {
 				pageNavi += "<li class='page-item'><a class='page-link' href='/groupStudyListManager?reqPage="+pageNo+"'>>></a></li>";
 			}
 
+			if(pageNo==2) {
+				pageNavi="";
+			}
+			
 			//10. 리스트+태그텍스트+멤버 카운트를 객체에 넣어줌
 			GroupManagePage gmp = new GroupManagePage(list, pageNavi, memberCount);
 			JDBCTemplate.close(conn);

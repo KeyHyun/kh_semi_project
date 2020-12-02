@@ -318,8 +318,9 @@ public class MemberService {
 				}else {
 					JDBCTemplate.rollback(conn);
 				}
-				JDBCTemplate.close(conn);
+				
 			}
+			JDBCTemplate.close(conn);
 			return result;
 		}
 
@@ -396,9 +397,14 @@ public class MemberService {
 				pageNavi += "<li class='page-item'><a class='page-link' href='/memberList?reqPage="+pageNo+"'>>></a></li>";
 			}
 			
+			if(pageNo==2) {
+				pageNavi="";
+			}
+			
 			//10. 리스트와 태그 텍스트를 객체에 넣어줌
 			MemberManagePage mmp = new MemberManagePage(list, pageNavi);
 			JDBCTemplate.close(conn);
 			return mmp;
 		}
+
 }

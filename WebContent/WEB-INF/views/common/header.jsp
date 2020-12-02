@@ -175,6 +175,7 @@
                           <li><a href="#">개인스터디</a></li>
                           <li><a href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>">그룹스터디</a><br>
                   <%}else {%>
+<!-- ---------------------기현님, 개인스터디 경로 수정했어요------------------------------------- -->
                    <a href="myStudyCalender?memberNo=0">My Plan</a>
                    <ul class="nav-sub">
                           <li><a href="#">개인스터디</a></li>

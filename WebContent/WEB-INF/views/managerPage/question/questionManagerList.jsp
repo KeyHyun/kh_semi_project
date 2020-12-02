@@ -1,26 +1,23 @@
-<%@page import="java.util.HashMap"%>
-<%@page import="groupstudy.model.vo.GroupStudyMember"%>
-<%@page import="groupstudy.model.vo.GroupStudyRoom"%>
+<%@page import="questionboard.model.vo.QuestionBoard"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-	<%
-    	ArrayList<GroupStudyRoom> list = (ArrayList<GroupStudyRoom>)request.getAttribute("list");
+<%
+    	ArrayList<QuestionBoard> list = (ArrayList<QuestionBoard>)request.getAttribute("list");
 		String pageNavi = (String)request.getAttribute("pageNavi");
-		HashMap<Integer, Integer> memberCount = (HashMap<Integer, Integer>)request.getAttribute("memberCount");
-	%>
+    %>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
-    <title>관리자|그룹스터디 관리</title>
+    <title>관리자|고객문의 관리</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.js"></script>
 <style>
-.wrap{
+ .wrap{
         width: 1200px;
         margin: 0 auto;
     }
@@ -84,7 +81,7 @@
         border-left: 10px solid #75D701;
     }
     /* 해당 페이지의 메뉴를 고정으로 */
-    .leftMenuList>li:nth-child(3)>a{
+    .leftMenuList>li:nth-child(5)>a{
         border-color: #75D701;
     }
     
@@ -94,7 +91,6 @@
         font-weight: bold;
         font-size: 20px;
     }
-
     .title {
         margin-left: 20px;
     }
@@ -135,6 +131,16 @@
     	background-color : #38AF52;
     }
 
+	.statusY{
+		color : #004106;
+		border: 1px solid #64CC6F;
+	}
+	
+	.statusN{
+		color : #630000;
+		border: 1px solid #CD5F5F;
+	}
+	
 </style>
 
 <body>
@@ -144,7 +150,7 @@
                 <%@ include file="/WEB-INF/views/common/managerHeader.jsp"%>
             </div>
             <div class="myplan">
-                    <div class="groupListTitle">그룹스터디 관리</div>
+                    <div class="groupListTitle">고객문의 관리</div>
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>관리자</li>
@@ -159,32 +165,33 @@
                     <div class="groupList">
                         <section>
                         <br><br>
-                            <table class="table" style="width:95%;  margin:0 auto; text-align:center; "">
+                            <table class="table" style="width:95%;  margin:0 auto; text-align:center;">
                                 <tr>
                                     <th>선택</th>
-                                    <th>그룹번호</th>
-                                    <th>그룹장</th>
+                                    <th>순서</th>
+                                    <th>상태</th>
                                     <th>제목</th>
-                                    <th>기간</th>
-                                    <th>인원수</th>
-
+									<th>작성자</th>
+                                    <th>작성일</th>
                                 </tr>
-                                <%for(GroupStudyRoom gsr : list){ %>
+                                <%for(QuestionBoard q : list){ %>
                                 <tr>
                                     <td><input type="checkbox" class="chk"></td>
-                                    <td style="display:none"><%=gsr.getGroupNo() %></td>
-                                    <td><%=gsr.getGroupNo() %></td>
-                                    <td><%=gsr.getGroupManagerNo() %></td>
-                                    <td><%=gsr.getGroupTitle() %></td>
-                                    <td><%=gsr.getGroupStartDate() %>~<%=gsr.getGroupEndDate() %></td>
-                                    <%if(memberCount.containsKey(gsr.getGroupNo())){ %>
-                                    	<td><%=memberCount.get(gsr.getGroupNo()) %>/<%=gsr.getGroupPersonnel() %></td>
-                                    <%}else{ %>
-                                    	<td>1/<%=gsr.getGroupPersonnel() %></td>
-                                    <%} %>
+                                   <td style="display:none;"><%=q.getQuestionNo() %></td>
+                                   <td><%=q.getRnum() %></td>
+                                   <td class="tableStatus">
+	                                     <%if(q.getAnswerStatus().charAt(0)=='y'){ %>
+	                                    <div class="statusY"> 완료 </div>
+	                                    <%} else{%>
+	                                    <div class="statusN"> 미답변 </div>
+	                                    <%} %>
+                                    </td>
+                                    <td><a href="/questionView?questionNo=<%=q.getQuestionNo() %>&memberId=admin&writerId="><%=q.getQuestionTitle() %></a></td>
+                                    <td><%=q.getQuestionWriterId() %></td>
+                                    <td><%=q.getQuestionWriteDate() %></td>
                                 </tr>
-                                <%}  %>
-                                <tr>
+                                <%} %>
+                      <tr>
                                     <th>
                                         <button class="btn btn-primary btn-sm deleteAllBtn">삭제하기</button>
                                     </th>
@@ -208,19 +215,19 @@
                                     num.push($(item).parent().next().html());
                                 });
                                 if(num.length==0){
-                                	alert('삭제할 그룹을 선택해주세요.');
+                                	alert('삭제할 글을 선택해주세요.');
                                 }else{
-                                	location.href = "/deleteAllGroup?num=" + num.join("/");
+                                	location.href = "/managerQuestionAllDelete?num=" + num.join("/");
                                 }
                             });
                             
                             //사이드메뉴바 호버기능
                             $(".leftMenuA").hover(function(){
-                               $(".leftMenuA").eq(1).attr("style","border-color : white");
+                               $(".leftMenuA").eq(3).attr("style","border-color : white");
                                $(this).attr("style","border-color : #75D701");
                             },function(){
                                $(".leftMenuA").attr("style","border-color : white");
-                               $(".leftMenuA").eq(1).attr("style","border-color : #75D701");
+                               $(".leftMenuA").eq(3).attr("style","border-color : #75D701");
                             });
                         </script>
 

@@ -1,21 +1,21 @@
-<%@page import="noticeboard.model.vo.NoticeBoard"%>
+<%@page import="questionboard.model.vo.QuestionBoard"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-    	NoticeBoard n = (NoticeBoard)request.getAttribute("n");
+    	QuestionBoard q = (QuestionBoard)request.getAttribute("q");
     %>
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="UTF-8">
-    <title>공지사항</title>
+    <title>고객문의</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.js"></script>
 <style>
- .wrap{
+.wrap{
         width: 1200px;
         margin: 0 auto;
     }
@@ -32,11 +32,13 @@
     .leftMenu {
         width: 182px;
         height: 920px;
+
         float: left;
     }
     
     .participatingGroup {
         float: left;
+        height: 920px;
     }
 
     .groupListTitle {
@@ -51,6 +53,7 @@
 
     .groupList {
         width: 1018px;
+        height: 867px;
     }
 
     .leftMenuList{
@@ -76,7 +79,7 @@
         border-left: 10px solid #75D701;
     }
     /* 해당 페이지의 메뉴를 고정으로 */
-    .leftMenuList>li:nth-child(2)>a{
+    .leftMenuList>li:nth-child(3)>a{
         border-color: #75D701;
     }
     
@@ -86,7 +89,6 @@
         font-weight: bold;
         font-size: 20px;
     }
-
     .title {
         margin-left: 20px;
     }
@@ -141,8 +143,7 @@
 	}  
 	
 	.bordertable th, .bordertable td{
-	  font-size: 12px;    
-	  font-weight: normal;      
+	  font-size: 12px;         
 	  line-height: 19px;
 	  color:#20232;
 	  padding-top: 9px !important;
@@ -152,25 +153,30 @@
 	.th120 th{
 	  width:120px;
 	}
-	
-	.img-wrap{
-		text-align: center;
-	}
-	
-	.img-wrap>img{
-		width:60%;
-	}
 
+	.statusY{
+		color : #004106;
+		border: 1px solid #64CC6F;
+	}
+	
+	.statusN{
+		color : #630000;
+		border: 1px solid #CD5F5F;
+	}
+	
+	strong{
+		font-size: 15px;
+	}
 </style>
 
 <body>
-    <section>
+	 <section>
          <div class="wrap">
             <div class="header">
                 <%@ include file="/WEB-INF/views/common/header.jsp"%>
             </div>
             <div class="myplan">
-                    <div class="groupListTitle">공지사항</div>
+                    <div class="groupListTitle">고객센터</div>
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>고객센터</li>
@@ -180,53 +186,62 @@
                 </div>
                 <div class="participatingGroup">
                     <div class="groupList">
-                        <section>
-                        <br>
                         <div class="table-wrapper" style="width:95%; margin:0 auto;">
+                        <br>
                             <table class="table bordertable th120">
                                 <tr>
-                                    <th colspan="4" style="border-top:2px solid #6ECF4C;"><strong><%=n.getNoticeTitle() %></strong></th>
+                                    <th  style="border-top:2px solid #6ECF4C;">
+                                     <%if(q.getAnswerStatus().charAt(0)=='y'){ %>
+                                    <div class="statusY"> 완료 </div>
+                                    <%}else{ %>
+                                    <div class="statusN"> 미답변 </div>
+                                    <%} %>
+                                    </th>
+                                    <td  style="border-top:2px solid #6ECF4C;"><strong><%=q.getQuestionTitle() %></strong></td>
                                 </tr>
                                 <tr>
-                                    <th>작성자</th>
-                                    <td>운영자</td>
-                                    <th>작성일</th>
-                                    <td><%=n.getNoticeEnrollDate() %></td>
+                                    <th>등록자</th>
+                                    <td><%=q.getQuestionWriterId() %></td>
                                 </tr>
                                 <tr>
-                                    <th>첨부파일</th>
-                                    <td colspan="3">
-                                        <%if(n.getFilename() != null){ %>
-                                        <img src="/img/file.png" width="16px">
-                                        <a href="javascript:fileDownload('<%=n.getFilename() %>', '<%=n.getFilepath() %>')"><%=n.getFilename() %></a>
-                                        <%} else{%>
-                                        없음
-                                        <%} %>
-                                    </td>
+                                    <th>등록일</th>
+                                    <td><%=q.getQuestionWriteDate() %></td>
                                 </tr>
                                 <tr >
                                     <th>내용</th>
-                                    <td colspan="3"><%=n.getNoticeContent() %></td>
+                                    <td><%=q.getQuestionContentBr() %></td>
                                 </tr>
-                                <%if(n.getFilename() != null){ %>
+                                <%if(q.getAnswerStatus().charAt(0)=='y'){ %>
                                 <tr>
-                                	<td colspan="4" class="img-wrap"><img src="/upload/notice/<%=n.getFilepath() %>">	<br></td>
+                                	<th>운영자</th>
+                                	<td><strong>답변일 | </strong><%=q.getAnswerDate() %></td>
                                 </tr>
+                                <tr>
+                                	<th>답변내용</th>
+                                	<td><%=q.getAnswerContentBr() %></td>
+                                </tr>
+                                <%}else{ %>
+                                	<tr>
+                                		<th>운영자</th>
+                                		<td colspan="2"> 답변 준비 중입니다.</td>
+                                	</tr>
                                 <%} %>
+                                <tr style="text-align:center">
+                                
+                                    <th colspan="2">
+                                    <br>
+                                    <%if(m!=null && m.getMemberId().equals(q.getQuestionWriterId()) ){ %>
+                                    	<%if(q.getAnswerStatus().charAt(0)=='y'){ %>
+                                    	<a href="javascript:onclick()" class="btn btn-primary btn-sm">삭제하기</a>
+                                    	<%}else{ %>
+                                    	<a href="/questionOneDelete?questionNo=<%=q.getQuestionNo() %>" class="btn btn-primary btn-sm" style="background-color:#56A902;border:0px;">삭제하기</a>
+                                    	<%} %>
+                                    <%} %>
+                                      <a href="javascript:history.go(-1)" class="btn btn-primary btn-sm" style="background-color:#56A902;border:0px;">목록으로</a>
+                                    </th>
+                                </tr>
                             </table>
-                            <br><hr><br>
-                            <div style="text-align:center"><a href="javascript:history.go(-1)" class="btn btn-primary btn-sm">목록으로</a></div>
-                        	<br>
                         </div>
-
-                        <script>
-                            function fileDownload(filename, filepath) {
-                                var url = "/noticeFileDownload";
-                                var enFilename = encodeURIComponent(filename);
-                                var enFilepath = encodeURIComponent(filepath);
-                                location.href = url + "?filename=" + enFilename + "&filepath=" + enFilepath;
-                            }
-                        </script>
                     </div>
                 </div>
             </div>
@@ -235,21 +250,11 @@
     <div>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
     </div>
-<script>
-	//사이드메뉴바 호버기능
-	$(".leftMenuA").hover(function(){
-	   $(".leftMenuA").eq(1)).attr("style","border-color : white");
-	   $(this).attr("style","border-color : #75D701");
-	},function(){
-	   $(".leftMenuA").attr("style","border-color : white");
-	   $(".leftMenuA").eq(1).attr("style","border-color : #75D701");
-	});
-	
-    $(document).ready(function(){
-    	var height = $(".th120").height();
-    	$(".table-wrapper").height(height+100);
-    });
-</script>
+	<script>
+    function onclick() {
+        alert('답변이 등록된 글은 삭제하실 수 없습니다.');
+    }
+	</script>
 </body>
 
 </html>
