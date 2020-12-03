@@ -17,82 +17,81 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.js"></script>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
-
-    .wrap {
-        margin: 0 auto;
+ .wrap{
         width: 1200px;
+        margin: 0 auto;
     }
 
     .header {
         width: 1200px;
         height: 100px;
-        background: green;
     }
 
-    .myplan {
+    .myplan{
         overflow: hidden;
     }
 
     .leftMenu {
         width: 182px;
         height: 920px;
-        background: #E1E1E1;
+
         float: left;
     }
-
+    
     .participatingGroup {
         float: left;
+        height: 920px;
     }
 
     .groupListTitle {
-        width: 1018px;
-        height: 58px;
+        width: 100%;
+        height: 53px;
         text-align: center;
-        line-height: 58px;
+        line-height: 53px;
         color: white;
         font-weight: bold;
-        background: #6ED078;
+        background: #75D701;
     }
 
     .groupList {
         width: 1018px;
-        padding-top: 30px;
-        background: #FDFDFD;
+        height: 867px;
     }
 
-    .leftMenuList {
+    .leftMenuList{
         padding: 0;
         margin: 0;
         list-style-type: none;
+        text-indent: 25px;
         line-height: 58px;
     }
-
-    .leftMenuA {
+    .leftMenuA{
         display: block;
         width: 100%;
         height: 58px;
         color: black;
         font-size: 13px;
         font-weight: bold;
-        text-align: center;
         text-decoration: none;
+        border-left: 10px solid white;
     }
-
-    .leftMenuA:hover {
+    .leftMenuA:hover{
         color: black;
         text-decoration: none;
+        border-left: 10px solid #75D701;
     }
-
-    .leftMenuList>li:first-child {
+    /* 해당 페이지의 메뉴를 고정으로 */
+    .leftMenuList>li:nth-child(2)>a{
+        border-color: #75D701;
+    }
+    
+    .leftMenuList>li:first-child{
         text-indent: 0;
         text-align: center;
         font-weight: bold;
         font-size: 20px;
     }
+    
 
     .title {
         margin-left: 20px;
@@ -134,45 +133,54 @@
     	background-color : #38AF52;
     }
     
-    .notice-content{
+    .notice-content, .notice-content>a{
     	color:black;
+    	width:450px;
+		text-align: left;
     }
     
-    .bordertable th, .bordertable td{
+   .table th, .table td{
 	  font-size: 12px;    
-	  border:1px solid #ededed !important;
 	  line-height: 19px;
 	  color:#20232;
 	  padding-top: 9px !important;
 	  padding-bottom: 7px !important;
+	  
 	}
 	
-	.bordertable th{
+	.table th{
 		font-weight: bold;  
+		border-top: 1px solid #414141;
 	}
+	
+	.statusY{
+		color : #C50000;
+		border: 1px solid #CD5F5F;
+	}
+
 
 </style>
 
 <body>
-    <div>
-        <%@ include file="/WEB-INF/views/common/header.jsp" %>
-    </div>
     <section>
-        <div class="wrap">
-            <div class="header">헤더부분</div>
+         <div class="wrap">
+            <div class="header">
+                <%@ include file="/WEB-INF/views/common/header.jsp"%>
+            </div>
             <div class="myplan">
+                    <div class="groupListTitle">공지사항</div>
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>고객센터</li>
-                        <li><a class="leftMenuA" href="/noticeList?reqPage=1" style="background-color: #6ED078;">공지사항</a></li>
+                        <li><a class="leftMenuA" href="/noticeList?reqPage=1">공지사항</a></li>
                         <li><a class="leftMenuA" href="/questionList?reqPage=1">고객문의</a></li>
                     </ul>
                 </div>
                 <div class="participatingGroup">
-                    <div class="groupListTitle">공지사항</div>
                     <div class="groupList">
                         <section>
-                            <table class="table bordertable" style="width:95%;  margin:0 auto; text-align:center;">
+                        <br>
+                            <table class="table" style="width:95%;border-top:2px solid #6ECF4C; margin:0 auto; text-align:center;">
                                 <tr>
                                     <th>순서</th>
                                     <th>분류</th>
@@ -184,20 +192,20 @@
                                 <tr>
                                     <td><%=n.getRnum() %></td>
                                    <td style="display:none;"><%=n.getNoticeNo() %></td>
-                                   <td>
-                                    <%if(n.getNoticeStatus()==0){ %>
-                                   <span style="color:red;"> 공지</span>
-                                    <%} else{%>
-                                    일반
-                                    <%} %>
+                                   <td class="tableStatus">
+	                                    <%if(n.getNoticeStatus()==0){ %>
+	                                    <div class="statusY"> 공지 </div>
+	                                    <%} else{%>
+	                                    <div class="statusN"> 일반 </div>
+	                                    <%} %>
                                     </td>
-                                    <td><a class="notice-content" href="/noticeView?noticeNo=<%=n.getNoticeNo() %>"><%=n.getNoticeTitle() %></a></td>
+                                    <td class="notice-content"><a  href="/noticeView?noticeNo=<%=n.getNoticeNo() %>"><%=n.getNoticeTitle() %></a></td>
                                     <td>운영자</td>
                                     <td><%=n.getNoticeEnrollDate() %></td>
                                 </tr>
                                 <%} %>
                             </table>
-                            <hr>
+                            <br><br>
                             <div class="text-center" style="width:100%; margin:0 auto;">
 								<ul class="pagination" >
 									<%=pageNavi %>
@@ -212,7 +220,16 @@
     <div>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
     </div>
-
+<script>
+	//사이드메뉴바 호버기능
+	$(".leftMenuA").hover(function(){
+	   $(".leftMenuA").eq(0).attr("style","border-color : white");
+	   $(this).attr("style","border-color : #75D701");
+	},function(){
+	   $(".leftMenuA").attr("style","border-color : white");
+	   $(".leftMenuA").eq(0).attr("style","border-color : #75D701");
+	});
+</script>
 </body>
 
 </html>

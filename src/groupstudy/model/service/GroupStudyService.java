@@ -8,11 +8,14 @@ import java.util.StringTokenizer;
 import common.JDBCTemplate;
 import groupstudy.model.dao.GroupStudyDao;
 import groupstudy.model.vo.Category;
+import groupstudy.model.vo.GroupComment;
+import groupstudy.model.vo.GroupCommentMemberFilePath;
 import groupstudy.model.vo.GroupManagePage;
 import groupstudy.model.vo.GroupStudyMember;
 import groupstudy.model.vo.GroupStudyPageData;
 import groupstudy.model.vo.GroupStudyRoom;
 import groupstudy.model.vo.GroupStudyRoomAddCategory;
+import member.model.vo.Member;
 
 public class GroupStudyService {
 	
@@ -354,6 +357,10 @@ public class GroupStudyService {
 				pageNavi += "<li class='page-item'><a class='page-link' href='/groupStudyListManager?reqPage="+pageNo+"'>>></a></li>";
 			}
 
+			if(pageNo==2) {
+				pageNavi="";
+			}
+			
 			//10. 리스트+태그텍스트+멤버 카운트를 객체에 넣어줌
 			GroupManagePage gmp = new GroupManagePage(list, pageNavi, memberCount);
 			JDBCTemplate.close(conn);
@@ -477,5 +484,72 @@ public class GroupStudyService {
 				return null;
 			}
 			
+		}
+		
+		//(진선)참여중인스터디 > 상세보기 > 댓글전체 불러오기
+		public GroupCommentMemberFilePath selectGroupCommentAll(int groupNo) {
+			Connection conn = JDBCTemplate.getConnection();
+			ArrayList<GroupComment> gcList = new GroupStudyDao().selectGroupCommentAll(conn, groupNo);
+			ArrayList<String> memberIdList = new GroupStudyDao().selectMemberIdDistinct(conn,groupNo);
+			HashMap<String, String> memberIdFileMap = new HashMap<String, String>();
+			for(String memberId : memberIdList) {//memberId와 filepath를 한번에 저장
+				Member memberIdFile = new GroupStudyDao().selectMemberIdFilepath(conn,memberId);
+				memberIdFileMap.put(memberIdFile.getMemberId(), memberIdFile.getFilepath());//memberId를 키로 filepath를 값으로 가져옴
+			}
+			GroupCommentMemberFilePath gcmf = new GroupCommentMemberFilePath(gcList, memberIdFileMap);
+			JDBCTemplate.close(conn);
+			return gcmf;
+		}
+		
+		//(진선)댓글 수정하기
+		public int updateGroupComment(int commentNo, String commentContent) {
+			Connection conn = JDBCTemplate.getConnection();
+			int result = new GroupStudyDao().updateGroupComment(conn, commentNo, commentContent);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+			return result;
+		}
+		
+		//(진선)댓글 삭제하기
+		public int deleteGroupComment(int commentNo) {
+			Connection conn = JDBCTemplate.getConnection();
+			int result = new GroupStudyDao().deleteGroupComment(conn, commentNo);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+			return result;
+		}
+		
+		//(진선)댓글 작성하기(insert)
+		public int insertGroupComment(int groupNo, String commentWriter, String commentContent) {
+			Connection conn = JDBCTemplate.getConnection();
+			int result = new GroupStudyDao().insertGroupComment(conn, groupNo, commentWriter, commentContent);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+			return result;
+		}
+		
+		//(진선)댓글 첨부파일 업로드(insert)
+		public int insertGroupCommentFile(int groupNo, String commentWriter, String commentTitle, String filename, String filepath) {
+			Connection conn = JDBCTemplate.getConnection();
+			int result = new GroupStudyDao().insertGroupCommentFile(conn, groupNo, commentWriter, commentTitle, filename, filepath);
+			if(result>0) {
+				JDBCTemplate.commit(conn);
+			}else {
+				JDBCTemplate.rollback(conn);
+			}
+			JDBCTemplate.close(conn);
+			return result;
 		}
 }

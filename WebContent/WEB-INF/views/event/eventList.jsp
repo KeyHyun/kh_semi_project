@@ -18,14 +18,9 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.js"></script>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
-
-    .wrap {
-        margin: 0 auto;
+    .wrap{
         width: 1200px;
+        margin: 0 auto;
     }
 
     .header {
@@ -34,211 +29,172 @@
         background: green;
     }
 
-    .myplan {
+    .myplan{
         overflow: hidden;
     }
-
-    .leftMenu {
-        width: 182px;
-        height: 920px;
-        background: #E1E1E1;
-        float: left;
-    }
-
+    
     .participatingGroup {
-        float: left;
+    	width:100%;
+        height: 920px;
+        margin: 0 auto;
+        text-align: center;
     }
 
     .groupListTitle {
-        width: 1018px;
-        height: 58px;
+        width: 100%;
+        height: 53px;
         text-align: center;
-        line-height: 58px;
+        line-height: 53px;
         color: white;
         font-weight: bold;
-        background: #6ED078;
+        background: #75D701;
     }
 
     .groupList {
-        width: 1018px;
-        padding-top: 30px;
-        background: #FDFDFD;
-        text-align: center;
-    }
-
-    .leftMenuList {
-        padding: 0;
-        margin: 0;
-        list-style-type: none;
-        line-height: 58px;
-    }
-
-    .leftMenuA {
-        display: block;
         width: 100%;
-        height: 58px;
-        color: black;
-        font-size: 13px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
+        height: 867px;
+    }
+    
+    a>div{
+    	color:black;
     }
 
-    .leftMenuA:hover {
-        color: black;
-        text-decoration: none;
-    }
 
-    .leftMenuList>li:first-child {
-        text-indent: 0;
-        text-align: center;
-        font-weight: bold;
-        font-size: 20px;
-    }
+ /*이벤트 박스 관련*/
+        .box {
+            width: 40%;
+            height: 150px;
+            margin: 20px;
+            display: inline-block;
+            overflow: hidden;
+            font-size: 20px;
+            background-color: #F8FFF7;
+        }
 
-    .title {
-        margin-left: 20px;
-    }
+        .box>div:first-child {
+            float: left;
+            font-size:25px;
+            text-align:left;
+            margin: 50px 0px 0px 20px;
+        }
 
-    .text {
-        width: 94%;
-        height: 750px;
-        overflow: auto;
-        line-height: 20px;
-        font-family: Roboto;
-        font-style: normal;
-        padding: 3%;
-        margin: 0 auto;
-    }
+        .box>div:last-child {
+            float: right;
+            margin:10px 10px 0px 0px;
+        }
 
-    strong {
-        margin-left: 10px;
-    }
+        .box>div>div:last-child {
+            font-size: 13px;
+        }
 
-    select.form-control,
-    input.form-control {
-        display: inline-block;
-        width: 200px;
-        height: 30px;
-        font-size: 0.8em;
-    }
+        .img-box {
+            width: 130px;
+            height: 130px;
+        }
 
-    .pagination {
-        justify-content: center;
-    }
+        .box left,
+        .eventTitle {
+            float: left;
+        }
 
-    .pagination>li>a {
-        color: black;
-    }
+        .box right,
+        .endDate {
+            float: right;
+        }
 
-    .deleteAllBtn {
-        border-color: #38AF52;
-        background-color: #38AF52;
-    }
+        .eventTitle,
+        .endDate {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
 
-    .notice-content {
-        color: black;
-    }
+        .eventTitle {
+            font-size: 15px;
+            color: #313131;
+        }
 
-	/*이벤트 박스 관련*/
-    .box {
-        width: 40%;
-        height: 150px;
-        margin: 20px;
-        display: inline-block;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.11);
-    }
+        .endDate {
+            color: #D80000;
+        }
 
-    .box left,
-    .eventTitle {
-        float: left;
-    }
+        hr {
+            background-color: rgba(244, 244, 244, 0.05);
+        }
 
-    .box right,
-    .endDate {
-        float: right;
-    }
+        .none {
+            opacity: 0%;
+        }
 
-    .eventTitle,
-    .endDate {
-        margin-left: 10px;
-        margin-right: 10px;
-    }
-
-    .eventTitle{
-        font-size: 15px;
-        color: #313131;
-    }
-
-    .endDate {
-        color: #D80000;
-    }
-    hr{
-    	background-color: rgba(244, 244, 244, 0.05);
-    }
-    .none{
-    	opacity: 0%;
-    }
-
+        .pagination {
+            justify-content: center;
+        }
+        
+        .img-box, .img-box>img{
+            width: 130px;
+            height:130px;
+            border-radius: 10px;
+        }
 </style>
 
 <body>
-    <div>
-        <%@ include file="/WEB-INF/views/common/header.jsp" %>
-    </div>
+<div><%@ include file="/WEB-INF/views/common/header.jsp" %></div>
     <section>
         <div class="wrap">
-            <div class="header">헤더부분</div>
+            <div class="header"></div>
             <div class="myplan">
-                <div class="leftMenu">
-                    <ul class="leftMenuList">
-                        <li>이벤트</li>
-                        <li><a class="leftMenuA" href="/eventList?reqPage=1" style="background-color: #6ED078;">이달의 이벤트</a></li>
-                        <li><a class="leftMenuA" href="/eventWinnerList?reqPage=1">이벤트 당첨자 조회</a></li>
-                    </ul>
-                </div>
+            <div class="groupListTitle">이달의 이벤트</div>
                 <div class="participatingGroup">
-                    <div class="groupListTitle">이달의 이벤트</div>
                     <div class="groupList">
                         <section>
-                            <hr>
+                        <br>
                             <%int count = 0; %>
 
                             <%for(EventBoard e : list){ %>
                             <%count++; %>
                             <%if(count%2 != 0){ %>
-                            <div class="box left">
-                                <a href="/eventManagerView?eventNo=<%=e.getEventNo() %>&manager=no">
-                                    
-                                    <span class="eventTitle"><%=e.getEventTitle() %></span>
-                                    <span class="endDate" value="<%=e.getEventEndDate() %>"><%=e.getEventEndDate() %></span>
-                                    <div class="img">
-                                        <img src="/upload/event/<%=e.getFilepath() %>" width="100%">
-                                    </div>
-                                </a>
-                            </div>
+                            <a href="/eventManagerView?eventNo=<%=e.getEventNo() %>&manager=no">
+							<div class="box left">
+								<div>
+									<div><%=e.getEventTitle() %></div>
+									<div><%=e.getEventEnrollDate() %> ~ <%=e.getEventEndDate() %></div>
+								</div>
+								<div>
+									<div class="img-box">
+									<%if(e.getFilepath()!=null){ %>
+									<img src="/upload/event/<%=e.getFilepath() %>" alt="이벤트 이미지">
+									<%} %>
+									</div>
+								</div>
+							</div>
+							</a>
                             <%} else{  %>
-                            <div class="box right">
-                                <a href="/eventManagerView?eventNo=<%=e.getEventNo() %>&manager=no">
-                                    <span class="eventTitle"><%=e.getEventTitle() %></span>
-                                    <span class="endDate" value="<%=e.getEventEndDate() %>"><%=e.getEventEndDate() %></span>
-                                    <div class="img">
-                                        <img src="/upload/event/<%=e.getFilepath() %>" widht="100%">
-                                    </div>
-                                </a>
-                            </div>
+                            <a href="/eventManagerView?eventNo=<%=e.getEventNo() %>&manager=no">
+							<div class="box right">
+								<div>
+									<div><%=e.getEventTitle() %></div>
+									<div><%=e.getEventEnrollDate() %> ~ <%=e.getEventEndDate() %></div>
+								</div>
+								
+								<div>
+									<div class="img-box">
+									<%if(e.getFilepath()!=null){ %>
+									<img src="/upload/event/<%=e.getFilepath() %>" alt="이벤트 이미지">
+									<%} %>
+									</div>
+								</div>
+								
+							</div>
+							</a>
                             <hr>
                             <%} } %>
-                            
-                            <!-- 여백 맞추려고 빈 박스 생성 -->
-							<%if(count%2 != 0){ %>
-								 <div class="box none"></div>
-							<%} %>
 
-                            <div class="text-center" style="width:100%; margin:0 auto;">
-                                <ul class="pagination">
+                            <!-- 여백 맞추려고 빈 박스 생성 -->
+                            <%if(count%2 != 0){ %>
+                            <div class="box none"></div>
+                            <%} %>
+
+                            <div>
+                                <ul class="pagination text-center">
                                     <%=pageNavi %>
                                 </ul>
                             </div>
@@ -261,6 +217,8 @@
                                     }
                                 });
 
+                                var height = $(".participatingGroup").height();
+                                $(".leftMenu").height(height);
                             });
 
                             function dayCal(date) {
@@ -274,6 +232,16 @@
                                 return dday;
 
                             }
+                            
+                            //사이드메뉴바 호버기능
+                            $(".leftMenuA").hover(function(){
+                               $(".leftMenuA").attr("style","border-color : white");
+                               $(this).attr("style","border-color : #75D701");
+                            },function(){
+                               $(".leftMenuA").attr("style","border-color : white");
+                               $(".leftMenuA").eq(2).attr("style","border-color : #75D701");
+                            });
+
                         </script>
 
                     </div>

@@ -16,14 +16,9 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.js"></script>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
-
-    .wrap {
-        margin: 0 auto;
+     .wrap{
         width: 1200px;
+        margin: 0 auto;
     }
 
     .header {
@@ -32,80 +27,28 @@
         background: green;
     }
 
-    .myplan {
+    .myplan{
         overflow: hidden;
     }
-
-    .leftMenu {
-        width: 182px;
-        height: 920px;
-        background: #E1E1E1;
-        float: left;
-    }
-
+    
     .participatingGroup {
-        float: left;
+    	width:100%;
+        margin: 0 auto;
+        text-align: center;
     }
 
     .groupListTitle {
-        width: 1018px;
-        height: 58px;
+        width: 100%;
+        height: 53px;
         text-align: center;
-        line-height: 58px;
+        line-height: 53px;
         color: white;
         font-weight: bold;
-        background: #6ED078;
+        background: #75D701;
     }
 
     .groupList {
-        width: 1018px;
-        padding-top: 30px;
-        background: #FDFDFD;
-    }
-
-    .leftMenuList {
-        padding: 0;
-        margin: 0;
-        list-style-type: none;
-        line-height: 58px;
-    }
-
-    .leftMenuA {
-        display: block;
         width: 100%;
-        height: 58px;
-        color: black;
-        font-size: 13px;
-        font-weight: bold;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    .leftMenuA:hover {
-        color: black;
-        text-decoration: none;
-    }
-
-    .leftMenuList>li:first-child {
-        text-indent: 0;
-        text-align: center;
-        font-weight: bold;
-        font-size: 20px;
-    }
-
-    .title {
-        margin-left: 20px;
-    }
-
-    .text {
-        width: 94%;
-        height: 750px;
-        overflow: auto;
-        line-height: 20px;
-        font-family: Roboto;
-        font-style: normal;
-        padding: 3%;
-        margin: 0 auto;
     }
 
     strong {
@@ -137,55 +80,59 @@
     	color:black;
     }
     
-    .bordertable th, .bordertable td{
+    .tableEdit th, .tableEdit td{
 	  font-size: 12px;    
-	  border:1px solid #ededed !important;
 	  line-height: 19px;
 	  color:#20232;
 	  padding-top: 9px !important;
 	  padding-bottom: 7px !important;
 	}
 	
-	.bordertable th{
+	.tableEdit th{
 		width : 200px;
 		font-weight: bold;  
 	}
+	
+	.tableEdit td{
+		text-align: left;
+	}
 	.img-wrap{
 		text-align: center;
+	}
+	
+	.img-wrap>img{
+		width:60%;
+	}
+	.table-wrapper{
+		min-height: 500px;
 	}
 
 </style>
 
 <body>
-    <div>
-        <%@ include file="/WEB-INF/views/common/header.jsp" %>
-    </div>
+<div><%@ include file="/WEB-INF/views/common/header.jsp" %></div>
     <section>
         <div class="wrap">
-            <div class="header">헤더부분</div>
+            <div class="header"></div>
             <div class="myplan">
-                <div class="leftMenu">
-                    <ul class="leftMenuList">
-                        <li>이벤트</li>
-                        <li><a class="leftMenuA" href="/eventList?reqPage=1" style="background-color: #6ED078;">이달의 이벤트</a></li>
-                        <li><a class="leftMenuA" href="/questionList?reqPage=1">이벤트 당첨자 조회</a></li>
-                    </ul>
-                </div>
-                 <div class="participatingGroup">
-                    <div class="groupListTitle">이벤트 관리</div>
+            <div class="groupListTitle">이달의 이벤트</div>
+                <div class="participatingGroup">
                     <div class="groupList">
-                        <div class="table-wrapper" style="width:95%; margin:0 auto;">
-                            <table class="table table-borader bordertable">
+                        <div class="table-wrapper" style="width:85%; margin:0 auto;">
+                        <br>
+                            <table class="table table-borader tableEdit">
                                 <tr>
-                                    <th colspan="2" style="background-color:#F1F1F1"><%=e.getEventTitle() %></th>
+                                    <th colspan="4" style="border-top:2px solid #6ECF4C;"><%=e.getEventTitle() %></th>
                                 </tr>
                                 <tr>
                                     <th>작성자</th>
                                     <td>관리자</td>
+                                    <th>마감일</th>
+                                    <td><%=e.getEventEndDate() %></td>
                                 </tr>
                                 <tr>
                                     <th>첨부파일</th>
-                                    <td>
+                                    <td colspan="3">
                                         <%if(e.getFilename() != null){ %>
                                         <img src="/img/file.png" width="16px">
                                         <a href="javascript:fileDownload('<%=e.getFilename() %>', '<%=e.getFilepath() %>')"><%=e.getFilename() %></a>
@@ -196,7 +143,7 @@
                                 </tr>
                                 <tr>
                                 	<th>첨부링크</th>
-                                	<td>
+                                	<td colspan="3">
                                 		<%if(e.getEventLink().equals("null")){ %>
                                 		없음
                                 		<%}else{ %>
@@ -207,25 +154,26 @@
                                 
                                 <tr >
                                     <th>내용</th>
-                                    <td>
+                                    <td colspan="3">
                                     <%=e.getEventContent() %><br>
 									</td>
                                 </tr>
                                 <%if(e.getFilepath()!= null){ %>
                                 <tr>
-                                	<td colspan="2" class="img-wrap">
+                                	<th colspan="4" class="img-wrap">
                  	                 
                                     <img src="/upload/event/<%=e.getFilepath() %>">	<br>
                                     
-                                	</td>
+                                	</th>
                                 </tr>
                                 <%} %>
                                 <tr style="text-align:center">
-                                    <th colspan="2">
+                                    <th colspan="4">
                                         <a href="javascript:history.go(-1)" class="btn btn-primary btn-sm">목록으로</a>
                                     </th>
                                 </tr>
                             </table>
+                            <br>
                         </div>
 
                         <script>
@@ -237,8 +185,8 @@
                             }
                             
                             $(document).ready(function(){
-                            	var height = $(".participatingGroup").height();
-                            	$(".leftMenu").height(height);
+                            	var height = $(".tableEdit").height();
+                            	$(".table-wrapper").height(height+70);
                             });
                             
                             

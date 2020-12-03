@@ -9,6 +9,7 @@ public class EventBoard {
 	private String filename;
 	private String filepath;
 	private String eventLink;
+	private String eventWinnerStatus;   //<-----추가
 	private int rnum;
 	public int getRnum() {
 		return rnum;
@@ -21,7 +22,7 @@ public class EventBoard {
 		// TODO Auto-generated constructor stub
 	}
 	public EventBoard(int eventNo, String eventTitle, String eventEnrollDate, String eventEndDate, String eventContent,
-			String filename, String filepath, String eventLink) {
+			String filename, String filepath, String eventLink, String eventWinnerStatus) {
 		super();
 		this.eventNo = eventNo;
 		this.eventTitle = eventTitle;
@@ -31,6 +32,7 @@ public class EventBoard {
 		this.filename = filename;
 		this.filepath = filepath;
 		this.eventLink = eventLink;
+		this.eventWinnerStatus = eventWinnerStatus;
 	}
 	public int getEventNo() {
 		return eventNo;
@@ -79,6 +81,12 @@ public class EventBoard {
 	}
 	public void setEventLink(String eventLink) {
 		this.eventLink = eventLink;
+	}
+	public String getEventWinnerStatus() {
+		return eventWinnerStatus;
+	}
+	public void setEventWinnerStatus(String eventWinnerStatus) {
+		this.eventWinnerStatus = eventWinnerStatus;
 	}
 	
 	

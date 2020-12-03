@@ -71,6 +71,10 @@ public class EventBoardService {
 			pageNavi += "<li class='page-item'><a class='page-link' href='/eventManagerList?reqPage="+pageNo+"'>>></a></li>";
 		}
 
+		if(pageNo==2) {
+			pageNavi="";
+		}
+		
 		//10. 리스트+태그텍스트+멤버 카운트를 객체에 넣어줌
 		EventBoardPage ebp = new EventBoardPage(list, pageNavi);
 		JDBCTemplate.close(conn);

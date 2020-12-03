@@ -18,20 +18,15 @@
 <style>
 .full_container {
 	width: 1200px;
-	height: 920px;
+	height: 1300px;
 	margin: auto;
 	display: flex;
 }
 
-.left_tab {
-	width: 182px;
-	height: 920px;
-	background-color: #E1E1E1;
-}
-
 .content_container {
-	width: 1018px;
-	height: 920px;
+	width: 100%;
+	height: 100%;
+	margin: auto;
 }
 
 .banner {
@@ -40,8 +35,9 @@
 	line-height: 45px;
 	text-align: center;
 	font-weight: bold;
-	background-color: #8D8D8D;
+	background-color: #75D701;
 	color: white;
+	margin-bottom: 100px;
 }
 
 .content {
@@ -51,18 +47,22 @@
 
 .content_box {
 	width: 76%;
-	border: 1px solid black;
+	border: 1px solid #B6B6B6;
 	margin: auto;
-	height: 29%;
-	margin-top: 20px;
+	height: 35%;
+	margin-top: 60px;
 	border-top-right-radius: 10px;
 	border-top-left-radius: 10px;
+	background-color: rgba(222,255,214,0.2);
+
 }
 
 .content>div:first-child {
 	margin-top: 70px;
 }
-
+.content_box:last-child{
+	margin-bottom: 70px;
+}
 .my_info {
 	border: 1px solid transparent;
 	width: 100%;
@@ -100,9 +100,9 @@
 	width: 40%;
 	height: 20%;
 	border-bottom: 1px solid black;
-	color: dimgrey;
+	color: grey;
 	font-weight: bold;
-	font-size: 12px;
+	font-size: 15px;
 }
 
 li {
@@ -120,17 +120,19 @@ a {
 	font-size: 12px;
 }
 
-
+.group_list,.work_list{
+	margin-top:15px;
+}
 .content_title {
 	width: 100%;
 	height: 15%;
-	border-bottom: 1px solid black;
-	background-color: darkgrey;
-	color: white;
+	color: black;
 	text-align: center;
 	line-height: 45px;
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: bold;
+	border-top-left-radius:10px;
+	border-top-right-radius: 10px; 
 }
 
 .g_list>td:nth-child(2), .g_list>th:nth-child(2) {
@@ -170,55 +172,6 @@ td, th {
 	font-size: 15px;
 }
 
-.leftMenuList {
-	padding: 0;
-	margin: 0;
-	list-style-type: none;
-	text-indent: 25px;
-	line-height: 58px;
-}
-
-.leftMenuA {
-	display: block;
-	width: 100%;
-	height: 58px;
-	color: black;
-	font-size: 13px;
-	font-weight: bold;
-	text-decoration: none;
-}
-
-.tab_icon {
-	width: 30%;
-	height: 41px;
-	margin-right: 10px;
-	margin-left: 10px;
-}
-
-.leftMenuList>li:not(:first-child):hover {
-	color: black;
-	background-color: white;
-	text-decoration: none;
-	border-radius: 20px;
-}
-
-.leftMenuList>li {
-	display: flex;
-	padding-top: 10px;
-}
-
-.leftMenuList>li>a {
-	width: 60%;
-	line-height: 50px;
-}
-
-.leftMenuList>li:first-child>a {
-	text-indent: 0;
-	text-align: center;
-	font-weight: bold;
-	font-size: 20px;
-	padding-left: 30px;
-}
 td img{
 	width:20px;
 	height:20px;
@@ -230,29 +183,33 @@ color: cornflowerblue;
 }
 #glNavi{
 	text-align: center;
+	margin-top:20px;
 }
 #alNavi{
 text-align: center;
+margin-top:20px;
 }
 .work_list,.group_list{
-height:70%;
+height:60%;
 }
 .modal_back{
 	position:absolute;
 	width: 100vw;
-	height : 100vh;
-	background-color:rgba(0, 0,0, 0.5);
+	height : 150vh;
+	background-color:rgba(0, 0,0, 0.2);
 	z-index: 1;
 	display:none;
 }
 .modal_content{
 position:absolute;
 width: 500px;
-height : 500px;
-background-color: #eee;
+height : 430px;
+border-radius:10px;
+background-color: #fff;
 z-index:2;
 margin: 200px 400px 200px 400px;
 display:none;
+box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 }
 .modal_content>div:first-child{
 	text-align: center;
@@ -260,21 +217,22 @@ display:none;
 	line-height: 70px;
 	font-weight: bold;
 	font-size : 20px;
-	border-bottom: 2px solid black;
 	width:100%;
 	height:70px;
+	border-bottom: 1px solid rgba(0,0,0,0.3);
 }
 .modal_content>div:nth-child(2){
 	width:100%;
 	height:65%;
-	border-bottom: 2px solid black;
 }
 #modal_text{
 	width:100%;
-	height:30%;
-	padding-left:20px;
-	padding-top:10px;
-	border-bottom: 2px solid black;
+	height:25%;
+	padding-left:50px;
+	padding-top:20px;
+}
+#modal_area>div{
+	padding-left:50px;
 }
 #modal_area{
 	width:100%;
@@ -284,23 +242,34 @@ display:none;
 	width:80%;
 	height:80%;
 	margin-left:10%;
-	margin-top:4.5%;
+	margin-top:2.5%;
+	border-bottom: 1px solid rgba(0,0,0,0.3);
+	resize: none;
 }
 #applyBtn,#rejectBtn{
-	width:30%;
+	width:40%;
 	height:60%;
-	margin-top: 30px;
-	outline: 0;
-	background-color:#e87c74;
+	outline: none;
+	border:none;
+	background-color: #fff;
+	margin: auto;
+	padding-top: 20px;
 }
+
 .btnWrap{
 	text-align: center;
+	margin-top : 20px;
+	border-top: 1px solid rgba(0,0,0,0.3);
 }
 #redFont{
 	color: red;
 }
 #blueFont{
 	color: blue;
+}
+.detail_info>li>a{
+	color: black !important;
+	font-size: 15px;
 }
 </style>
 </head>
@@ -318,6 +287,7 @@ display:none;
 			<div id="modal_text">
 			</div>
 			<div id="modal_area">
+			<div>참여요청 메시지</div>
 			<textarea></textarea>
 			</div>
 		</div>
@@ -326,15 +296,7 @@ display:none;
 			<button id="rejectBtn">거절</button>
 		</div>
 	</div>
-	<div class="left_tab">
-			<ul class="leftMenuList">
-				<li><a class="leftMenuA" href="#"> My Page</a></li>
-				<li><img src="img/my.png" class="tab_icon"> <a
-					class="leftMenuA" href="#"> My Info</a></li>
-				<li><img src="img/pen.png" class="tab_icon"> <a
-					class="leftMenuA" href="/updateForm">정보수정</a></li>
-			</ul>
-		</div>
+
 		<div class="content_container">
 			<div class="banner">마이 페이지</div>
 			<div class="content">
@@ -345,11 +307,11 @@ display:none;
 						</div>
 					</div>
 					<ul class="detail_info">
-						<li>아이디 : <%=myInfo.getMemberId()%></li>
-						<li>닉네임 : <%=myInfo.getMemberNickname()%></li>
-						<li>이메일 : <%=myInfo.getMemberEmail()%></li>
-						<li>등급 : <%if(myInfo.getMemberGrade() == 0){%> 관리자 <%}else if(myInfo.getMemberGrade() == 1){ %>
-							정회원 <%}else{ %> 준회원 <%} %>
+						<li>아이디 : <a><%=myInfo.getMemberId()%></a></li>
+						<li>닉네임 : <a><%=myInfo.getMemberNickname()%></a></li>
+						<li>이메일 : <a><%=myInfo.getMemberEmail()%></a></li>
+						<li>등급 : <a><%if(myInfo.getMemberGrade() == 0){%> 관리자 <%}else if(myInfo.getMemberGrade() == 1){ %>
+							정회원 <%}else{ %> 준회원 <%} %></a>
 						</li>
 					</ul>
 					<div>

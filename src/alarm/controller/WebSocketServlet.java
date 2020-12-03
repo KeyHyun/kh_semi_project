@@ -30,22 +30,29 @@ public class WebSocketServlet {
     al = new AlarmService().searchMyPopAlarm(memberNo); // 보낸 멤버넘버, 알람종류, 그룹넘버 조회
     ArrayList<Member> ml = new MemberService().searchSendMember(al); // 보낸사람 이름 프사
     String returnHTML = "";
-    for(int i=0; i<al.size();i++)
-    {
-    	if(al.get(i).getAlarmSubject()==3) {
-    		 returnHTML += "<li><div><img src="+ml.get(i).getFilepath()+"></div><div>"+ml.get(i).getMemberName()+"님이 메세지를 보냈습니다.<br><a href='myPlanGroupDetail?groupNo="+al.get(i).getGroupNo()+"'>그룹 스터디 페이지로 이동하기 ></a></div><div><img src='/img/delete.png'></div></li>";	
-    	}
-    	else if(al.get(i).getAlarmSubject()==2) {
-    		returnHTML += "<li><div><img src="+ml.get(i).getFilepath()+"></div><div>"+ml.get(i).getMemberName()+"님에게서 그룹 참여신청이 도착했습니다.<br><a href='/myPage?memberNo="+memberNo+"&alPage=1&glPage=1#glNavi'>신청내역 확인하기 ></a></div><div><img src='/img/delete.png'></div></li>";
-    	}
-    	else if(al.get(i).getAlarmSubject() ==1) {
-    		returnHTML += "<li><div><img src='/img/my.png'></div><div>공지사항이 등록되었습니다.<br><a href='/noticeList?reqPage=1'>공지사항으로 이동하기 ></a></div><div><img src='/img/delete.png'></div></li>";
-    	}
-    	else {
-    		System.out.println("알람 서브젝트 오류");
-    	}
-    	 
+    
+    if(al.isEmpty()) {
+    	returnHTML = "<div>도착한 알림이 없습니다.</div>";
     }
+    else {
+        for(int i=0; i<al.size();i++)
+        {
+        	if(al.get(i).getAlarmSubject()==3) {
+        		 returnHTML += "<li><div><img src="+ml.get(i).getFilepath()+"></div><div>"+ml.get(i).getMemberName()+"님이 메세지를 보냈습니다.<br><a href='myPlanGroupDetail?groupNo="+al.get(i).getGroupNo()+"'>그룹 스터디 페이지로 이동하기 ></a></div><div><a href='#'><img src='/img/delete.png'></a></div></li>";	
+        	}
+        	else if(al.get(i).getAlarmSubject()==2) {
+        		returnHTML += "<li><div><img src="+ml.get(i).getFilepath()+"></div><div>"+ml.get(i).getMemberName()+"님에게서 그룹 참여신청이 도착했습니다.<br><a href='/myPage?memberNo="+memberNo+"&alPage=1&glPage=1#glNavi'>신청내역 확인하기 ></a></div><div><a href='#' class='deletes' value="+al.get(i).getAlarmNo()+"><img src='/img/delete.png'><div class='deleteToggle'>읽음처리하기</div></a></div></li>";
+        	}
+        	else if(al.get(i).getAlarmSubject() ==1) {
+        		returnHTML += "<li><div><img src='/img/my.png'></div><div>공지사항이 등록되었습니다.<br><a href='/noticeList?reqPage=1'>공지사항으로 이동하기 ></a></div><div><a href='#'><img src='/img/delete.png'></a></div></li>";
+        	}
+        	else {
+        		System.out.println("알람 서브젝트 오류");
+        	}
+        	 
+        }
+    }
+
    
     return returnHTML;
   }

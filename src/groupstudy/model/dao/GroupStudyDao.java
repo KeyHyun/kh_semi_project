@@ -13,8 +13,10 @@ import alarm.model.vo.Alarm;
 import common.JDBCTemplate;
 import groupstudy.model.vo.Category;
 import groupstudy.model.vo.GroupApplyData;
+import groupstudy.model.vo.GroupComment;
 import groupstudy.model.vo.GroupList;
 import groupstudy.model.vo.GroupStudyRoom;
+import member.model.vo.Member;
 import sun.security.action.GetIntegerAction;
 import groupstudy.model.vo.GroupStudyMember;
 
@@ -835,6 +837,163 @@ public class GroupStudyDao {
 				JDBCTemplate.close(pstmt);
 			}
 			return list;
+		}
+		//(진선)참여중인스터디 > 상세보기 > 댓글전체 불러오기
+		public ArrayList<GroupComment> selectGroupCommentAll(Connection conn, int groupNo) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			ArrayList<GroupComment> gcList = new ArrayList<GroupComment>();
+			String query = "select rownum as rnum , g.* from (select * from GROUP_COMMENT where group_no=? order by comment_no desc) g";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, groupNo);
+				rset = pstmt.executeQuery();
+				while(rset.next()) {
+					GroupComment gc = new GroupComment();
+					gc.setrNum(rset.getInt("rnum"));
+					gc.setCommentNo(rset.getInt("comment_no"));
+					gc.setGroupNo(rset.getInt("group_no"));
+					gc.setCommentContent(rset.getString("comment_content"));
+					gc.setFilename(rset.getString("filename"));
+					gc.setFilepath(rset.getString("filepath"));
+					gc.setCommentWriter(rset.getString("comment_writer"));
+					gc.setCommentTitle(rset.getString("comment_title"));
+					gcList.add(gc);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+			    JDBCTemplate.close(pstmt);
+			    JDBCTemplate.close(rset);
+			}
+			return gcList;
+		}
+		
+		//(진선)댓글 수정하기
+		public int updateGroupComment(Connection conn, int commentNo, String commentContent) {
+			PreparedStatement pstmt = null;
+			int result = 0;
+			String query = "update GROUP_COMMENT set comment_content=? where comment_no=?";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, commentContent);
+				pstmt.setInt(2, commentNo);
+				result = pstmt.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+			    JDBCTemplate.close(pstmt);
+			}
+			return result;
+		}
+		//(진선)댓글 삭제하기
+		public int deleteGroupComment(Connection conn, int commentNo) {
+			PreparedStatement pstmt = null;
+			int result = 0;
+			String query = "delete from GROUP_COMMENT where comment_no=?";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, commentNo);
+				result = pstmt.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+			    JDBCTemplate.close(pstmt);
+			}
+			return result;
+		}
+		
+		//(진선)댓글 작성하기(insert)
+		public int insertGroupComment(Connection conn, int groupNo, String commentWriter, String commentContent) {
+			PreparedStatement pstmt = null;
+			int result = 0;
+			String query = "insert into GROUP_COMMENT values(GROUP_COMMENT_SEQ.NEXTVAL,?,?,null,null,?,null)";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, groupNo);
+				pstmt.setString(2, commentContent);
+				pstmt.setString(3, commentWriter);
+				result = pstmt.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+			    JDBCTemplate.close(pstmt);
+			}
+			return result;
+		}
+
+		//(진선)댓글 첨부파일 업로드(insert)
+		public int insertGroupCommentFile(Connection conn, int groupNo, String commentWriter, String commentTitle, String filename, String filepath) {
+			PreparedStatement pstmt = null;
+			int result = 0;
+			String query = "insert into GROUP_COMMENT values(GROUP_COMMENT_SEQ.NEXTVAL,?,null,?,?,?,?)";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, groupNo);
+				pstmt.setString(2, filename);
+				pstmt.setString(3, filepath);
+				pstmt.setString(4, commentWriter);
+				pstmt.setString(5, commentTitle);
+				result = pstmt.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+			    JDBCTemplate.close(pstmt);
+			}
+			return result;
+		}
+		//(진선)그룹스터디별로 코멘트 작성한 사용자의 id구하기(중복없이)
+		public ArrayList<String> selectMemberIdDistinct(Connection conn, int groupNo) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			ArrayList<String> memberIdList = new ArrayList<String>();
+			String query = "select distinct comment_writer from group_comment where group_no=?";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, groupNo);
+				rset = pstmt.executeQuery();
+				while(rset.next()) {
+					String memberId = null;
+					memberId = rset.getString("comment_writer");
+					memberIdList.add(memberId);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				JDBCTemplate.close(rset);
+			    JDBCTemplate.close(pstmt);
+			}
+			return memberIdList;
+		}
+
+		//(진선)selectMemberIdDistinct에서 구한 memberId로 한쌍으로 filepath을 구함
+		public Member selectMemberIdFilepath(Connection conn, String memberId) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			Member memberIdFile = new Member();
+			String query = "select member_id, filepath from member where member_id=?";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setString(1, memberId);
+				rset = pstmt.executeQuery();
+				if(rset.next()) {
+					memberIdFile.setMemberId(rset.getString("member_id"));
+					memberIdFile.setFilepath(rset.getString("filepath"));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				JDBCTemplate.close(rset);
+			    JDBCTemplate.close(pstmt);
+			}
+			return memberIdFile;
 		}
 
 }

@@ -1,6 +1,7 @@
 package groupstudy.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import groupstudy.model.dao.GroupStudyDao;
 import groupstudy.model.service.GroupStudyService;
+import groupstudy.model.vo.GroupComment;
+import groupstudy.model.vo.GroupCommentMemberFilePath;
 import groupstudy.model.vo.GroupStudyRoom;
 
 /**
@@ -40,13 +43,19 @@ public class MyPlanGroupDetailServlet extends HttpServlet {
 		
 		//groupList.jsp에서 선택한 그룹스터디의 상세페이지를 보여주기위한 정보
 		GroupStudyRoom gsr = new GroupStudyService().selectGroupStudyOne(groupNo);
-		System.out.println(gsr.getFilepath());
 		//인원수 가져오기
 		int memberCnt = new GroupStudyService().selectMemberNo(groupNo);
+		//댓글 및 자료실 첨부파일 가져오기(같은 테이블)
+		//댓글가져올때 사용자들의 프로필사진도 가져와야해서 새로운 vo를 만들어서 짝지어서 가져옴
+		GroupCommentMemberFilePath gcmf = new GroupStudyService().selectGroupCommentAll(groupNo);
+		
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/myplan/myPlanGroupDetail.jsp");
 		
+		
 		request.setAttribute("gsr", gsr);
+		request.setAttribute("gcList", gcmf.getGcList());
+		request.setAttribute("memberIdFileMap", gcmf.getMemberIdFileMap());
 		request.setAttribute("category1", category1);
 		request.setAttribute("category2", category2);
 		request.setAttribute("memberCnt", memberCnt);

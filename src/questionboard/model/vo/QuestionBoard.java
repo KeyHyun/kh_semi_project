@@ -4,23 +4,30 @@ public class QuestionBoard {
 	private int questionNo;
 	private String questionTitle;
 	private String questionWriteDate;
-	private int questionWriterNo;
+	private String questionWriterId;
 	private String questionContent;
 	private int questionPw;
 	private String answerStatus;
 	private String answerContent;
 	private String answerDate;
+	private int rnum;
+	public int getRnum() {
+		return rnum;
+	}
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
 	public QuestionBoard() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public QuestionBoard(int questionNo, String questionTitle, String questionWriteDate, int questionWriterNo,
+	public QuestionBoard(int questionNo, String questionTitle, String questionWriteDate, String questionWriterId,
 			String questionContent, int questionPw, String answerStatus, String answerContent, String answerDate) {
 		super();
 		this.questionNo = questionNo;
 		this.questionTitle = questionTitle;
 		this.questionWriteDate = questionWriteDate;
-		this.questionWriterNo = questionWriterNo;
+		this.questionWriterId = questionWriterId;
 		this.questionContent = questionContent;
 		this.questionPw = questionPw;
 		this.answerStatus = answerStatus;
@@ -45,15 +52,16 @@ public class QuestionBoard {
 	public void setQuestionWriteDate(String questionWriteDate) {
 		this.questionWriteDate = questionWriteDate;
 	}
-	public int getQuestionWriterNo() {
-		return questionWriterNo;
+	public String getQuestionWriterId() {
+		return questionWriterId;
 	}
-	public void setQuestionWriterNo(int questionWriterNo) {
-		this.questionWriterNo = questionWriterNo;
+	public void setQuestionWriterId(String questionWriterId) {
+		this.questionWriterId = questionWriterId;
 	}
 	public String getQuestionContent() {
 		return questionContent;
 	}
+
 	public void setQuestionContent(String questionContent) {
 		this.questionContent = questionContent;
 	}
@@ -72,6 +80,7 @@ public class QuestionBoard {
 	public String getAnswerContent() {
 		return answerContent;
 	}
+
 	public void setAnswerContent(String answerContent) {
 		this.answerContent = answerContent;
 	}
@@ -81,6 +90,11 @@ public class QuestionBoard {
 	public void setAnswerDate(String answerDate) {
 		this.answerDate = answerDate;
 	}
-	
+	public String getQuestionContentBr() {
+		return questionContent.replaceAll("\r\n", "</br>");
+	}
+	public String getAnswerContentBr() {
+		return answerContent.replaceAll("\r\n", "</br>");
+	}
 	
 }

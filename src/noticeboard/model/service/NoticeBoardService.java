@@ -67,7 +67,11 @@ public class NoticeBoardService {
 		if(reqPage <= totalPage-3) {
 			pageNavi += "<li class='page-item'><a class='page-link' href='/noticeMangerList?reqPage="+pageNo+"'>>></a></li>";
 		}
-
+		
+		if(pageNo==2) {
+			pageNavi="";
+		}
+		
 		//10. 리스트+태그텍스트+멤버 카운트를 객체에 넣어줌
 		NoticeBoardPage nbp = new NoticeBoardPage(list, pageNavi);
 		JDBCTemplate.close(conn);
@@ -107,6 +111,7 @@ public class NoticeBoardService {
 
 	public boolean deleteAllNotice(String num) {
 		Connection conn = JDBCTemplate.getConnection();
+		System.out.println("num : " + num);
 		StringTokenizer sT1 = new StringTokenizer(num, "/");
 		boolean result = true;
 		while(sT1.hasMoreTokens()) {
@@ -121,8 +126,9 @@ public class NoticeBoardService {
 			}else {
 				JDBCTemplate.rollback(conn);
 			}
-			JDBCTemplate.close(conn);
+			
 		}
+		JDBCTemplate.close(conn);
 		return result;
 	}
 

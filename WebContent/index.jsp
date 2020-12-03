@@ -110,6 +110,11 @@
 	0
 	auto;
 }
+.carousel-indicators{
+	text-align: center !important;
+	width:100% !important;
+	margin: auto !important;
+}
 </style>
 <body>
 	<div class="wrap">

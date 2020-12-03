@@ -92,6 +92,16 @@ Kakao.Auth.createLoginButton({
 				var id = res.id;
 				var name = res.properties.nickname;
 				var image = res.properties.profile_image;
+				Kakao.API.request({
+	                   url: '/v1/user/unlink',
+	                   success: function(res) {
+	                
+	                     alert('success: ' + JSON.stringify(res))
+	                   },
+	                   fail: function(err) {
+	                     alert('fail: ' + JSON.stringify(err))
+	                   },
+	              });
 				$.ajax({
 					url:"/snsLogin",
 					type:"post",
@@ -107,7 +117,8 @@ Kakao.Auth.createLoginButton({
 					}
 				});
 			}
-		})
+		});
+
 		console.log(authObj);
 		var token = authObj.access_token;
 		console.log(token);

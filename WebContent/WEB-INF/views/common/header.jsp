@@ -14,6 +14,7 @@
    .nav{
       width: 1200px;
         margin: 0 auto;
+        position:relative;
    }
     .nav-wrap {
         position: absolute;
@@ -96,12 +97,11 @@
         cursor: pointer;
     }
     .alarmNote{
-    	border :1px solid black;
     	width : 300px;
     	height:500px;
     	position:absolute;
-    	right : 40px;
-    	top : 50px;
+    	right:-310px;
+    	top : 15px;
     	display:none;
     	background-color: rgba(63,63,63,0.3);
     	border-radius: 10px;
@@ -118,8 +118,11 @@
     	display:flex;
     	width : 100%;
     	height : calc(100%/5);
-    	border-bottom : 1px solid black;
+    	border-bottom : 1px solid rgba(0,0,0,0.3);
     	font-size : 12px;
+    }
+    .alarmNote>ul>li:first-child{
+    	border-top : 1px solid rgba(0,0,0,0.3);
     }
     .alarmNote>ul>li>div>a{
     	font-size : 10px;
@@ -150,18 +153,31 @@
     .alarmNote>ul>li>div:nth-child(3)>img{
     	width:70%;
     	height:100%;
-    	margin:0px;
+    	margin-top:10px;
     	object-fit : contain;
     	
+    }
+    .deleteToggle{
+		border-radius:10px;
+    	width:100px;
+    	display:none;
+    	height:30px;
+    	position: absolute;
+    	background-color: rgba(0,0,0,0.7);
+    	color : orange;
+    	font-size: 13px;
+    	text-align: center;
+    	line-height: 30px;
     }
 </style>
 
 <body>
-	<div class="alarmNote">
+	
+   <div class="nav">
+   <div class="alarmNote">
 		<ul id="alarmHTML">
 		</ul>
 	</div>
-   <div class="nav">
       <div class="nav-wrap">
           <div class="nav-left">
               <a href="index.jsp"><img src="/img/navi_logo.png" width="140px" height="70px"></a>
@@ -175,7 +191,7 @@
                           <li><a href="/todayPlan?memberNo=<%=m.getMemberNo()%>">개인스터디</a></li>
                           <li><a href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>">그룹스터디</a><br>
                   <%}else {%>
-                   <a href="/todayPlan?memberNo=0">My Plan</a>
+                    <a href="/todayPlan?memberNo=0">My Plan</a>
                    <ul class="nav-sub">
                           <li><a href="/todayPlan?memberNo=0">개인스터디</a></li>
                           <li><a href="/myGroupStudyList?memberNo=0">그룹스터디</a><br>
@@ -230,7 +246,22 @@
       </div>
    </div>
    <script>
-   
+ 
+      $(document).on("click",".deletes",function(){
+    	 var deleteElement = $(this).children().next();
+    	 var alvalues = $(this).attr("value");
+    	 	deleteElement.show();
+    	 	deleteElement.click(function(){
+    	 		$.ajax({
+    	 			url : "/updatePopAlarm",
+    	 			type : "post",
+    	 			data : {alvalues:alvalues},
+    	 			success : function(){
+    	 			}
+    	 		});
+    	 	});
+   		});
+      
    $(".nav-center").bind({
        mouseenter:function() {
            var $btn = $('.nav-sub');
@@ -265,14 +296,14 @@
       			 var webSocket = new WebSocket("ws://localhost/webSocket");
                  var interval = setInterval(function() {
             			webSocket.send(memberNo);
-               	}, 3000);
+               	}, 2000);
       		}
       		webSocket.onmessage = function(message) {
       		// 콘솔 텍스트에 메시지를 출력한다.
       		$("#alarmHTML").html(message.data);
       		};
       
-
+		
    </script>   
 
 </body>

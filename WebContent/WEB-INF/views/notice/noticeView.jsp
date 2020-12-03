@@ -15,77 +15,72 @@
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.js"></script>
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
-
-    .wrap {
-        margin: 0 auto;
+ .wrap{
         width: 1200px;
+        margin: 0 auto;
     }
 
     .header {
         width: 1200px;
         height: 100px;
-        background: green;
     }
 
-    .myplan {
+    .myplan{
         overflow: hidden;
     }
 
     .leftMenu {
         width: 182px;
         height: 920px;
-        background: #E1E1E1;
         float: left;
     }
-
+    
     .participatingGroup {
         float: left;
     }
 
     .groupListTitle {
-        width: 1018px;
-        height: 58px;
+        width: 100%;
+        height: 53px;
         text-align: center;
-        line-height: 58px;
+        line-height: 53px;
         color: white;
         font-weight: bold;
-        background: #6ED078;
+        background: #75D701;
     }
 
     .groupList {
         width: 1018px;
-        padding-top: 30px;
-        background: #FDFDFD;
     }
 
-    .leftMenuList {
+    .leftMenuList{
         padding: 0;
         margin: 0;
         list-style-type: none;
+        text-indent: 25px;
         line-height: 58px;
     }
-
-    .leftMenuA {
+    .leftMenuA{
         display: block;
         width: 100%;
         height: 58px;
         color: black;
         font-size: 13px;
         font-weight: bold;
-        text-align: center;
         text-decoration: none;
+        border-left: 10px solid white;
     }
-
-    .leftMenuA:hover {
+    .leftMenuA:hover{
         color: black;
         text-decoration: none;
+        border-left: 10px solid #75D701;
     }
-
-    .leftMenuList>li:first-child {
+    /* 해당 페이지의 메뉴를 고정으로 */
+    .leftMenuList>li:nth-child(2)>a{
+        border-color: #75D701;
+    }
+    
+    .leftMenuList>li:first-child{
         text-indent: 0;
         text-align: center;
         font-weight: bold;
@@ -137,7 +132,7 @@
     }
     
     .bordertable th{
-	  background-color: #f7f8fa;    
+      font-weight:bold;
 	  text-align: center;
 	}
 	
@@ -146,9 +141,7 @@
 	}  
 	
 	.bordertable th, .bordertable td{
-	  font-family: '나눔고딕',NanumGothic,'맑은고딕',MalgunGothic,'돋움',Dotum,Helvetica,sans-serif;
 	  font-size: 12px;    
-	  border:1px solid #ededed !important;
 	  font-weight: normal;      
 	  line-height: 19px;
 	  color:#20232;
@@ -159,39 +152,50 @@
 	.th120 th{
 	  width:120px;
 	}
+	
+	.img-wrap{
+		text-align: center;
+	}
+	
+	.img-wrap>img{
+		width:60%;
+	}
 
 </style>
 
 <body>
-    <div>
-        <%@ include file="/WEB-INF/views/common/header.jsp" %>
-    </div>
     <section>
-        <div class="wrap">
-            <div class="header">헤더부분</div>
+         <div class="wrap">
+            <div class="header">
+                <%@ include file="/WEB-INF/views/common/header.jsp"%>
+            </div>
             <div class="myplan">
+                    <div class="groupListTitle">공지사항</div>
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                         <li>고객센터</li>
-                        <li><a class="leftMenuA" href="/noticeList?reqPage=1" style="background-color: #6ED078;">공지사항</a></li>
+                        <li><a class="leftMenuA" href="/noticeList?reqPage=1">공지사항</a></li>
                         <li><a class="leftMenuA" href="/questionList?reqPage=1">고객문의</a></li>
                     </ul>
                 </div>
                 <div class="participatingGroup">
-                    <div class="groupListTitle">공지사항</div>
                     <div class="groupList">
+                        <section>
+                        <br>
                         <div class="table-wrapper" style="width:95%; margin:0 auto;">
-                            <table class="table table-bordered bordertable th120">
+                            <table class="table bordertable th120">
                                 <tr>
-                                    <th colspan="2" style="background-color:#F1F1F1"><%=n.getNoticeTitle() %></th>
+                                    <th colspan="4" style="border-top:2px solid #6ECF4C;"><strong><%=n.getNoticeTitle() %></strong></th>
                                 </tr>
                                 <tr>
                                     <th>작성자</th>
                                     <td>운영자</td>
+                                    <th>작성일</th>
+                                    <td><%=n.getNoticeEnrollDate() %></td>
                                 </tr>
                                 <tr>
                                     <th>첨부파일</th>
-                                    <td>
+                                    <td colspan="3">
                                         <%if(n.getFilename() != null){ %>
                                         <img src="/img/file.png" width="16px">
                                         <a href="javascript:fileDownload('<%=n.getFilename() %>', '<%=n.getFilepath() %>')"><%=n.getFilename() %></a>
@@ -202,16 +206,17 @@
                                 </tr>
                                 <tr >
                                     <th>내용</th>
-                                    <td><%=n.getNoticeContent() %>
-                                    
-                                    </td>
+                                    <td colspan="3"><%=n.getNoticeContent() %></td>
                                 </tr>
-                                <tr style="text-align:center">
-                                    <th colspan="2">
-                                      <a href="javascript:history.go(-1)" class="btn btn-primary btn-sm">목록으로</a>
-                                    </th>
+                                <%if(n.getFilename() != null){ %>
+                                <tr>
+                                	<td colspan="4" class="img-wrap"><img src="/upload/notice/<%=n.getFilepath() %>">	<br></td>
                                 </tr>
+                                <%} %>
                             </table>
+                            <br><hr><br>
+                            <div style="text-align:center"><a href="javascript:history.go(-1)" class="btn btn-primary btn-sm">목록으로</a></div>
+                        	<br>
                         </div>
 
                         <script>
@@ -230,7 +235,21 @@
     <div>
         <%@ include file="/WEB-INF/views/common/footer.jsp" %>
     </div>
-
+<script>
+	//사이드메뉴바 호버기능
+	$(".leftMenuA").hover(function(){
+	   $(".leftMenuA").eq(1)).attr("style","border-color : white");
+	   $(this).attr("style","border-color : #75D701");
+	},function(){
+	   $(".leftMenuA").attr("style","border-color : white");
+	   $(".leftMenuA").eq(1).attr("style","border-color : #75D701");
+	});
+	
+    $(document).ready(function(){
+    	var height = $(".th120").height();
+    	$(".table-wrapper").height(height+100);
+    });
+</script>
 </body>
 
 </html>

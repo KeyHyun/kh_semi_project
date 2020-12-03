@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import member.model.service.MemberService;
+import member.model.vo.Member;
+
 /**
  * Servlet implementation class LogoutServlet
  */
@@ -33,12 +36,12 @@ public class LogoutServlet extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		
 		HttpSession session = request.getSession(false);
-		
+
 		if(session != null)
 		{
 			session.invalidate();
 		}
-		
+			
 		RequestDispatcher rd=request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
 		request.setAttribute("msg", "로그아웃 성공");
 		request.setAttribute("loc", "/");

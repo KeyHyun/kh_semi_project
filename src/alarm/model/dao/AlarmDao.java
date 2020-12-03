@@ -180,6 +180,7 @@ public class AlarmDao {
 			rset = pstmt.executeQuery();
 			while(rset.next()) {
 				a = new Alarm();
+				a.setAlarmNo(rset.getInt("alarm_no"));
 				a.setSendMemberNo(rset.getInt("send_member_no"));
 				a.setAlarmSubject(rset.getInt("alarm_subject"));
 				a.setGroupNo(rset.getInt("group_no"));
@@ -233,6 +234,24 @@ public class AlarmDao {
 			JDBCTemplate.close(pstmt);
 		}
 		
+		return result;
+	}
+
+	public int updatePopAlarm(Connection conn, int alvalues) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update alarm set alarm_status = ? where alarm_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "o");
+			pstmt.setInt(2, alvalues);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
 		return result;
 	}
 

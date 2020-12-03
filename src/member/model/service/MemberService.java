@@ -333,8 +333,9 @@ public class MemberService {
 				}else {
 					JDBCTemplate.rollback(conn);
 				}
-				JDBCTemplate.close(conn);
+				
 			}
+			JDBCTemplate.close(conn);
 			return result;
 		}
 
@@ -409,6 +410,10 @@ public class MemberService {
 			//9. 다음버튼
 			if(pageNo <= totalPage-3) {
 				pageNavi += "<li class='page-item'><a class='page-link' href='/memberList?reqPage="+pageNo+"'>>></a></li>";
+			}
+			
+			if(pageNo==2) {
+				pageNavi="";
 			}
 			
 			//10. 리스트와 태그 텍스트를 객체에 넣어줌
@@ -541,6 +546,8 @@ public class MemberService {
 				JDBCTemplate.close(conn);
 			return result;
 		}
+		
+
 	
 }
 

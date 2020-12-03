@@ -1,27 +1,35 @@
 package groupstudy.model.vo;
 
 public class GroupComment {
+	private int rNum;
 	private int commentNo;
 	private int groupNo;
 	private String commentContent;
-	private String commentTime;
-	private int memberNo;
+	private String commentTitle;
 	private String filename;
 	private String filepath;
+	private String commentWriter;
 	public GroupComment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public GroupComment(int commentNo, int groupNo, String commentContent, String commentTime, int memberNo,
-			String filename, String filepath) {
+	
+	
+	public GroupComment(int rNum, int commentNo, int groupNo, String commentContent, String commentTitle,
+			String filename, String filepath, String commentWriter) {
 		super();
+		this.rNum = rNum;
 		this.commentNo = commentNo;
 		this.groupNo = groupNo;
 		this.commentContent = commentContent;
-		this.commentTime = commentTime;
-		this.memberNo = memberNo;
+		this.commentTitle = commentTitle;
 		this.filename = filename;
 		this.filepath = filepath;
+		this.commentWriter = commentWriter;
+	}
+
+	public String getCommentContentBr() {
+		return commentContent.replaceAll("\r\n", "<br>");
 	}
 	public int getCommentNo() {
 		return commentNo;
@@ -41,17 +49,11 @@ public class GroupComment {
 	public void setCommentContent(String commentContent) {
 		this.commentContent = commentContent;
 	}
-	public String getCommentTime() {
-		return commentTime;
+	public String getCommentTitle() {
+		return commentTitle;
 	}
-	public void setCommentTime(String commentTime) {
-		this.commentTime = commentTime;
-	}
-	public int getMemberNo() {
-		return memberNo;
-	}
-	public void setMemberNo(int memberNo) {
-		this.memberNo = memberNo;
+	public void setCommentTitle(String commentTitle) {
+		this.commentTitle = commentTitle;
 	}
 	public String getFilename() {
 		return filename;
@@ -65,6 +67,16 @@ public class GroupComment {
 	public void setFilepath(String filepath) {
 		this.filepath = filepath;
 	}
-	
-	
+	public String getCommentWriter() {
+		return commentWriter;
+	}
+	public void setCommentWriter(String commentWriter) {
+		this.commentWriter = commentWriter;
+	}
+	public int getrNum() {
+		return rNum;
+	}
+	public void setrNum(int rNum) {
+		this.rNum = rNum;
+	}
 }

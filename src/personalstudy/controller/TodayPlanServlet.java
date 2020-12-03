@@ -33,15 +33,22 @@ public class TodayPlanServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
-		int groupList = 2;
-		int myList = 1;
 		int memberNo = Integer.parseInt(request.getParameter("memberNo"));
-		ArrayList<PersonalStudyTask> pst = new PersonalStudyService().selectPersonalTask(memberNo,myList);
-		ArrayList<PersonalStudyTask> gpstl = new PersonalStudyService().selectPersonalTask(memberNo,groupList);
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/myplan/todayPlan.jsp");
-		request.setAttribute("pstl", pst);
-		request.setAttribute("gpstl", gpstl);
-		rd.forward(request, response);
+		if(memberNo==0) {
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
+			request.setAttribute("msg", "로그인 후 이용가능한 페이지 입니다");
+			request.setAttribute("loc", "/views/login.jsp");//로그인화면으로 이동
+			rd.forward(request, response);
+		}
+		else {
+			ArrayList<PersonalStudyTask> pst = new PersonalStudyService().selectPersonalTask(memberNo);
+			ArrayList<String> gpstl = new PersonalStudyService().selectGroupTask(memberNo);
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/myplan/todayPlan.jsp");
+			request.setAttribute("pstl", pst);
+			request.setAttribute("gpstl", gpstl);
+			rd.forward(request, response);
+		}
+	
 	}
 
 	/**
