@@ -1,4 +1,4 @@
-  
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -23,26 +23,31 @@
 	margin: 0 auto;
 	width: 1200px;
 }
+
 .content-wrap {
 	top: 100px;
 	width: 1200px;
 }
+
 .container-wrap {
 	width: 1200px;
 	height: 500px;
 	padding: 0;
 	margin-bottom: 80px;
 }
+
 .carousel-caption {
 	position: absolute;
 	top: 140px;
 }
+
 .carousel-inner>.item>img {
 	top: 0;
 	left: 0;
 	min-width: 1200px;
 	min-height: 500px;
 }
+
 .content {
 	margin-top: 10px;
 	width: 1000px;
@@ -51,11 +56,13 @@
 	text-align: center;
 	background-color: rgb(240, 240, 240);
 }
+
 .second {
 	height: 474px;
 	position: relative;
 	z-index: 1;
 }
+
 .content-top {
 	margin-top: 50px;
 	padding-top: 15px;
@@ -65,22 +72,26 @@
 	text-align: center;
 	background-color: rgb(63, 63, 63);
 }
+
 .content-img1 {
 	text-align: center;
 	line-height: 404px;
 	width: 100%;
 	height: calc(100% -70);
 }
+
 .content-img2 {
 	text-align: center;
 	line-height: 604px;
 	width: 100%;
 	height: calc(100% -70);
 }
+
 .content-img>img {
 	width: 85%;
 	height: 80%;
 }
+
 .content-comment {
 	padding-top: 60px;
 	width: 500px;
@@ -95,10 +106,13 @@
 	top: -300px;
 	left: 400px;
 }
+
 #calendar {
-	margin-top: 10px; margin-left : 20px;
+	margin-top: 10px;
+	margin-left: 20px;
 	max-width: 960px;
-	margin-left: 20px; max-width : 960px;
+	margin-left: 20px;
+	max-width: 960px;
 	max-height: 594px;
 	<!--
 	달력
@@ -110,9 +124,10 @@
 	0
 	auto;
 }
-.carousel-indicators{
+
+.carousel-indicators {
 	text-align: center !important;
-	width:100% !important;
+	width: 100% !important;
 	margin: auto !important;
 }
 </style>
@@ -141,8 +156,19 @@
 									<p>
 										My Plan에서 스터디계획을 설정하세요.<br> 혼자하는 개인스터디, 함께하는 그룹스터디
 									</p>
+									<%
+										if (m != null) {
+									%>
+									<br> <span>지금 바로 시작하세요> </span><a
+										href="/todayPlan?memberNo=<%=m.getMemberNo()%>"> 오늘의 스케줄</a>
+									<%
+										} else {
+									%>
 									<br> <span>지금 바로 시작하세요> </span><a href="/joinFrm">
 										회원가입하기</a>
+									<%
+										}
+									%>
 								</div>
 							</div>
 							<div class="item">
@@ -218,7 +244,7 @@
 
 
 		</section>
-		<div>
+		<div style="margin-top: 20px;">
 			<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 		</div>
 	</div>
@@ -251,38 +277,38 @@
 				}, {
 					title : '제20회 공인노무사 3차시험 합격자 발표(12.2)',
 					start : '2020-12-02'
-				},{
+				}, {
 					title : '제31회 공인중개사 1,2차시험 합격자 발표(12.2)',
 					start : '2020-12-02'
-				},{
+				}, {
 					title : '제20회 국내여행안내사 및 호텔3종 1차시험 합격자 발표(12.2)',
 					start : '2020-12-02'
-				},{
+				}, {
 					title : '제15회 한국어교육능력검정 2차 합격자 발표(12.2)',
 					start : '2020-12-02'
-				},{
+				}, {
 					title : '제28회 청소년지도사 2차시험(12.7~12.12)',
 					start : '2020-12-07',
 					end : '2020-12-12'
-				},{
+				}, {
 					title : '제20회 소방시설관리사 2차시험 합격자 발표(12.9)',
 					start : '2020-12-09'
-				},{
+				}, {
 					title : '제20회 관광통역안내사 2차시험 합격자 발표(12.16)',
 					start : '2020-12-16'
-				},{
+				}, {
 					title : '제20회 국내여행안내사 및 호텔3종 2차시험(12.19)',
 					start : '2020-12-19'
-				},{
+				}, {
 					title : '제28회 청소년지도사 2차시험 합격자 발표(12.23)',
 					start : '2020-12-23'
-				},{
+				}, {
 					title : '기능사 제4회 실기시험 1차 합격자 발표',
 					start : '2020-12-24'
-				},{
+				}, {
 					title : '제21회 박물관및미술관준학예사 합격자 발표(12.30)',
 					start : '2020-12-30'
-				},{
+				}, {
 					title : '기능사 제4회 실기시험 2차 합격자 발표',
 					start : '2020-12-31'
 				},

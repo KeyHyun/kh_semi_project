@@ -207,13 +207,11 @@
                   <a href="/eventList?memberNo=<%=m.getMemberNo()%>&reqPage=1">이벤트</a>
                    <ul class="nav-sub">
                     		<li><a href="/eventList?memberNo=<%=m.getMemberNo()%>&reqPage=1">이달의 이벤트</a></li>
-                          <li><a href="#">이벤트 당첨자 조회</a></li>
                     </ul>
                   <%}else{ %>
                   <a href="/eventList?memberNo=0&reqPage=1">이벤트</a>
                       <ul class="nav-sub">
                           <li><a href="/eventList?memberNo=0&reqPage=1">이달의 이벤트</a></li>
-                          <li><a href="#">이벤트 당첨자 조회</a></li>
                       </ul>
                   <%} %>
                       

@@ -52,7 +52,6 @@ public class EventBoardDao {
 				e.setEventTitle(rset.getString("EVENT_TITLE"));
 				e.setFilepath(rset.getString("filepath"));
 				e.setRnum(rset.getInt("rnum"));
-				e.setEventWinnerStatus(rset.getNString("EVENT_WINNER_STATUS"));
 				list.add(e);
 			}
 		} catch (SQLException e) {
@@ -69,7 +68,7 @@ public class EventBoardDao {
 	public int insertEvent(Connection conn, EventBoard eb) {
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String query = "insert into event_board values(event_BOARD_SEQ.NEXTVAL, ?,to_char(sysdate, 'yyyy-mm-dd'), ?, ?, ? , ?,?, null )";
+		String query = "insert into event_board values(event_BOARD_SEQ.NEXTVAL, ?,to_char(sysdate, 'yyyy-mm-dd'), ?, ?, ? , ?,?)";
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, eb.getEventTitle());

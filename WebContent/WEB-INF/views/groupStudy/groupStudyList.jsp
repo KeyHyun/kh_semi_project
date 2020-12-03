@@ -69,8 +69,8 @@
 .search-name {
 	float: left;
 	width: 100%;
-	height: 200px;
-	line-height: 180px;
+	height: 150px;
+	line-height:150px;
 }
 .search-name>select {
 	width: 100px;
@@ -85,7 +85,8 @@
 .search-category {
 	float: left;
 	width: 100%;
-	height: 200px;
+height:150px;
+line-height:150px;
 	text-align: center;
 }
 #search-btn {
@@ -156,9 +157,11 @@ hr {
 	width: 150px;
 	height: 50px;
 	color: #fff;
-	background-color: #75D701;
+	background-color: #fff;
 	overflow: hidden;
 	box-sizing:none;
+	border-top: 1px solid #DCDEDD;
+	border-bottom : 1px solid #DCDEDD;
 }
 .list-content>a {
 	display: inline-block;
@@ -166,8 +169,10 @@ hr {
 	text-decoration: none;
 	font-weight: bold;
 	font-size: 15px;
+	color:black;
 }
 .list-content>p {
+color:black;
 	margin: 0;
 	margin-top: 0px;
 	font-size: 10px;
@@ -225,11 +230,11 @@ select {
 							href="/createRoomCntCheck?memberNo=<%=m.getMemberNo()%>&memberGrade=<%=m.getMemberGrade()%>">그룹스터디
 							생성</a>
 						<%} %>
-						<select id="float" name="float-category"
-							onChange="window.open(value,'_self');">
-							<option value="/groupStudyList?reqPage=1">최신순</option>
-							<option value="/groupStudyList?reqPage=2">이름순</option>
-						</select>
+<select id="float" name="float-category"
+	onChange="window.open(value,'_self');">
+	<option>선택하세요</option>
+	<option value="/groupStudyList?reqPage=1">최근등록순</option>
+</select>
 					</div>
 					<hr>
 					<div class="content-list">

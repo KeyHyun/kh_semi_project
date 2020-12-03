@@ -38,7 +38,6 @@
     
     .participatingGroup {
         float: left;
-        height: 920px;
     }
 
     .groupListTitle {
@@ -53,7 +52,6 @@
 
     .groupList {
         width: 1018px;
-        height: 867px;
     }
 
     .leftMenuList{
@@ -157,7 +155,7 @@
                         <section>
                         <br><br>
                         <div class="table-wrapper" style="width:95%; margin:0 auto;">
-                            <table class="table table-borader">
+                            <table class="table table-borader tableEdit">
                                 <tr>
                                     <th colspan="2" style="background-color:#F1F1F1"><%=n.getNoticeTitle() %></th>
                                 </tr>
@@ -210,6 +208,11 @@
                             },function(){
                                $(".leftMenuA").attr("style","border-color : white");
                                $(".leftMenuA").eq(2).attr("style","border-color : #75D701");
+                            });
+                            
+                            $(document).ready(function(){
+                            	var height = $(".tableEdit").height();
+                            	$(".table-wrapper").height(height+50);
                             });
                         </script>
 

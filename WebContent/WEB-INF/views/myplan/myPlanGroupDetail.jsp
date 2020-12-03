@@ -209,8 +209,8 @@
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                     	<li>개인스터디</li>
-                        <li><a class="leftMenuA" href="#"><img src="/img/calender2.png" style="margin-right: 10px;">일일 계획</a></li>
-                        <li><a class="leftMenuA" href="#"><img src="/img/day2.png" style="margin-right: 10px;">나의 스케줄</a></li>
+                        <li><a class="leftMenuA" href="/todayPlan?memberNo=<%=m.getMemberNo()%>"><img src="/img/calender2.png" style="margin-right: 10px;">일일 계획</a></li>
+                        <li><a class="leftMenuA" href="/myStudyCalender?memberNo=<%=m.getMemberNo()%>"><img src="/img/day2.png" style="margin-right: 10px;">나의 스케줄</a></li>
                         <li><a class="leftMenuA" href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>"><img src="/img/group_icon2.png" style="margin-right: 10px;">참여중인 스터디</a></li>
                     </ul>
                 </div>
@@ -218,7 +218,7 @@
                     
                     <div class="groupList">
                     	<div class="btnDiv">
-                    		<a href="javascript:history.go(-1)" class="btnAll">목록으로</a>
+                    		<a href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>" class="btnAll">목록으로</a>
                     		<%if(gsr.getGroupManagerNo()==m.getMemberNo()){//방장인 경우 %>
 	                    		<a href="/updateGroupStudyRoomFrm?groupNo=<%=gsr.getGroupNo() %>&category1=<%=category1 %>&category2=<%=category2 %>" class="btnAll">수정</a>
     	                		<a href="" class="btnAll" id="studyDelete">삭제</a><!-- script로처리 -->
@@ -333,18 +333,18 @@
 							<!-- 전체 댓글 출력 및 본인 댓글 수정 / 삭제 -->
 							<div style="overflow:scroll; height: 505px; width: 93%; overflow-x:hidden; margin-top: 20px;">
                     		<%for(GroupComment gc : gcList){ %>
-                    		<%if(gc.getFilename()==null){ %>
+                    		<%if(gc.getCommentContent()!=null){ %>
                     			<div class="commentListWrap" style="clear:left;">
 									<div class="commentList" style="width: 10%;">
 										<img src="<%=memberIdFileMap.get(gc.getCommentWriter())%>" style="border-radius: 50%; width: 60px; height: 60px;" ><!-- 댓글을 쓴 사용자들의 프로필사진 -->
 									</div>
-									<div class="commentList" style="width: 80%;">
+									<div class="commentList" style="width: 77%;">
 										<p id="commentWriterP" style="margin: 0;"><%=gc.getCommentWriter() %></p>
 										<p class="oldContent"><%=gc.getCommentContentBr() %></p>
 										<textarea name="commentContent" class="form-control changeComment" style="display: none; resize: none;" required="required"><%=gc.getCommentContent() %></textarea>
 									</div>
 									<%if(m.getMemberId().equals(gc.getCommentWriter()) || m.getMemberNo()==gsr.getGroupManagerNo()){ //작성자랑 현재 접속자랑 같은 경우 수정/삭제 가능하게 || 그룹장인경우 삭제만가능하게%>
-                              <div class="commentList" style="width: 10%;">
+                              <div class="commentList" style="width: 13%;">
                                  <%if(m.getMemberId().equals(gc.getCommentWriter())){ %>
                                     <a href="javascript:void(0)" onclick="modifyComment(this,'<%=gc.getCommentNo()%>','<%=gsr.getGroupNo()%>')">수정</a>
                                  <%} %>

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import common.JDBCTemplate;
+import personalstudy.model.vo.PersonalStudyRoom;
 import personalstudy.model.vo.PersonalStudyTask;
 
 public class PersonalStudyDao {
@@ -272,5 +273,27 @@ public class PersonalStudyDao {
 				JDBCTemplate.close(pstmt);
 			}
 			return result;
+		}
+
+
+		public PersonalStudyRoom selectTimer(Connection conn, int memberNo) {
+			PreparedStatement pstmt = null;
+			ResultSet rset = null;
+			PersonalStudyRoom perRoom = null;
+			String query = "select study_totaltime from personal_studyroom where member_no = ? and today_date = to_char(sysdate,'yyyy-mm-dd')";
+			try {
+				pstmt = conn.prepareStatement(query);
+				pstmt.setInt(1, memberNo);
+				rset = pstmt.executeQuery();
+				if(rset.next()) {
+					perRoom = new PersonalStudyRoom();
+					perRoom.setMemberNo(memberNo);
+					perRoom.setStudyTotalTime(rset.getString("study_totaltime"));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return perRoom;
 		}
 }

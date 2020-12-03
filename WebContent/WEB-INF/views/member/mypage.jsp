@@ -368,13 +368,13 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 							<tr class="w_list">
 								<td><%if(l.getAlarmSubject()==1){ %>
 								공지사항
-								<%}else if(l.getAlarmSubject() ==2){ %>참여요청<%}else{ %>댓글<%} %></td>
+								<%}else if(l.getAlarmSubject() ==2){ %>참여요청<%}else{ %>요청 결과<%} %></td>
 								<td><%=l.getAlarmContent()%></td>
 								<td>
-									<%if(l.getAlarmStatus().charAt(0) == 'x') {%>
-									<a class="readVal" href="#" alarmNum="<%=l.getAlarmNo()%>">안읽음</a>
+									<%if(l.getAlarmStatus().charAt(0) == 'x' || l.getAlarmStatus().charAt(0) == 'k' ||l.getAlarmStatus().charAt(0) == 'd'||l.getAlarmStatus().charAt(0) == 'c') {%>
+									<a class="readVal" href="#" alarmNum="<%=l.getAlarmNo()%>" id="noRead">안읽음</a>
 									<%}else if(l.getAlarmStatus().charAt(0) == 'r'){%>
-									<a class="readVal" id="redFont">승인거부</a>
+									<a class="readVal" id="redFont">거부</a>
 									<%}else if(l.getAlarmStatus().charAt(0) == 'a') {%>
 									<a class="readVal" id="blueFont">승인</a>
 									<% }else{%>
@@ -403,6 +403,8 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 			var applyMemberNo;
 			var alarmNum;
 			var stat;
+			
+
 			$("#applyBtn").click(function(){
 				$.ajax({
 					url : "/checkMemberMax",
@@ -473,7 +475,7 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 					type : "post",
 					data : {alarmNum:alarmNum,stat:stat},
 					success : function(data){
-						readVal.html("실패");
+						readVal.html("거절");
 						readVal.css('color','red');
 						alert("거부완료");
 					}
@@ -486,6 +488,7 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 				if(status == '안읽음'){
 					$(this).html("읽음");
 					$(this).css('color','grey');
+					/*
 					$.ajax({
 						url:"/updateRead",
 						type:"post",
@@ -499,7 +502,7 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 							}
 						}
 						
-					});
+					});*/
 					
 					//안읽은 요소중에 참여요청이면
 					if($(this).parent().prev().prev().html() == '참여요청')

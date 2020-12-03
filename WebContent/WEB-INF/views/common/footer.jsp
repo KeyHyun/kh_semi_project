@@ -70,7 +70,7 @@
             <div class="footer-menu"><a href="/usePolicy">이용약관</a></div>
             <div class="footer-menu"><a href="/privacyPersonal">개인정보처리방침</a></div>
             <div class="footer-menu"><a href="/servicePolicy">운영정책</a></div>
-            <div class="footer-menu"><a href="#">고객문의</a></div>
+            <div class="footer-menu"><a href="/questionList?reqPage=1">고객문의</a></div>
         </div>
         <div><pre>세미프로젝트 SWU팀
 KH당산지점 : 1544-9970 | 담당 강사님 이윤수

@@ -159,8 +159,9 @@ public class QuestionBoardService {
 			}else {
 				JDBCTemplate.rollback(conn);
 			}
-			JDBCTemplate.close(conn);
+			
 		}
+		JDBCTemplate.close(conn);
 		return result;
 	}
 

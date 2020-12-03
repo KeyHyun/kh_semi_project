@@ -118,5 +118,45 @@ public class AlarmService {
 		return result;
 	}
 
+	public int sendMessage(int alarmNum, Alarm prevAl) {
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new AlarmDao().sendMessage(conn,alarmNum,prevAl);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}
+		else {
+			JDBCTemplate.rollback(conn);
+		}
+		return result;
+	}
+
+	public Alarm searchAlarm(int alarmNum) {
+		Connection conn = JDBCTemplate.getConnection();
+		Alarm al = new AlarmDao().searchAlarm(conn,alarmNum);
+		JDBCTemplate.close(conn);
+		return al;
+	}
+
+	public int searchAlarm(int groupNo, int memberNo) {
+		Connection conn = JDBCTemplate.getConnection();
+		int alarmNo = new AlarmDao().serachAlarm(conn,groupNo,memberNo);
+		JDBCTemplate.close(conn);
+		return alarmNo;
+	}
+
+	public int chageStatusH(int alarmNum) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new AlarmDao().changeStatusH(conn,alarmNum);
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}
+		else {
+			JDBCTemplate.rollback(conn);
+		}
+		JDBCTemplate.close(conn);
+		return result;
+	}
+
 
 }

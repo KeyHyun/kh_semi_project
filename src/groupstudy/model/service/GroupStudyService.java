@@ -285,11 +285,12 @@ public class GroupStudyService {
 				}else {
 					JDBCTemplate.rollback(conn);
 				}
-				JDBCTemplate.close(conn);
+				
 			}
 			if(result) {
 				return imgList;
 			}
+			JDBCTemplate.close(conn);
 			return null;
 		}
 

@@ -366,7 +366,7 @@
                         <textarea rows="2" cols="50"  maxlength="33"name="content" style="resize: none" required="required"></textarea>
                     <hr>
                     <div class="modal-button123">
-                        <input type="submit" value="전송">
+                        <input type="submit" value="등록">
                         <input type="button" value="취소">
                     </div>
                     </div>

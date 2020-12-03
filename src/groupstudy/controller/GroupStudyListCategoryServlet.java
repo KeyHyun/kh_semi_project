@@ -41,9 +41,11 @@ public class GroupStudyListCategoryServlet extends HttpServlet {
 		GroupStudyPageData gspdCategory = new GroupStudyService().selectListCategory(reqPage, category1, category2);
 		//4. 결과처리
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/groupStudy/groupStudyListCategory.jsp");
+		request.setAttribute("category1", category1);
+		request.setAttribute("category2", category2);
 		if(gspdCategory!=null) {
 			request.setAttribute("list", gspdCategory.getList());
-			request.setAttribute("pageNavi", gspdCategory.getPageNavi());			
+			request.setAttribute("pageNavi", gspdCategory.getPageNavi());		
 		}else {
 			request.setAttribute("list", null);
 			request.setAttribute("pageNavi", "");

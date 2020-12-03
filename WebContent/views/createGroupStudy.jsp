@@ -164,10 +164,10 @@
 	}
 	
 	select{
-		width: 100px;
-		height: 30px;
-		border-color: #DBDBDB;
-	}
+      width: auto; 
+      height: 30px;
+      border-color: #DBDBDB;
+   }
 	input{
 		outline: none;
 		border-color: #DBDBDB;

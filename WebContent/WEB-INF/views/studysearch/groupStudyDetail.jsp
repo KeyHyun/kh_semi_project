@@ -150,7 +150,7 @@
       top: 0px;
       left: 0px;
       width: 100vw;
-      height: 100vh;
+      height: 160vh;
       background-color: rgba(0,0,0,0.5);
       display: none;
       justify-content: center;

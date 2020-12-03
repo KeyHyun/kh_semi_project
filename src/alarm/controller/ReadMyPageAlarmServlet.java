@@ -1,4 +1,4 @@
-package groupstudy.controller;
+package alarm.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,19 +9,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import groupstudy.model.service.GroupStudyService;
+import alarm.model.service.AlarmService;
 
 /**
- * Servlet implementation class UpdateAndInsertMemberServlet
+ * Servlet implementation class ReadMyPageAlarmServlet
  */
-@WebServlet(name = "UpdateAndInsertMember", urlPatterns = { "/updateAndInsertMember" })
-public class UpdateAndInsertMemberServlet extends HttpServlet {
+@WebServlet(name = "ReadMyPageAlarm", urlPatterns = { "/readMyPageAlarm" })
+public class ReadMyPageAlarmServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateAndInsertMemberServlet() {
+    public ReadMyPageAlarmServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,14 +31,10 @@ public class UpdateAndInsertMemberServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		int alarmNum = Integer.parseInt(request.getParameter("alarmNum"));
 		
-		int groupNo = Integer.parseInt(request.getParameter("groupNo")); // 그룹넘
-		int memberNo = Integer.parseInt(request.getParameter("applyMemberNo")); //승인받은 멤버
-		// 그룹 참여 수락 후, status 변경 및 groupstudymember에 추가
-		int result = new GroupStudyService().updateAndInsert(groupNo,memberNo);
-		
+		int result = new AlarmService().chageStatusH(alarmNum);
 		PrintWriter out = response.getWriter();
-		
 		if(result>0) {
 			out.print(true);
 		}

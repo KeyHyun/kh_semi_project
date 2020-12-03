@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import common.JDBCTemplate;
 import personalstudy.model.dao.PersonalStudyDao;
+import personalstudy.model.vo.PersonalStudyRoom;
 import personalstudy.model.vo.PersonalStudyTask;
 
 public class PersonalStudyService {
@@ -149,6 +150,13 @@ public class PersonalStudyService {
 			}
 			JDBCTemplate.close(conn);
 			return result;
+		}
+
+		public PersonalStudyRoom selectTimer(int memberNo) {
+			Connection conn = JDBCTemplate.getConnection();
+			PersonalStudyRoom perRoom = new PersonalStudyDao().selectTimer(conn,memberNo);
+			JDBCTemplate.close(conn);
+			return perRoom;
 		}
 
 }

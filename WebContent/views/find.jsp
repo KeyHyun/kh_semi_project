@@ -66,7 +66,7 @@
    								}
    							else{
    								$("#resultText").css('color','green');
-   								resultHTML = searchName+" 님의 아이디는 ["+data+"] 입니다.";
+   								resultHTML = searchName+" 님의 아이디는 ["+data+"] 입니다.<br><a href='/views/login.jsp' style='color: blue; text-decoration:none;'>로그인 페이지로 이동하기 ></a>";
    							}
    							$("#searchName").val("");
    							$("#searchEmail").val("");
@@ -87,7 +87,7 @@
    						success : function(data){
    							if(data == true){
    								$("#resultText").css('color','green');
-   								resultHTML = "임시비밀번호가 발급되었습니다. 이메일을 확인해주세요.";
+   								resultHTML = "임시비밀번호가 발급되었습니다. 이메일을 확인해주세요. <br><a href='/views/login.jsp' style='color: blue; text-decoration:none;'>로그인 페이지로 이동하기 ></a>";
    							}
    							else{
    								resultHTML = "입력하신 정보에 맞는 계정이 없습니다. 확인 후 다시 시도해주세요.";

@@ -7,6 +7,8 @@
    	ArrayList<GroupStudyRoom> list = (ArrayList<GroupStudyRoom>)request.getAttribute("list");
 	Category category = (Category)request.getAttribute("category");
    	String pageNavi = (String)request.getAttribute("pageNavi");
+   	String category1 = (String)request.getAttribute("category1");
+   	String category2 = (String)request.getAttribute("category2");
    %>
 <!DOCTYPE html>
 <html>
@@ -70,8 +72,8 @@
 .search-name {
 	float: left;
 	width: 100%;
-	height: 200px;
-	line-height: 180px;
+height:150px;
+line-height:150px;
 }
 .search-name>select {
 	width: 100px;
@@ -86,7 +88,8 @@
 .search-category {
 	float: left;
 	width: 100%;
-	height: 200px;
+	height:150px;
+line-height:150px;
 	text-align: center;
 }
 #search-btn {
@@ -157,9 +160,10 @@ hr {
 	width: 150px;
 	height: 50px;
 	color: #fff;
-	background-color: #75D701;
+	background-color: #fff;
 	overflow: hidden;
 	box-sizing:none;
+	border: 1px solid #DCDEDD;
 }
 .list-content>a {
 	display: inline-block;
@@ -167,11 +171,13 @@ hr {
 	text-decoration: none;
 	font-weight: bold;
 	font-size: 15px;
+	color:black;
 }
 .list-content>p {
 	margin: 0;
 	margin-top: 0px;
 	font-size: 10px;
+	color:black;
 }
 .selectPage {
 	font-size: 18px;
@@ -227,10 +233,10 @@ select {
 							생성</a>
 						<%} %>
 						<select id="float" name="float-category"
-							onChange="window.open(value,'_self');">
-							<option value="/groupStudyList?reqPage=1">최신순</option>
-							<option value="/groupStudyList?reqPage=2">이름순</option>
-						</select>
+	onChange="window.open(value,'_self');">
+	<option>선택하세요</option>
+	<option value="/groupStudyList?reqPage=1">최근등록순</option>
+</select>
 					</div>
 					<hr>
 					<div class="content-list">
@@ -243,7 +249,7 @@ select {
 									<%if(gsr.getFilename()==null) {%>
 										<img src="/img/basic.png">
 									<%}else {%>								
-										<img src="/upload/groupImg/<%=gsr.getFilename() %>">
+										<img src="/upload/groupImg/<%=gsr.getFilepath() %>">
 									<%} %>
 								</div>
 								<div class="list-content">
@@ -299,6 +305,7 @@ select {
         	                 option.html(data[idx]);
         	                 sel2.append(option);
         	              }
+
         	           }
         	        });
             	}

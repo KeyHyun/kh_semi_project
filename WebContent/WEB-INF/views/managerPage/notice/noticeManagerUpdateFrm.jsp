@@ -191,7 +191,7 @@
                                     <tr style="text-align:center">
                                         <th colspan="2">
                                             <button type="submit" class="btn btn-primary">수정완료</button>
-                                            <a href="javascript:history.go(-1)" class="btn btn-primary btn-sm">목록으로</a>
+                                            <a href="/noticeManagerList?reqPage=1" class="btn btn-primary btn-sm">목록으로</a>
                                         </th>
                                     </tr>
                                 </table>

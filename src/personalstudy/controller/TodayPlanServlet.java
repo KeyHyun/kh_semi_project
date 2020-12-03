@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import personalstudy.model.service.PersonalStudyService;
+import personalstudy.model.vo.PersonalStudyRoom;
 import personalstudy.model.vo.PersonalStudyTask;
 
 /**
@@ -41,10 +42,12 @@ public class TodayPlanServlet extends HttpServlet {
 			rd.forward(request, response);
 		}
 		else {
+			PersonalStudyRoom perRoom = new PersonalStudyService().selectTimer(memberNo);
 			ArrayList<PersonalStudyTask> pst = new PersonalStudyService().selectPersonalTask(memberNo);
 			ArrayList<String> gpstl = new PersonalStudyService().selectGroupTask(memberNo);
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/myplan/todayPlan.jsp");
 			request.setAttribute("pstl", pst);
+			request.setAttribute("NTime", perRoom);
 			request.setAttribute("gpstl", gpstl);
 			rd.forward(request, response);
 		}

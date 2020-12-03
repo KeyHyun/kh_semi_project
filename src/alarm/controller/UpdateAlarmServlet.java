@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import alarm.model.service.AlarmService;
+import alarm.model.vo.Alarm;
 
 /**
  * Servlet implementation class UpdateAlarmServlet
@@ -34,8 +35,11 @@ public class UpdateAlarmServlet extends HttpServlet {
 		
 		String stat = request.getParameter("stat");
 		int alarmNum = Integer.parseInt(request.getParameter("alarmNum"));
-		
 		int result = new AlarmService().updateStatus(alarmNum,stat);
+		Alarm prevAl = new AlarmService().searchAlarm(alarmNum);
+		
+		int sendResult = new AlarmService().sendMessage(alarmNum,prevAl);
+		
 		PrintWriter out = response.getWriter();
 		
 		if(result>0) {

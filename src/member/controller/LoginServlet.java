@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("member", loginMember);
 			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp");
-			request.setAttribute("msg", "["+loginMember.getMemberNickname()+"]님 환영합니다.");
+			request.setAttribute("msg", "[ "+loginMember.getMemberNickname()+" ]님 환영합니다.");
 			request.setAttribute("loc", "/");
 			rd.forward(request, response);
 		}

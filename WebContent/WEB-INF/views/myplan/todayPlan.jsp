@@ -1,3 +1,6 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="personalstudy.model.vo.PersonalStudyRoom"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="personalstudy.model.vo.PersonalStudyTask"%>
 <%@page import="java.util.ArrayList"%>
@@ -33,6 +36,26 @@
     		korDay ="토";
     		break;
     	}
+    	int Tminute;
+    	int Tsec;
+    	int TMilli;
+    	PersonalStudyRoom NTime = (PersonalStudyRoom)request.getAttribute("NTime");
+    	if(NTime == null)
+    	{
+    		 Tminute = 0;
+       		 Tsec = 0;
+       		 TMilli = 0;
+    	}
+    	else{
+    		String str = NTime.getStudyTotalTime();
+        	str = str.replaceAll(" ", "");
+        	String[] strA= str.split(":");
+        	 Tminute = Integer.parseInt(strA[0]);
+       		 Tsec = Integer.parseInt(strA[1]);
+       		 TMilli = Integer.parseInt(strA[2]);
+    	}
+    	
+
     %>
 <!DOCTYPE html>
 <html>
@@ -333,7 +356,7 @@
                         <img id="pause" src="/img/today_time_pause.png" style="width:25px; height:25px;" onclick="func8();">
 
                         <form action="/personalStudyRoomInsert?memberNo=<%=m.getMemberNo()%>" method="post" style="display:inline;">                        
-                        <input type="text" id="timeInput" name="time" placeholder="00 : 00 : 00">
+                        <input type="text" id="timeInput" name="time" placeholder="<%=Tminute %> : <%=Tsec%> : <%=TMilli%>">
                         <input type="submit" id="timeSet" value="시간 저장"> 
                         </form>
                     </div>
@@ -394,10 +417,13 @@
 		<%@ include file="/WEB-INF/views/common/footer.jsp"%>
 	</div>
 <script>
-var minute = 0;
+var minute = "<%=Tminute%>";
 var time = 0;
-var sec = 0;
+var sec = "<%=Tsec%>";
+var mill = "<%=TMilli%>";
 var time2;
+var pause = false;
+var timeInput = document.getElementById("timeInput");
 var memberNo = "<%=m.getMemberNo()%>";
 function drag(target, food) {		//드래그 시작시 호출 할 함수
 	food.dataTransfer.setData('Text', target.id);
@@ -429,6 +455,7 @@ function drop(target, food) {		//드롭시 호출 할 함수
 		function openPop(){
 			var popup = window.open('/views/popUp.jsp','리스트 추가','width=330px,height=310px,scrollbars=no');
 		};
+		
 		$(function(){
 			$(".deleteBtn").click(function(){
 				var deleteIdx = $(this).parent().index();
@@ -451,39 +478,68 @@ function drop(target, food) {		//드롭시 호출 할 함수
 			});
 			
 		});
-		
 		function func6(){
 			$("#stop").css('display','inline-block');
 			$("#pause").css('display','inline-block');
 			$("#start").css('display','none');
-            var timeInput = document.getElementById("timeInput");
-            time2 = window.setInterval(function(){
-                var date = new Date();
-                var mill = date.getMilliseconds();
-                //p2.innerHTML = count + " : "+mill;
-                timeInput.value = minute + " : " + sec + " : "+mill;
-                if(mill >= 990){
-                    sec++;
-                }
-                if(sec >= 59 && mill >= 990){
-                	minute++;
-                	sec = 0;
-                }
-                if(minute >= 59 && sec >= 59 && mill >= 990){
-                	window.clearInterval(time2);
-                }
-            },10);
+			//var timeInput = document.getElementById("timeInput");
+            //if(pause){
+            time2 = window.setInterval(function(){	
+            		//일시정지일때 시작누르면
+            		var date = new Date();
+                    var mill = date.getMilliseconds();
+                    //p2.innerHTML = count + " : "+mill;
+                    timeInput.value = minute + " : " + sec + " : "+mill;
+                    if(mill >= 990){
+                        sec++;
+                    }
+                    if(sec >= 59 && mill >= 990){
+                    	minute++;
+                    	sec = 0;
+                    }
+                    if(minute >= 59 && sec >= 59 && mill >= 990){
+                    	window.clearInterval(time2);
+                    }
+                },10)
+               // }
+/*
+            	else{
+            		// 중지하고 시작누르면
+            		 time2 = window.setInterval(function(){	
+            		var date = new Date();
+                    var mill = date.getMilliseconds();
+                    //p2.innerHTML = count + " : "+mill;
+                    minute = 0;
+                    time = 0;
+                    sec = 0;
+                    timeInput.value = minute + " : " + sec + " : "+mill;
+                    if(mill >= 990){
+                        sec++;
+                    }
+                    if(sec >= 59 && mill >= 990){
+                    	minute++;
+                    	sec = 0;
+                    }
+                    if(minute >= 59 && sec >= 59 && mill >= 990){
+                    	window.clearInterval(time2);
+                    }
+                },10);
+            	}
+                */
         }
         function func7(){
+        	pause = false;
         	$("#stop").css('display','none');
         	$("#start").css('display','inline-block');
 			$("#pause").css('display','inline-block');
             window.clearInterval(time2);
-           minute = 0;
-           time = 0;
-           sec = 0;
+           minute = "<%=Tminute%>";
+           sec = "<%=Tsec%>";
+           mill = "<%=TMilli%>";
+           timeInput.value = minute + " : " + sec + " : "+mill;
         }
         function func8(){
+        	pause = true;
         	$("#pause").css('display','none');
         	$("#start").css('display','inline-block');
 			$("#stop").css('display','inline-block');

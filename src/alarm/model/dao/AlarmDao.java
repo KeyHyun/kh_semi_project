@@ -171,7 +171,7 @@ public class AlarmDao {
 	public ArrayList<Alarm> searchMyPopAlarm(Connection conn, int memberNo) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from alarm where member_no=? and rownum<=5 and alarm_status='x' order by 1 desc";
+		String query = "select * from alarm where member_no=? and rownum<=5 and alarm_status in ('a','r','x','c','d') order by 1 desc";
 		ArrayList<Alarm> al = new ArrayList<Alarm>();
 		Alarm a = null;
 		try {
@@ -181,6 +181,8 @@ public class AlarmDao {
 			while(rset.next()) {
 				a = new Alarm();
 				a.setAlarmNo(rset.getInt("alarm_no"));
+				a.setAlarmStatus(rset.getString("alarm_status"));
+				a.setAlarmContent(rset.getString("alarm_content"));
 				a.setSendMemberNo(rset.getInt("send_member_no"));
 				a.setAlarmSubject(rset.getInt("alarm_subject"));
 				a.setGroupNo(rset.getInt("group_no"));
@@ -243,8 +245,111 @@ public class AlarmDao {
 		String query = "update alarm set alarm_status = ? where alarm_no = ?";
 		try {
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, "o");
+			pstmt.setString(1, "k");
 			pstmt.setInt(2, alvalues);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int sendMessage(Connection conn, int alarmNum, Alarm prevAl) {
+		// TODO Auto-generated method stub
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "insert into alarm values(alarm_seq.nextval,?,?,?,?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(2, prevAl.getSendMemberNo());
+			pstmt.setInt(3, prevAl.getGroupNo());
+			pstmt.setInt(5, 3);
+			pstmt.setInt(6, prevAl.getMemberNo());
+			if(prevAl.getAlarmStatus().charAt(0) == 'r') {
+				pstmt.setString(1, "스터디 참여신청이 거부되었습니다.");
+				pstmt.setString(4,"c");
+			}
+			else if(prevAl.getAlarmStatus().charAt(0) == 'a'){
+				pstmt.setString(1, "스터디 참여 신청이 승인됐습니다.");
+				pstmt.setString(4,"d");
+			}
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		
+		
+		return result;
+	}
+
+	public Alarm searchAlarm(Connection conn, int alarmNum) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		Alarm a = null;
+		String query = "select * from alarm where alarm_no = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, alarmNum);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				a = new Alarm();
+				a.setAlarmContent(rset.getString("alarm_content"));
+				a.setAlarmNo(alarmNum);
+				a.setAlarmStatus(rset.getString("alarm_status"));
+				a.setAlarmSubject(rset.getInt("alarm_subject"));
+				a.setGroupNo(rset.getInt("group_no"));
+				a.setMemberNo(rset.getInt("member_no"));
+				a.setSendMemberNo(rset.getInt("send_member_no"));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return a;
+	}
+
+	public int serachAlarm(Connection conn, int groupNo, int memberNo) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		String query = "select alarm_no from alarm where group_no = ? and send_member_no = ? and alarm_status = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, groupNo);
+			pstmt.setInt(2, memberNo);
+			pstmt.setString(3, "a");
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("alarm_no");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int changeStatusH(Connection conn, int alarmNum) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String query = "update alarm set alarm_status = ? where alarm_no = ? ";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "h");
+			pstmt.setInt(2, alarmNum);
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
