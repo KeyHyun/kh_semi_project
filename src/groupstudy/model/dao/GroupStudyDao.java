@@ -995,5 +995,29 @@ public class GroupStudyDao {
 			}
 			return memberIdFile;
 		}
+		//(진선)참여요청이력이 있는지 확인하기 위해 groupApply 테이블 조회
+	      public ArrayList<Integer> selectApplyMemberAll(Connection conn, int groupNo) {
+	         PreparedStatement pstmt = null;
+	         ResultSet rset = null;
+	         ArrayList<Integer> gaMemberNoList = new ArrayList<Integer>();
+	         String query = "select member_no from group_apply where group_no=?";//참여요청한 memberNo만 가져옴
+	         try {
+	            pstmt = conn.prepareStatement(query);
+	            pstmt.setInt(1, groupNo);
+	            rset = pstmt.executeQuery();
+	            while(rset.next()) {
+	               int ga;
+	               ga = (rset.getInt("member_no"));
+	               gaMemberNoList.add(ga);
+	            }
+	         } catch (SQLException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	         }finally {
+	            JDBCTemplate.close(rset);
+	             JDBCTemplate.close(pstmt);
+	         }
+	         return gaMemberNoList;
+	      }
 
 }

@@ -40,7 +40,7 @@ public class QuestionOneDeleteServlet extends HttpServlet {
 		}else {
 			request.setAttribute("msg", "실패");
 		}
-		request.setAttribute("loc", "/managerQuestionList?reqPage=1");
+		request.setAttribute("loc", "/questionList?reqPage=1");
 		rd.forward(request, response);
 	}
 

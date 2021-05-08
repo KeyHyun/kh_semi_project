@@ -31,9 +31,24 @@ public class UpdatePopAlarmServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		int result = 0;
 		int alvalues = Integer.parseInt(request.getParameter("alvalues"));
+		//만약에 subject를 3이나 4로 바꿔야되는데 어떨때냐 참여요청이면 3 결과면 4 
+		// 알람번호로 알람 서브젝트 구해야함 -> 
+		int subject = new AlarmService().getSubject(alvalues);
+		System.out.println(subject);
+		if(subject == 0) {
+			System.out.println("서브젝트 0 ");
+		}
+		else if(subject == 1) {
+			int sub = 3;
+			result = new AlarmService().updatePopAlarm(alvalues,sub);
+		}
+		else {
+			int sub = 4;
+			result = new AlarmService().updatePopAlarm(alvalues,sub);
+		}
 		
-		int result = new AlarmService().updatePopAlarm(alvalues);
 		
 		PrintWriter out = response.getWriter();
 		out.print(result);

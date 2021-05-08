@@ -35,7 +35,7 @@ public class CreateRoomCntCheckServlet extends HttpServlet {
 		//스터디찾기 페이지에서 memberNo, memberGrade을 넘겨받음 -> 이걸로 방을 더 생성할 수있는지 체크
 		int memberNo = Integer.parseInt(request.getParameter("memberNo"));
 		int memberGrade = Integer.parseInt(request.getParameter("memberGrade"));
-		
+		System.out.println(memberGrade);
 		int roomCnt = new GroupStudyService().createRoomCntCheck(memberNo);
 		
 		//등급별 방개수제한

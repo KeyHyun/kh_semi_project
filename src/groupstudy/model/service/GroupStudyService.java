@@ -553,4 +553,11 @@ public class GroupStudyService {
 			JDBCTemplate.close(conn);
 			return result;
 		}
+		
+		public ArrayList<Integer> selectApplyMemberAll(int groupNo) {
+	         Connection conn = JDBCTemplate.getConnection();
+	         ArrayList<Integer> gaMemberNoList = new GroupStudyDao().selectApplyMemberAll(conn,groupNo);
+	         JDBCTemplate.close(conn);
+	         return gaMemberNoList;
+	      }
 }

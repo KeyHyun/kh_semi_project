@@ -5,7 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-	JSONArray calendarData = (JSONArray)request.getAttribute("calendarData");
+   JSONArray calendarData = (JSONArray)request.getAttribute("calendarData");
 %>
 <!DOCTYPE html>
 <html>
@@ -148,79 +148,88 @@
         }
 
         /* 모달------------------------------------------------------------ */
-		.modalBtnDiv{
-			text-align: center;
-		}	
-		#btn{
-			outline: none;
-			width: 156px;
-			height: 53px;
-			background: #6ED078;
-			border-radius: 5px;
-			color: white;
-			font-size: 20px;
-			font-weight: bold;
-		}
-		
-	    .modal-wrap123, .modal-wrap1234{
-	      position: absolute;
-	      top: 0;
-	      left: 0;
-	      width: 100vw;
-	      height: 1000vh;
-	      background-color: rgba(0,0,0,0.3);
-	      justify-content: center;
-	      align-items: center;
-	      display:none;
-	      z-index:100;
-	    }
-	    .modal123{
-	      background-color: #fff;
-	      position: absolute;
-	      top:300px;
-	      left:34vw;
-	      width: 40vw;
-	      max-width: 500px;
-	      min-width: 300px;
-	      border-radius: 10px;
-	      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
-	    }
-	    .modal-top123, .modal-top123>h4{
-	      text-align: center;
-	      color:green;
-	    }
-	    .modal-content123{
-	    	padding-left: 50px;
-	    	padding-right: 50px;
-	    }
-	    .modal-button123>input{
-	    	background-color: white;
-	    	font-weight: bold;
-	      	outline: none;
-	      	width: 49%;
-	      	height:30px;
-	      	border: 0;
-	      	box-sizing: border-box;
-	      	padding: 0;
-	      	margin-bottom: 10px;
-	    }
-	    .modal-wrap1234>div>div>h4{
-	    	display:inline-block;
-	    	margin-left: 50px;
-	    }
-	    .btn{
-	    	float:right;
-	    	margin-right:10px;
-	    }
+      .modalBtnDiv{
+         text-align: center;
+      }   
+      #btn{
+         outline: none;
+         width: 156px;
+         height: 53px;
+         background: #6ED078;
+         border-radius: 5px;
+         color: white;
+         font-size: 20px;
+         font-weight: bold;
+      }
+      
+       .modal-wrap123, .modal-wrap1234{
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100vw;
+         height: 1000vh;
+         background-color: rgba(0,0,0,0.3);
+         justify-content: center;
+         align-items: center;
+         display:none;
+         z-index:100;
+       }
+       .modal123{
+         background-color: #fff;
+         position: absolute;
+         top:300px;
+         left:34vw;
+         width: 40vw;
+         max-width: 500px;
+         min-width: 300px;
+         border-radius: 10px;
+         box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+       }
+       .modal-top123, .modal-top123>h4{
+         text-align: center;
+         color:green;
+       }
+       .modal-content123{
+          padding-left: 50px;
+          padding-right: 50px;
+       }
+       .modal-button123>input{
+          background-color: white;
+          font-weight: bold;
+            outline: none;
+            width: 49%;
+            height:30px;
+            border: 0;
+            box-sizing: border-box;
+            padding: 0;
+            margin-bottom: 10px;
+       }
+       .modal-wrap1234>div>div>h4{
+          display:inline-block;
+          margin-left: 50px;
+       }
+       .btn{
+          float:right;
+          margin-right:10px;
+       }
+        .backColor>li{
+          float:left;
+          margin-left: 5px;
+       }
+
+       
+       input[type=radio]{
+          display:none;
+       }
     </style>
 </head>
 <script>
-	
+   
     document.addEventListener('DOMContentLoaded', function() {
-    	/*서블릿에서 받아온 JSONArray*/
+       /*서블릿에서 받아온 JSONArray*/
         var list = ${calendarData};
 
-    	var calendarEl = document.getElementById('calendar');        
+       var calendarEl = document.getElementById('calendar');        
         var now = new Date();
         var modal = document.getElementById("modal");
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -242,27 +251,27 @@
             },
             //달력에 저장된 일정 누르면
             eventClick: function(arg) {
-               	var taskNo = arg.event.id;
-               	$("#taskNo").val(taskNo);
-        		$.ajax({
-        			url : "/calendarSelectOneDate",
-        			type : "get",
-        			data : {taskNo:taskNo},
-        			success : function(data){
-        				//data는 JSON형태 즉, 객체 형태
-        				var title = decodeURIComponent(data.title);
-        				var start = decodeURIComponent(data.start);
-        				var end = decodeURIComponent(data.end);
-        				var color = decodeURIComponent(data.color);
-        				console.log(color);
-        				$(".modal-wrap1234").show();
+                  var taskNo = arg.event.id;
+                  $("#taskNo").val(taskNo);
+              $.ajax({
+                 url : "/calendarSelectOneDate",
+                 type : "get",
+                 data : {taskNo:taskNo},
+                 success : function(data){
+                    //data는 JSON형태 즉, 객체 형태
+                    var title = decodeURIComponent(data.title);
+                    var start = decodeURIComponent(data.start);
+                    var end = decodeURIComponent(data.end);
+                    var color = decodeURIComponent(data.color);
+                    console.log(color);
+                    $(".modal-wrap1234").show();
                         $("#startDateUpdate").val(start);
                         $("#endDateUpdate").val(end);
                         $("#contentUpdate").val(title);
                         $("#colorUpdate").val(color);
                         $("#taskNo").val(arg.event.id);
-        			}
-        		});
+                 }
+              });
                 /*삭제버튼*/
                 $("#delete").click(function(){             
                    var idx = thisClick(taskNo);
@@ -314,9 +323,26 @@
            $(".leftMenuA").eq(1).attr("style","border-color : #75D701");
         });
         
+        /*색상 선택되면 테두리*/
+        $(".backColor>li>label").click(function() {
+            $(".backColor>li>label").each(function(index, item) {
+                $(item).prev().attr("pass", "false");
+            });
+            $(this).prev().attr("pass", "true");
+              $(".backColor>li>label").each(function(index, item) {
+                if($(item).prev().attr("pass")=="true"){
+                    $(item).children().css("border","2px solid black");
+                }
+                else{
+                    $(item).children().css("border","none");
+                }
+            });
+            
+        });
+        
     });
     
-
+    
 
 </script>
 
@@ -331,7 +357,7 @@
                 <div class="leftMenu">
                     <ul class="leftMenuList">
                        <li>My Plan</li>
- 						<li><a class="leftMenuA" href="/todayPlan?memberNo=<%=m.getMemberNo()%>"><img src="/img/calender2.png" style="margin-right: 10px;">일일 계획</a></li>
+                   <li><a class="leftMenuA" href="/todayPlan?memberNo=<%=m.getMemberNo()%>"><img src="/img/calender2.png" style="margin-right: 10px;">일일 계획</a></li>
                         <li><a class="leftMenuA" href="/myStudyCalender?memberNo=<%=m.getMemberNo()%>"><img src="/img/day2.png" style="margin-right: 10px;">나의 스케줄</a></li>
                         <li><a class="leftMenuA" href="/myGroupStudyList?memberNo=<%=m.getMemberNo()%>"><img src="/img/group_icon2.png" style="margin-right: 10px;">참여중인 스터디</a></li>
                     </ul>
@@ -346,8 +372,8 @@
             </div>
             <%@ include file="/WEB-INF/views/common/footer.jsp"%>
         </div>
-		
-		<!-- 일정 추가 모달 -->
+      
+      <!-- 일정 추가 모달 -->
         <div class="modal-wrap123">
             <div class="modal123">
                 <div class="modal-top123">
@@ -357,12 +383,46 @@
                 </div>
                 <form action="/calendarInsert?memberNo=<%=m.getMemberNo() %>" method="post">
                     <div class="modal-content123">
-                    	<p>시작날짜 : <input id="startDate" name="startDate" type="text" value="" readonly style="border:0px;"></p>
+                       <p>시작날짜 : <input id="startDate" name="startDate" type="text" value="" readonly style="border:0px;"></p>
                         <p>종료날짜 : <input id="startDate" name="endDate" type="date" required="required"></p>
                         <hr>
-                        <p>스케줄 색상 : <input name="color" type="color" required="required"></p>
-                        <hr>
-                        <p>스케줄에 추가할 내용을 입력하세요</p>
+                        
+                         <ul class="backColor">
+                         <li><p style="display:inline-block">스케줄 색상 : </p></li>
+                        <li>
+                            <input type="radio" id="ex1" name="color" value="#D979BF">
+
+                            <label for="ex1"><div style="background-color:#D979BF; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ex2" name="color" value="#934ED9">
+
+                            <label for="ex2"><div style="background-color:#934ED9; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                       
+                        <li>
+                            <input type="radio" id="ex4" name="color" value="#AEACF2">
+
+                            <label for="ex4"><div style="background-color:#AEACF2; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ex6" name="color" value="#7EBF60">
+
+                            <label for="ex6"><div style="background-color:#7EBF60; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ex7" name="color" value="#BAF2A0">
+
+                            <label for="ex7"><div style="background-color:#BAF2A0; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="ex8" name="color" value="#f2f263">
+
+                            <label for="ex8"><div style="background-color:#f2f263; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                    </ul>
+                        <hr style="margin-top:55px;">
+                        <p style="display:block;">스케줄에 추가할 내용을 입력하세요</p>
                         <textarea rows="2" cols="50"  maxlength="33"name="content" style="resize: none" required="required"></textarea>
                     <hr>
                     <div class="modal-button123">
@@ -385,13 +445,41 @@
                 </div>
                 <form action="/calendarUpdate?memberNo=<%=m.getMemberNo() %>" method="post">
                     <div class="modal-content123">
-                    	<input type="text" name="taskNo" style="display:none;" id="taskNo">
-                    	<p>시작날짜 : <input id="startDateUpdate" name="startDate" type="text" value="" readonly style="border:0px;"></p>
+                       <input type="text" name="taskNo" style="display:none;" id="taskNo">
+                       <p>시작날짜 : <input id="startDateUpdate" name="startDate" type="text" value="" readonly style="border:0px;"></p>
                         <p>종료날짜 : <input id="endDateUpdate" name="endDate" type="date" required="required"></p>
                         <hr>
-                        <p>스케줄 색상 :<input id="colorUpdate" type="color" name="color"></p>
-                        <hr>
-                        <p>수정 할 내용을 입력하세요</p>
+                       
+                         <ul class="backColor">
+                         <li><p style="display:inline-block">스케줄 색상 : </p></li>
+                        <li>
+                            <input type="radio" id="e1" name="color" value="#D979BF">
+                            <label for="e1"><div style="background-color:#D979BF; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="e2" name="color" value="#934ED9">
+                            <label for="e2"><div style="background-color:#934ED9; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                       
+                        <li>
+                            <input type="radio" id="e4" name="color" value="#AEACF2">
+                            <label for="e4"><div style="background-color:#AEACF2; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="e6" name="color" value="#7EBF60">
+                            <label for="e6"><div style="background-color:#7EBF60; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="e7" name="color" value="#BAF2A0">
+                            <label for="e7"><div style="background-color:#BAF2A0; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                        <li>
+                            <input type="radio" id="e8" name="color" value="#f2f263">
+                            <label for="e8"><div style="background-color:#f2f263; width:30px; height:30px; border-radius:10px;"></div></label>
+                        </li>
+                    </ul>
+                        <hr style="margin-top:55px;">
+                        <p style="display:block;">수정 할 내용을 입력하세요</p>
                         <textarea id="contentUpdate" rows="2" maxlength="33" cols="50" name="content" style="resize: none" required="required"></textarea>
                     <hr>
                     <div class="modal-button123">

@@ -2,6 +2,7 @@
  * 
  */
         var checkNo = 0;
+        var count = 0;
         $(function() {
             $(".join_info>li>input").focusin(function() {
                 //              $(this).css('right','90px');
@@ -170,15 +171,19 @@
             $("input").each(function(index, item) {
                 if ($(item).attr("pass") == "true") {
                     checkNo = checkNo + 1;
-                } else {
-                    console.log("false");
-                }
+                    count = count+1;
+                } 
+
             });
             console.log(checkNo);
             if (checkNo == 8) {
                 return true;
             } else {
             	alert("모든 정보를 입력해주세요");
+            	checkNo = checkNo-count;
+            	console.log(checkNo);
                 return false;
             }
-        };
+        };/**
+ * 
+ */

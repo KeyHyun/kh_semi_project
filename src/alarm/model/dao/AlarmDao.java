@@ -171,7 +171,7 @@ public class AlarmDao {
 	public ArrayList<Alarm> searchMyPopAlarm(Connection conn, int memberNo) {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
-		String query = "select * from alarm where member_no=? and rownum<=5 and alarm_status in ('a','r','x','c','d') order by 1 desc";
+		String query = "select * from alarm where member_no=? and rownum<=5 and alarm_status in ('a','r','x') order by 1 desc";
 		ArrayList<Alarm> al = new ArrayList<Alarm>();
 		Alarm a = null;
 		try {
@@ -208,7 +208,7 @@ public class AlarmDao {
 			pstmt.setString(1, applyContent);
 			pstmt.setInt(2, managerNo);
 			pstmt.setInt(3, groupNo);
-			pstmt.setInt(4,2);
+			pstmt.setInt(4,1);
 			pstmt.setInt(5, memberNo);
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -239,13 +239,13 @@ public class AlarmDao {
 		return result;
 	}
 
-	public int updatePopAlarm(Connection conn, int alvalues) {
+	public int updatePopAlarm(Connection conn, int alvalues, int sub) {
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String query = "update alarm set alarm_status = ? where alarm_no = ?";
+		String query = "update alarm set alarm_subject = ? where alarm_no = ?";
 		try {
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, "k");
+			pstmt.setInt(1, sub);
 			pstmt.setInt(2, alvalues);
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -266,15 +266,15 @@ public class AlarmDao {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(2, prevAl.getSendMemberNo());
 			pstmt.setInt(3, prevAl.getGroupNo());
-			pstmt.setInt(5, 3);
+			pstmt.setInt(5, 2);
 			pstmt.setInt(6, prevAl.getMemberNo());
 			if(prevAl.getAlarmStatus().charAt(0) == 'r') {
 				pstmt.setString(1, "스터디 참여신청이 거부되었습니다.");
-				pstmt.setString(4,"c");
+				pstmt.setString(4,"r");
 			}
 			else if(prevAl.getAlarmStatus().charAt(0) == 'a'){
 				pstmt.setString(1, "스터디 참여 신청이 승인됐습니다.");
-				pstmt.setString(4,"d");
+				pstmt.setString(4,"a");
 			}
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -345,16 +345,40 @@ public class AlarmDao {
 	public int changeStatusH(Connection conn, int alarmNum) {
 		PreparedStatement pstmt = null;
 		int result = 0;
-		String query = "update alarm set alarm_status = ? where alarm_no = ? ";
+		String query = "update alarm set alarm_status = ? where alarm_no = ? and alarm_status = ? or alarm_status = ?";
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, "h");
 			pstmt.setInt(2, alarmNum);
+			pstmt.setString(3, "c");
+			pstmt.setString(4, "d");
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		return result;
+	}
+
+	public int getSubject(Connection conn, int alvalues) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		String query = "select alarm_subject from alarm where alarm_no = ? ";
+		int result = 0;
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, alvalues);
+			rset = pstmt.executeQuery();
+			if(rset.next()) {
+				result = rset.getInt("alarm_subject");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
 			JDBCTemplate.close(pstmt);
 		}
 		return result;

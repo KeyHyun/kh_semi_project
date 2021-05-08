@@ -356,7 +356,7 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 							<tr class="w_list">
 								<th>알림 분류</th>
 								<th>내용</th>
-								<th>확인</th>
+								<th>상태</th>
 								<th>삭제</th>
 							</tr>
 							<%if(al == null) {%>
@@ -366,12 +366,15 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 							<%}else{ %>
 							<%for (Alarm l : al) {%>
 							<tr class="w_list">
-								<td><%if(l.getAlarmSubject()==1){ %>
-								공지사항
-								<%}else if(l.getAlarmSubject() ==2){ %>참여요청<%}else{ %>요청 결과<%} %></td>
+								<%if(l.getAlarmSubject()==1||l.getAlarmSubject()==3){%>
+								<td>참여요청</td>
+								<%}else if(l.getAlarmSubject() ==2|| l.getAlarmSubject()==4){ %>
+								<td>요청결과</td>
+								<%} %>
+								
 								<td><%=l.getAlarmContent()%></td>
 								<td>
-									<%if(l.getAlarmStatus().charAt(0) == 'x' || l.getAlarmStatus().charAt(0) == 'k' ||l.getAlarmStatus().charAt(0) == 'd'||l.getAlarmStatus().charAt(0) == 'c') {%>
+									<%if(l.getAlarmStatus().charAt(0) == 'x'){%>
 									<a class="readVal" href="#" alarmNum="<%=l.getAlarmNo()%>" id="noRead">안읽음</a>
 									<%}else if(l.getAlarmStatus().charAt(0) == 'r'){%>
 									<a class="readVal" id="redFont">거부</a>
@@ -403,7 +406,21 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 			var applyMemberNo;
 			var alarmNum;
 			var stat;
-			
+			/*
+			$("#noRead").click(function(){
+				alarmNum = $(this).attr("alarmNum");
+				$.ajax({
+					url : "/readMyPageAlarm",
+					type : "post",
+					data : {alarmNum:alarmNum},
+					success : function(data){
+						if(data){
+							location.reload();	
+						}
+						
+					}
+				});
+			});*/
 
 			$("#applyBtn").click(function(){
 				$.ajax({
@@ -475,7 +492,7 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 					type : "post",
 					data : {alarmNum:alarmNum,stat:stat},
 					success : function(data){
-						readVal.html("거절");
+						readVal.html("거부");
 						readVal.css('color','red');
 						alert("거부완료");
 					}
@@ -505,6 +522,7 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 					});*/
 					
 					//안읽은 요소중에 참여요청이면
+					console.log($(this).parent().prev().prev().html());
 					if($(this).parent().prev().prev().html() == '참여요청')
 						{
 							$.ajax({
@@ -523,10 +541,17 @@ box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
 							$(".modal_content").css('display','block');
 
 						}
-				//	else{
-					//	$(this).html("읽음");
-					//	$(this).css('color','grey');
-					//}
+					else{
+						stat = "k";
+						$.ajax({
+							url : "/updateAlarm",
+							type : "post",
+							data : {alarmNum:alarmNum,stat:stat},
+							success : function(data){
+								location.reload();
+							}
+						});
+					}
 				}
 			});
 			$("#deleteMember").click(function(){

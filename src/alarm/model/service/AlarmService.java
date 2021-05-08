@@ -105,9 +105,9 @@ public class AlarmService {
 		return result;
 	}
 
-	public int updatePopAlarm(int alvalues) {
+	public int updatePopAlarm(int alvalues, int sub) {
 		Connection conn = JDBCTemplate.getConnection();
-		int result = new AlarmDao().updatePopAlarm(conn,alvalues);
+		int result = new AlarmDao().updatePopAlarm(conn,alvalues,sub);
 		if(result>0) {
 			JDBCTemplate.commit(conn);
 		}
@@ -155,6 +155,15 @@ public class AlarmService {
 			JDBCTemplate.rollback(conn);
 		}
 		JDBCTemplate.close(conn);
+		return result;
+	}
+
+	public int getSubject(int alvalues) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		int result = new AlarmDao().getSubject(conn,alvalues);
+		JDBCTemplate.close(conn);
+		
 		return result;
 	}
 
